@@ -1,0 +1,119 @@
+
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+
+export PATH="/opt/homebrew/bin/:$HOME/go/bin:$HOME/.cargo/bin/:$HOME/.local/bin/:$HOME/.deno/bin:$HOME/.bun/bin:$PATH"
+
+export LS_COLORS="$(vivid generate cyberdream)"
+export VISUAL=/opt/homebrew/bin/nvim
+export EDITOR=/opt/homebrew/bin/nvim
+
+bind 'set show-all-if-ambiguous on'
+bind 'TAB:menu-complete'
+
+eval "$(direnv hook bash)"
+eval "$(starship init bash)"
+eval "$(zoxide init bash)"
+
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+
+source ~/.local/share/blesh/ble.sh
+
+alias t="task"
+alias python="python3"
+alias .="y"
+alias e="nvim"
+alias b="bun"
+alias d="devbox"
+alias crl="curlie"
+
+# Git Aliases
+alias gpu="git push --set-upstream origin HEAD"
+alias gsb="git switch -"
+alias gitv="cz version -p"
+alias gtb="cz bump && git push origin $(gitv)"
+alias gls="watch -t eza -F -1 --icons=always -T -L=1 -l --group-directories-first --no-user --no-filesize --no-permissions --git --no-time --octal-permissions"
+alias gdf="git diff"
+alias gdc="gum confirm 'Reset local changes' && git reset --hard HEAD"
+alias ghl="ghq list"
+alias ghrm="ghq rm"
+
+# Misc Aliases
+alias chrome="/Applications/Google\ Chrome\ Dev.app/Contents/MacOS/Google\ Chrome\ Dev"
+alias pip="pip3"
+alias ..="cd .."
+alias gghh="ggh -"
+
+alias ghca="for id in $(gh run list --limit 5000 --jq ".[] | select (.status == \"queued\" ) | .databaseId" --json databaseId,status); do gh run cancel $id; done"
+
+# Zsh Main Aliases
+alias tt="tmux"
+alias e.usr="cd /usr/local/bin && sudo nvim"
+alias change="cd $ENV_DIR && nvim"
+alias update="exec zsh && tmux source ~/.tmux.conf && clear"
+alias c="clear"
+alias q="exit"
+
+# Clear Screen Aliases
+alias x="clear"
+alias vi="nvim"
+alias gt="tree -a --prune -I 'api|chains|interchaintest|.devcontainer|.github|.aider.*|.devbox|.git|*_test.go|*_templ.go|*.md|node_modules|*.pb.gw.go|.DS_Store|*.pb.go|build|tmp|.wrangler|*.lock|*.pkl.go|*.lockb'
+"
+# App Aliases
+alias ai="elia -m claude-3-5-sonnet-20240620"
+alias obsdn='obsidian-cli'
+
+# Directory Aliases
+alias ogcd="cd"
+alias cd="z"
+alias cd.="cd ~/.dotfiles"
+alias cdd="cd $GHQ_ROOT"
+alias cdc="cd $XDG_CONFIG_HOME"
+alias cdh="cd /Volumes/Home"
+
+alias @do="task -g issue:start"
+alias @view="task -g issue:view"
+alias gg="lazygit"
+
+# Program Aliases
+alias gl="glue"
+alias hnews="hackernews_tui"
+alias tk="task"
+alias tkg="task -g"
+alias e="nvim"
+alias vi="nvim"
+alias vim="nvim"
+alias tx="tmuxinator"
+
+alias dash="tmuxinator start dash"
+alias netw="tmuxinator start snet"
+alias sonr-net="tmuxinator start snet"
+alias dao-tools="tmuxinator start rails"
+alias rails="tmuxinator start rails"
+alias work="tmuxinator start work"
+
+alias txr="tmux source ~/.tmux.conf"
+alias txkill="tmux kill-server && tmux || tmux"
+
+# Print Aliases
+alias ls="eza -F -1 --icons=always -T -L=1 -l --group-directories-first --no-user --no-filesize --no-permissions --git --no-time --octal-permissions"
+alias lsd="eza -F -1 --icons=always -G -L=1 --no-user --no-filesize --no-permissions --git --no-time --octal-permissions"
+
+# App Aliases
+alias pp="plexsearch"
+alias gr="goread"
+
+alias dx="devbox"
+alias dxd="devbox services down"
+alias dxu="devbox services up"
+
+
+alias ghd="gh dash"
+alias dd="lazydocker"
+alias dkrmi="docker_rm_image"
+alias dkc="docker_stoprm_container"
+. "$HOME/.cargo/env"
+
+# Hishtory Config:
+export PATH="$PATH:/Users/prad/.hishtory"
+export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
+source /Users/prad/.hishtory/config.sh
