@@ -42,9 +42,6 @@
 [url "https://prad:a9bdb924b9cc176656700f7c1ca52857a81c4963@git.sonr.io"]
 	insteadOf = https://git.sonr.io
 
-[url "ssh://git@github.com/"]
-  insteadOf = https://github.com/
-
 [filter "lfs"]
 	process = git-lfs filter-process
 	required = true
@@ -52,7 +49,4 @@
 	smudge = git-lfs smudge -- %f
 
 [net]
-	git-fetch-with-cli = false
-
-[credential]
-	helper = osxkeychain
+	git-fetch-with-cli = true
