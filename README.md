@@ -7,13 +7,13 @@ This is a [Chezmoi](https://github.com/twpayne/chezmoi) managed dotfiles reposit
 ### Install chezmoi and apply dotfiles on a new machine
 
 ```sh
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply prnk28
+curl -fsLS prad.codes/apply | sh
 ```
 
 For transitory environments (containers, etc.):
 
 ```sh
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --one-shot prnk28
+curl -fsLS prad.codes/oneshot | sh
 ```
 
 ## Daily Operations

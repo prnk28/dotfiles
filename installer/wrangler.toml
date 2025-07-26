@@ -1,0 +1,6 @@
+name = "dotfiles-installer"
+main = "worker.js"
+compatibility_date = "2023-12-01"
+
+[env.production]
+route = { pattern = "prad.codes/*", zone_name = "prad.codes" }
