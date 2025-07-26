@@ -1,0 +1,6 @@
+---
+tags:
+  - "#documentation"
+  - "#empty-content"
+---
+	

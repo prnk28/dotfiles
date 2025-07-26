@@ -4,3 +4,7 @@ command = "{{ .chezmoi.sourceDir }}/.install-doppler.sh"
 [doppler]
 project = "env"
 config = "local"  # or "staging", "prod", etc.
+
+[git]
+autocommit = true
+autopush = true
