@@ -51,6 +51,8 @@ bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "xc
 
 # Environment variables
 set-environment -g DOTFILES "{{ .chezmoi.homeDir }}/.dotfiles"
+set-environment -g LD_CONFIG_FILE "{{ .chezmoi.homeDir }}/.config/lazygit/config.yml"
+
 {{ if eq .chezmoi.os "darwin" -}}
 {{   if eq .chezmoi.arch "arm64" -}}
 set-environment -g PATH "{{ .chezmoi.homeDir }}/.local/bin:/opt/homebrew/bin:/usr/local/bin:/bin:/usr/bin:{{ .chezmoi.homeDir }}/.bun/bin:$PATH"
