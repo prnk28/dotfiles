@@ -1,0 +1,67 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/bash
+set -euo pipefail
+
+echo "Installing APT packages..."
+
+packages=(
+    # Essential build tools
+    build-essential
+    cmake
+    pkg-config
+    libssl-dev
+    libffi-dev
+    python3-dev
+    
+    # Version control
+    git
+    git-lfs
+    gh
+    
+    # Editors
+    neovim
+    python3-neovim
+    
+    # Languages (we'll install Go and Rust separately)
+    nodejs
+    npm
+    python3-pip
+    ruby-full
+    
+    # Terminal tools
+    tmux
+    zsh
+    curl
+    wget
+    jq
+    ripgrep
+    fd-find
+    bat
+    fzf
+    htop
+    ncdu
+    tree
+    
+    # Network tools
+    net-tools
+    dnsutils
+    
+    # Archive tools
+    zip
+    unzip
+    tar
+    
+    # System monitoring
+    iotop
+    sysstat
+)
+
+for package in "${packages[@]}"; do
+    if ! dpkg -l | grep -q "^ii  $package "; then
+        echo "Installing $package..."
+        sudo apt install -y "$package"
+    else
+        echo "$package is already installed"
+    fi
+done
+{{ end -}}

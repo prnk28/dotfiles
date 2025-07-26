@@ -1,0 +1,55 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+set -euo pipefail
+
+echo "Managing Homebrew packages..."
+
+# Ensure Homebrew is installed
+if ! command -v brew &> /dev/null; then
+    echo "Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    
+    # Add Homebrew to PATH for Apple Silicon Macs
+    if [[ $(uname -m) == "arm64" ]]; then
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
+fi
+
+# Create a temporary Brewfile
+BREWFILE=$(mktemp)
+trap "rm -f $BREWFILE" EXIT
+
+cat > "$BREWFILE" <<EOF
+# Taps are automatically handled by brew bundle when using full tap paths
+
+# Formulae
+{{ range .packages.darwin.brews -}}
+brew {{ . | quote }}
+{{ end }}
+
+# Casks
+{{ range .packages.darwin.casks -}}
+cask {{ . | quote }}
+{{ end }}
+EOF
+
+echo "Installing packages from Brewfile..."
+brew bundle --file="$BREWFILE"
+
+# Clean up packages not in Brewfile
+echo ""
+echo "Removing packages not in Brewfile..."
+brew bundle cleanup --file="$BREWFILE" --force
+
+# Remove unused dependencies
+echo "Removing unused dependencies..."
+brew autoremove
+
+# Clean up old versions
+echo "Cleaning up old versions..."
+brew cleanup
+
+echo ""
+echo "Homebrew packages managed successfully"
+{{ end -}}

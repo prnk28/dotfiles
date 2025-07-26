@@ -1,0 +1,33 @@
+background-opacity = 0.8
+
+auto-update = download
+theme = cyberdream
+font-family = "VictorMono Nerd Font Mono"
+
+shell-integration = zsh
+shell-integration-features = sudo
+confirm-close-surface = false
+font-size = 16
+
+window-decoration = false
+
+window-theme = auto
+window-inherit-working-directory = true
+window-colorspace = display-p3
+copy-on-select = true
+clipboard-write = allow
+
+macos-titlebar-style = transparent
+macos-titlebar-proxy-icon = hidden
+
+cursor-style-blink = true
+
+
+
+keybind = all:super+shift+j=new_split:down
+keybind = all:super+shift+k=new_split:up
+keybind = all:super+shift+h=new_split:left
+keybind = all:super+shift+l=new_split:right
+
+keybind = all:super+w=close_surface
+keybind = all:super+q=close_window

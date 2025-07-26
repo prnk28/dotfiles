@@ -1,0 +1,17 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "🔄 Refreshing Doppler secrets..."
+
+# Ensure we're logged in
+if ! doppler me &> /dev/null; then
+    echo "❌ Not logged into Doppler. Running 'doppler login'..."
+    doppler login
+fi
+
+# Update chezmoi with latest secrets
+echo "📥 Pulling latest secrets from Doppler..."
+chezmoi apply --refresh-externals
+
+echo "✅ Doppler secrets refreshed!"
+echo "   Restart your shell or run 'source ~/.config/doppler/env.sh' to load new values"

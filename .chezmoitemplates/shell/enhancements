@@ -1,0 +1,37 @@
+# Hishtory autosuggestion strategy
+_zsh_autosuggest_strategy_hishtory() {
+    local prefix="$1"
+    typeset -g suggestion
+    
+    suggestion=$(hishtory query "$prefix" 2>/dev/null | \
+                 awk '{$1=$2=$3=$4=""; print $0}' | \
+                 sed 's/^[[:space:]]*//' | \
+                 grep -v "^$prefix$" | \
+                 head -1)
+}
+
+ZSH_AUTOSUGGEST_STRATEGY=(hishtory)
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#666666"
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+
+# Smart tab function
+_smart_tab() {
+    if [[ -z "${LBUFFER// }" ]]; then
+        zle _hishtory_widget
+    else
+        zle expand-or-complete
+    fi
+}
+
+zle -N _smart_tab
+bindkey '^I' _smart_tab
+
+# Starship bottom prompt
+if command -v starship &> /dev/null; then
+  function starship_bottom_prompt() {
+    local rows=$(tput lines)
+    print -Pn "\033[${rows};0H"
+    starship prompt
+  }
+  export PROMPT='$(starship_bottom_prompt)'
+fi

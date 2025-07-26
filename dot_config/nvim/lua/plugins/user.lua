@@ -1,0 +1,84 @@
+-- You can also add or configure plugins by creating files in this `plugins/` folder
+-- PLEASE REMOVE THE EXAMPLES YOU HAVE NO INTEREST IN BEFORE ENABLING THIS FILE
+-- Here are some examples:
+
+---@type LazySpec
+return {
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-neotest/nvim-nio",
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+  },
+  {
+    "apple/pkl-neovim",
+    lazy = true,
+    ft = "pkl",
+    dependencies = {
+      {
+        "nvim-treesitter/nvim-treesitter",
+        build = function(_) vim.cmd "TSUpdate" end,
+      },
+      "L3MON4D3/LuaSnip",
+    },
+    build = function()
+      require("pkl-neovim.internal").init()
+
+      -- Set up syntax highlighting.
+      vim.cmd "TSInstall! pkl"
+    end,
+    config = function()
+      -- Set up snippets.
+      require("luasnip.loaders.from_snipmate").lazy_load()
+    end,
+  },
+  {
+    "apple/pkl-neovim",
+    lazy = true,
+    ft = "pkl",
+    dependencies = {
+      {
+        "nvim-treesitter/nvim-treesitter",
+        build = function(_) vim.cmd "TSUpdate" end,
+      },
+      "L3MON4D3/LuaSnip",
+    },
+    build = function()
+      require("pkl-neovim.internal").init()
+
+      -- Set up syntax highlighting.
+      vim.cmd "TSInstall! pkl"
+    end,
+    config = function()
+      -- Set up snippets.
+      require("luasnip.loaders.from_snipmate").lazy_load()
+    end,
+  },
+  {
+    "folke/snacks.nvim",
+    opts = {
+      dashboard = {
+        preset = {
+          header = table.concat({
+            "       ▗▄████▄▖       ",
+            "      ▟███▛███▛▘      ",
+            "    ▄███▜▝  ▘▀   ▗    ",
+            "  ▗▟██▜▞▘       ▟██▖  ",
+            " ▟██▛█▘   ▄▙▖  ▝▜█▜█▙ ",
+            "▟██▜▀   ▄████▄   ▀██▟▙",
+            "██▟▌   ▐████▟█▜   ▐▟██",
+            "▜▛██▄   ▀▜▟█▛▀   ▄██▛▛",
+            " ▜█▛█▙▖  ▝▀▌▘  ▗▟█▟▙▛ ",
+            "  ▝▜█▛▘       ▟██▟█▘  ",
+            "    ▘   ▄▄  ▄███▟▀    ",
+            "      ▗▟▜▛██▜█▜▞▘     ",
+            "       ▝▀████▀▘       ",
+          }, "\n"),
+        },
+      },
+    },
+  },
+}

@@ -1,0 +1,7 @@
+# Tool initialization
+command -v zoxide &> /dev/null && eval "$(zoxide init zsh)"
+command -v starship &> /dev/null && eval "$(starship init zsh)"
+
+# Hishtory
+[[ -f "{{ .chezmoi.homeDir }}/.hishtory/config.zsh" ]] && source "{{ .chezmoi.homeDir }}/.hishtory/config.zsh"
+export PATH="{{ .chezmoi.homeDir }}/.hishtory:$PATH"

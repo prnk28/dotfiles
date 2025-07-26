@@ -1,0 +1,58 @@
+[user]
+	name = Prad N
+	email = prad@sonr.io
+
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+
+[core]
+	editor = nvim
+	pager = delta
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true  # use n and N to move between diff sections
+	dark = true      # or light = true, or omit for auto-detection
+
+[rebase]
+	updateRefs = true
+
+[hub]
+	protocol = https
+	host = onsonr
+
+[merge]
+	conflictstyle = zdiff3
+
+# Updated ghq configuration to use the new storage location
+[ghq]
+	root = /Users/prad/Developer
+
+[ghq "https://github.com/sonr-io"]
+	vcs = git
+	root = /Users/prad/Developer/github.com/sonr-io
+
+[url "https://prad:a9bdb924b9cc176656700f7c1ca52857a81c4963@git.sonr.io"]
+	insteadOf = https://git.sonr.io
+
+[url "ssh://git@github.com/"]
+  insteadOf = https://github.com/
+
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+
+[net]
+	git-fetch-with-cli = false
+
+[credential]
+	helper = osxkeychain

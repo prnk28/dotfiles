@@ -1,0 +1,6 @@
+[hooks.read-source-state.pre]
+command = "{{ .chezmoi.sourceDir }}/.install-doppler.sh"
+
+[doppler]
+project = "env"
+config = "local"  # or "staging", "prod", etc.

@@ -1,0 +1,40 @@
+
+# Enable dotfile globbing
+setopt glob_dots
+
+# Initialize completions (optimized)
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR}/.zcompdump(#qNmh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+
+# Load language/tool specific configurations
+{{ template "shell/golang" . }}
+{{ template "shell/rust" . }}
+{{ template "shell/node" . }}
+{{ template "shell/python" . }}
+
+# Initialize interactive tools
+{{ template "shell/tools" . }}
+
+# Shell enhancements
+{{ template "shell/enhancements" . }}
+
+# Platform specific configurations
+{{ if eq .chezmoi.os "darwin" -}}
+{{ template "shell/darwin" . }}
+{{ else if eq .chezmoi.os "linux" -}}
+{{ template "shell/linux" . }}
+{{ end -}}
+
+# User specific aliases
+{{ template "shell/aliases" . }}
+{{ template "shell/functions" . }}
+
+# Load Doppler secrets
+if [ -f {{ .chezmoi.homeDir }}/.config/doppler/env.sh ]; then
+    source {{ .chezmoi.homeDir }}/.config/doppler/env.sh
+fi
+

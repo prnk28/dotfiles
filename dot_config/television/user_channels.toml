@@ -1,0 +1,115 @@
+# BMM - Bookmarks
+[[cable_channel]]
+name = "bmm"
+source_command = "bmm list"
+preview_command = "bmm show {0}"
+
+# Ghq List
+[[cable_channel]]
+name = "ghq"
+source_command = "ghq list"
+preview_command = ""
+
+# Make - Makefile
+[[cable_channel]]
+name = "make"
+source_command = "grep -E '^[a-zA-Z0-9_-]+:.*?[^\\]$' Makefile | sed 's/:.*//g' | sort | uniq"
+preview_command = "gum format '# {0}'"
+
+# Make - Makefile
+[[cable_channel]]
+name = "devbox"
+source_command = "cat devbox.json | jq -r '.shell.scripts | keys[]'"
+preview_command = "gum format '# {0}'"
+
+# Make - Makefile
+[[cable_channel]]
+name = "tmuxinator"
+source_command = "tmuxinator list | grep -v \"tmuxinator projects:\" | tr ' ' '\n' | grep -v '^$'"
+preview_command = ""
+
+# Gh - Labels
+[[cable_channel]]
+name = "gh-labels"
+source_command = "gh label list --json name --jq '.[].name' -R sonr-io/sonr"
+preview_command = ""
+
+# Channels - List all available channels with type
+[[cable_channel]]
+name = "channels"
+source_command = "tv list-channels | sed -E 's/^[[:space:]]+//' | grep -v '^$' | awk '/Builtin channels:/{flag=1; next} /Custom channels:/{flag=2; next} flag==1{print $0 \" (builtin)\"} flag==2{print $0 \" (custom)\"}'"
+preview_command = "echo 'Channel: {0}' | sed 's/ (builtin)$//' | sed 's/ (custom)$//'"
+
+# Gh - Milestones
+[[cable_channel]]
+name = "gh-milestones"
+source_command = "gh milestone list --json title,number --jq '.[] | \"\\(.title) [#\\(.number)]\"'"
+preview_command = "echo {0} | sed -E 's/.*\\[#([0-9]+)\\].*/\\1/'"
+
+# Ghq - Gitsonr Query
+[[cable_channel]]
+name = "task"
+source_command = "task -l -j | jq -r '.tasks[].name'"
+preview_command = "task {0} --summary"
+
+# Channels - List all cable channels
+[[cable_channel]]
+name = "tv"
+source_command = "cat ~/.config/television/channels.txt"
+preview_command = ""
+
+# Files - Golang
+[[cable_channel]]
+name = "go"
+source_command = 'fd --type f --color=never  -e go -E "*.pb.go" -E "*_test.go" -E "*.pkl.go" -E "*_templ.go" -E "*.pulsar.go"'
+preview_command = "bat --color=always --style=numbers {0}"
+
+# Files - JavaScript
+[[cable_channel]]
+name = "js"
+source_command = 'fd --type f --color=never  -e js -E "*.min.js" -E "*.test.js" -E "*_spec.js" -E "*.bundle.js"'
+preview_command = "bat --color=always --style=numbers {0}"
+
+# Files - Apple PKL
+[[cable_channel]]
+name = "pkl"
+source_command = 'fd --type f --color=never  -e pkl'
+preview_command = "bat --color=always --style=numbers {0}"
+
+# Files - Swift
+[[cable_channel]]
+name = "swift"
+source_command = 'fd --type f --color=never  -e swift -E "*Tests.swift" -E "*UITests.swift" -E "*.generated.swift"'
+preview_command = "bat --color=always --style=numbers {0}"
+
+# Files - Dockerfile
+[[cable_channel]]
+name = "docker"
+source_command = 'fd --type f --color=never  -g "Dockerfile*" -E "*.bak" -E "*.old"'
+preview_command = "bat --color=always --style=numbers {0}"
+
+# Files - Protobuf
+[[cable_channel]]
+name = "proto"
+source_command = 'fd --type f --color=never  -e proto'
+preview_command = "bat --color=always --style=numbers {0}"
+
+# Files - Templ
+[[cable_channel]]
+name = "templ"
+source_command = 'fd --type f --color=never  -e templ'
+preview_command = "bat --color=always --style=numbers {0}"
+
+# Files - CSS
+[[cable_channel]]
+name = "css"
+source_command = 'fd --type f --color=never  -e css -E "*.min.css" -E "*.generated.css"'
+preview_command = "bat --color=always --style=numbers {0}"
+
+# Files - Markdown
+[[cable_channel]]
+name = "md"
+source_command = 'fd --type f --color=never  -e md -e markdown -E "node_modules/" -E "vendor/"'
+preview_command = "bat --color=always --style=numbers {0}"
+
+

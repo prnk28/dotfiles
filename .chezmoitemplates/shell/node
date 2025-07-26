@@ -1,0 +1,14 @@
+# Node.js configuration
+export BUN_INSTALL="{{ .chezmoi.homeDir }}/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+[[ -s "$BUN_INSTALL/_bun" ]] && source "$BUN_INSTALL/_bun"
+
+{{ if eq .chezmoi.os "darwin" -}}
+export PNPM_HOME="{{ .chezmoi.homeDir }}/Library/pnpm"
+{{ else -}}
+export PNPM_HOME="{{ .chezmoi.homeDir }}/.local/share/pnpm"
+{{ end -}}
+export PATH="$PNPM_HOME:$PATH"
+
+export PATH="{{ .chezmoi.homeDir }}/.deno/bin:$PATH"
+[[ -s "{{ .chezmoi.homeDir }}/.deno/env" ]] && source "{{ .chezmoi.homeDir }}/.deno/env"

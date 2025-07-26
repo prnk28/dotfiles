@@ -1,0 +1,47 @@
+watch-files: true
+
+## Enable caching of prompts (default: False)
+cache-prompts: true
+
+## Restore the previous chat history messages (default: False)
+restore-chat-history: true
+
+## Log the conversation with the LLM to this file (for example, .aider.llm.history)
+#llm-history-file:
+
+##################
+# Output Settings:
+
+## Use colors suitable for a dark terminal background (default: False)
+# dark-mode: true
+
+## Use colors suitable for a light terminal background (default: False)
+light-mode: true
+
+## Enable/disable pretty, colorized output (default: True)
+pretty: true
+
+## Enable/disable streaming responses (default: True)
+stream: true
+
+## Set the color for user input (default: #00cc00)
+user-input-color: #00cc00
+
+## Set the color for tool output (default: None)
+tool-output-color:
+
+## Set the color for tool error messages (default: #FF2222)
+tool-error-color: #FF2222
+
+## Set the color for tool warning messages (default: #FFA500)
+tool-warning-color: #FFA500
+
+## Set the color for assistant output (default: #0088ff)
+assistant-output-color: #0088ff
+code-theme: solarized-light
+check-update: false
+install-main-branch: false
+upgrade: false
+gui: false
+suggest-shell-commands: true
+model: anthropic/claude-3-7-sonnet-20250219

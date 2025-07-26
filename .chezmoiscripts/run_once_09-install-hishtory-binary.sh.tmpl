@@ -1,0 +1,75 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "🔍 Installing hishtory..."
+
+# Check if hishtory is already installed
+if command -v hishtory &> /dev/null; then
+    echo "✅ hishtory is already installed (version: $(hishtory --version))"
+    
+    # Try to sync with Doppler secret if available and not already synced
+    if ! hishtory status | grep -q "Syncing: Enabled"; then
+        # Check if Doppler is available and has the secret
+        if command -v doppler &> /dev/null && doppler me &> /dev/null; then
+            HISHTORY_SECRET=$(doppler secrets get HISHTORY_SECRET --plain 2>/dev/null || echo "")
+            if [ -n "$HISHTORY_SECRET" ]; then
+                echo "🔄 Initializing hishtory with secret key from Doppler..."
+                hishtory init "$HISHTORY_SECRET"
+            else
+                echo "ℹ️  No HISHTORY_SECRET in Doppler. You can add one later with:"
+                echo "    1. Get your secret: hishtory status"
+                echo "    2. Add to Doppler: doppler secrets set HISHTORY_SECRET 'your-secret'"
+                echo "    3. Re-run: chezmoi apply"
+            fi
+        fi
+    fi
+    
+    echo "📊 Current status:"
+    hishtory status
+    exit 0
+fi
+
+echo "📥 Downloading and installing hishtory..."
+
+# Create temp directory for installation
+TEMP_DIR=$(mktemp -d)
+trap "rm -rf $TEMP_DIR" EXIT
+
+cd "$TEMP_DIR"
+
+# Download and run the installer
+if command -v curl &> /dev/null; then
+    curl -fsSL https://hishtory.dev/install.py -o install.py
+elif command -v wget &> /dev/null; then
+    wget -q https://hishtory.dev/install.py -O install.py
+else
+    echo "❌ Neither curl nor wget found. Please install one of them."
+    exit 1
+fi
+
+# Run the installer (default to online mode)
+echo "📦 Installing hishtory..."
+python3 install.py
+
+# After installation, try to init with Doppler secret if available
+if command -v doppler &> /dev/null && doppler me &> /dev/null; then
+    HISHTORY_SECRET=$(doppler secrets get HISHTORY_SECRET --plain 2>/dev/null || echo "")
+    if [ -n "$HISHTORY_SECRET" ]; then
+        echo "🔄 Initializing hishtory with secret key from Doppler..."
+        hishtory init "$HISHTORY_SECRET"
+    else
+        echo ""
+        echo "💡 Hishtory installed! To sync across devices:"
+        echo "    1. Get your secret: hishtory status"
+        echo "    2. Add to Doppler: doppler secrets set HISHTORY_SECRET 'your-secret'"
+        echo "    3. Re-run: chezmoi apply"
+    fi
+fi
+
+echo "✅ hishtory installed successfully!"
+echo ""
+echo "📊 Status:"
+hishtory status
+
+echo ""
+echo "🎉 hishtory is ready! Press Ctrl+R to search your command history."

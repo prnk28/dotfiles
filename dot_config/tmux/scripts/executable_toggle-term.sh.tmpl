@@ -1,0 +1,135 @@
+#!/bin/bash
+
+set -uo pipefail
+
+DIRECTION="${1:-}"
+SPLIT_SIZE="${2:-30}"
+
+# Get current state
+LIST_PANES="$(tmux list-panes -F '#F')"
+PANE_ZOOMED="$(echo "${LIST_PANES}" | grep Z || true)"
+PANE_COUNT="$(echo "${LIST_PANES}" | wc -l | bc)"
+CURRENT_PANE="$(tmux display-message -p '#{pane_id}')"
+
+# Get the stored pane ID for this direction
+get_pane_var() {
+    echo "@toggle_pane_${DIRECTION}"
+}
+
+# Check if a pane with the stored ID exists
+pane_exists() {
+    local pane_id="$1"
+    [ -n "$pane_id" ] && tmux list-panes -F '#{pane_id}' | grep -q "^${pane_id}$"
+}
+
+# Get the main pane (usually the first one created - your Neovim pane)
+get_main_pane() {
+    # If we have a stored main pane, use it
+    local main_pane=$(tmux show -wqv "@main_pane")
+    if pane_exists "$main_pane"; then
+        echo "$main_pane"
+    else
+        # Otherwise, use pane 0 (first pane) and store it
+        main_pane=$(tmux list-panes -F '#{pane_index}:#{pane_id}' | grep '^0:' | cut -d: -f2)
+        tmux set -w "@main_pane" "$main_pane"
+        echo "$main_pane"
+    fi
+}
+
+case "${DIRECTION}" in
+"float")
+    if [ "$(tmux display-message -p -F "#{session_name}")" = "popup" ]; then
+        tmux detach-client
+    else
+        tmux popup -d '#{pane_current_path}' -xC -yC -w90% -h80% -E "tmux attach -t popup || tmux new -s popup"
+    fi
+    ;;
+"left" | "right" | "down" | "up")
+    # Get the stored pane ID for this direction
+    PANE_VAR=$(get_pane_var)
+    STORED_PANE=$(tmux show -wqv "$PANE_VAR")
+    MAIN_PANE=$(get_main_pane)
+
+    if [ "${PANE_COUNT}" = 1 ]; then
+        # Only one pane exists, create the split
+        case "${DIRECTION}" in
+        "left")
+            NEW_PANE=$(tmux split-window -h -c "{{ .chezmoi.homeDir }}" -p 50 -PF '#{pane_id}')
+            tmux swap-pane -s "{left-of}"
+            ;;
+        "right")
+            NEW_PANE=$(tmux split-window -h -c "#{pane_current_path}" -p ${SPLIT_SIZE} -PF '#{pane_id}')
+            ;;
+        "down")
+            NEW_PANE=$(tmux split-window -v -c "#{pane_current_path}" -p ${SPLIT_SIZE} -PF '#{pane_id}')
+            ;;
+        "up")
+            NEW_PANE=$(tmux split-window -v -b -c "#{pane_current_path}" -p ${SPLIT_SIZE} -PF '#{pane_id}')
+            ;;
+        esac
+        # Store the new pane ID and focus on it
+        tmux set -w "$PANE_VAR" "$NEW_PANE"
+        tmux select-pane -t "$NEW_PANE"
+    elif [ -n "${PANE_ZOOMED}" ]; then
+        # A pane is zoomed, unzoom it and focus on the direction's pane
+        tmux resize-pane -Z
+        if pane_exists "$STORED_PANE"; then
+            tmux select-pane -t "$STORED_PANE"
+        fi
+    else
+        # Multiple panes exist and none are zoomed
+        # Check if the stored pane for this direction exists
+        if pane_exists "$STORED_PANE"; then
+            # The direction's pane exists, hide it by zooming the main pane
+            tmux select-pane -t "$MAIN_PANE"
+            tmux resize-pane -Z
+        else
+            # The direction's pane doesn't exist, create it
+            case "${DIRECTION}" in
+            "left")
+                NEW_PANE=$(tmux split-window -h -c "{{ .chezmoi.homeDir }}" -p 50 -PF '#{pane_id}')
+                tmux swap-pane -s "{left-of}"
+                ;;
+            "right")
+                NEW_PANE=$(tmux split-window -h -c "#{pane_current_path}" -p ${SPLIT_SIZE} -PF '#{pane_id}')
+                ;;
+            "down")
+                NEW_PANE=$(tmux split-window -v -c "#{pane_current_path}" -p ${SPLIT_SIZE} -PF '#{pane_id}')
+                ;;
+            "up")
+                NEW_PANE=$(tmux split-window -v -b -c "#{pane_current_path}" -p ${SPLIT_SIZE} -PF '#{pane_id}')
+                ;;
+            esac
+            # Store and focus on the new pane
+            tmux set -w "$PANE_VAR" "$NEW_PANE"
+            tmux select-pane -t "$NEW_PANE"
+        fi
+    fi
+    ;;
+*)
+    # Default behavior
+    PANE_VAR="@toggle_pane_default"
+    STORED_PANE=$(tmux show -wqv "$PANE_VAR")
+    MAIN_PANE=$(get_main_pane)
+
+    if [ "${PANE_COUNT}" = 1 ]; then
+        NEW_PANE=$(tmux split-window -v -c "#{pane_current_path}" -PF '#{pane_id}')
+        tmux set -w "$PANE_VAR" "$NEW_PANE"
+        tmux select-pane -t "$NEW_PANE"
+    elif [ -n "${PANE_ZOOMED}" ]; then
+        tmux resize-pane -Z
+        if pane_exists "$STORED_PANE"; then
+            tmux select-pane -t "$STORED_PANE"
+        fi
+    else
+        if pane_exists "$STORED_PANE"; then
+            tmux select-pane -t "$MAIN_PANE"
+            tmux resize-pane -Z
+        else
+            NEW_PANE=$(tmux split-window -v -c "#{pane_current_path}" -PF '#{pane_id}')
+            tmux set -w "$PANE_VAR" "$NEW_PANE"
+            tmux select-pane -t "$NEW_PANE"
+        fi
+    fi
+    ;;
+esac

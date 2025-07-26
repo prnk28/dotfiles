@@ -1,0 +1,94 @@
+#!/bin/bash
+set -euo pipefail
+
+GO_VERSION="{{ .versions.go | default "1.23.4" }}"
+GO_INSTALL_DIR="/usr/local"
+
+echo "Installing Go ${GO_VERSION}..."
+
+# Check if Go is already installed and if it's the correct version
+if command -v go &> /dev/null; then
+    INSTALLED_VERSION=$(go version | awk '{print $3}' | sed 's/go//')
+    if [ "$INSTALLED_VERSION" = "$GO_VERSION" ]; then
+        echo "Go ${GO_VERSION} is already installed"
+        exit 0
+    else
+        echo "Updating Go from ${INSTALLED_VERSION} to ${GO_VERSION}"
+    fi
+fi
+
+# Detect OS and architecture
+OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+ARCH=$(uname -m)
+
+# Convert architecture names
+case "$ARCH" in
+    x86_64)
+        ARCH="amd64"
+        ;;
+    aarch64|arm64)
+        ARCH="arm64"
+        ;;
+    *)
+        echo "Unsupported architecture: $ARCH"
+        exit 1
+        ;;
+esac
+
+# Construct download URL
+GO_DOWNLOAD_URL="https://go.dev/dl/go${GO_VERSION}.${OS}-${ARCH}.tar.gz"
+
+echo "Downloading Go for ${OS}-${ARCH}..."
+
+# Download and install Go
+cd /tmp
+wget -q "$GO_DOWNLOAD_URL" -O "go${GO_VERSION}.tar.gz" || {
+    echo "Failed to download Go. URL: $GO_DOWNLOAD_URL"
+    exit 1
+}
+
+{{ if eq .chezmoi.os "darwin" -}}
+# On macOS, we might not have sudo access to /usr/local
+if [ -w "$GO_INSTALL_DIR" ]; then
+    rm -rf "${GO_INSTALL_DIR}/go"
+    tar -C "$GO_INSTALL_DIR" -xzf "go${GO_VERSION}.tar.gz"
+else
+    sudo rm -rf "${GO_INSTALL_DIR}/go"
+    sudo tar -C "$GO_INSTALL_DIR" -xzf "go${GO_VERSION}.tar.gz"
+fi
+{{ else -}}
+sudo rm -rf "${GO_INSTALL_DIR}/go"
+sudo tar -C "$GO_INSTALL_DIR" -xzf "go${GO_VERSION}.tar.gz"
+{{ end -}}
+
+rm "go${GO_VERSION}.tar.gz"
+
+# Add Go to PATH in shell profile
+{{ if eq .chezmoi.os "darwin" -}}
+# macOS uses .zprofile or .profile
+PROFILE_FILE="{{ .chezmoi.homeDir }}/.zprofile"
+if [ ! -f "$PROFILE_FILE" ]; then
+    PROFILE_FILE="{{ .chezmoi.homeDir }}/.profile"
+fi
+{{ else -}}
+# Linux uses .profile
+PROFILE_FILE="{{ .chezmoi.homeDir }}/.profile"
+{{ end -}}
+
+# Add Go paths if not already there
+if ! grep -q 'export PATH=$PATH:/usr/local/go/bin' "$PROFILE_FILE" 2>/dev/null; then
+    echo 'export PATH=$PATH:/usr/local/go/bin' >> "$PROFILE_FILE"
+fi
+
+if ! grep -q 'export GOPATH=$HOME/go' "$PROFILE_FILE" 2>/dev/null; then
+    echo 'export GOPATH=$HOME/go' >> "$PROFILE_FILE"
+    echo 'export PATH=$PATH:$GOPATH/bin' >> "$PROFILE_FILE"
+fi
+
+echo "Go ${GO_VERSION} installed successfully"
+echo "Please run 'source $PROFILE_FILE' or restart your shell"
+
+# Source the profile to make Go available in current script
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin

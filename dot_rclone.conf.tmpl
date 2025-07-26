@@ -1,0 +1,9 @@
+{{ if (doppler "RCLONE_R2_ACCESS_KEY_ID") -}}
+[r2]
+type = s3
+provider = Cloudflare
+access_key_id = {{ doppler "RCLONE_R2_ACCESS_KEY_ID" }}
+secret_access_key = {{ doppler "RCLONE_R2_SECRET_ACCESS_KEY" }}
+region = auto
+endpoint = {{ doppler "RCLONE_R2_ENDPOINT" }}
+{{- end }}

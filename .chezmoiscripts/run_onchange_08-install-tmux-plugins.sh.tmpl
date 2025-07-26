@@ -1,0 +1,47 @@
+#!/bin/bash
+# {{ include ".chezmoitemplates/tmux/plugins.conf" | sha256sum }}
+set -euo pipefail
+
+echo "🔌 Managing tmux plugins with TPM..."
+
+TPM_DIR="{{ .chezmoi.homeDir }}/.config/tmux/plugins/tpm"
+
+# Check if TPM is installed
+if [ ! -d "$TPM_DIR" ]; then
+    echo "❌ TPM is not installed. Please ensure .chezmoiexternal.toml is configured correctly."
+    exit 1
+fi
+
+# Check if TPM scripts exist
+if [ ! -f "$TPM_DIR/bin/install_plugins" ]; then
+    echo "❌ TPM install script not found at $TPM_DIR/bin/install_plugins"
+    exit 1
+fi
+
+echo "📦 Installing/updating tmux plugins..."
+
+# Clean plugins first (remove plugins no longer in the list)
+if [ -f "$TPM_DIR/bin/clean_plugins" ]; then
+    echo "🧹 Cleaning unused plugins..."
+    "$TPM_DIR/bin/clean_plugins" || true
+fi
+
+# Install new plugins
+echo "📥 Installing plugins..."
+"$TPM_DIR/bin/install_plugins"
+
+# Update existing plugins
+if [ -f "$TPM_DIR/bin/update_plugins" ]; then
+    echo "🔄 Updating plugins..."
+    # Use 'all' flag to update all plugins non-interactively
+    echo "all" | "$TPM_DIR/bin/update_plugins" || true
+fi
+
+echo "✅ Tmux plugins installation complete!"
+
+# List installed plugins
+echo ""
+echo "📋 Installed tmux plugins:"
+if [ -d "{{ .chezmoi.homeDir }}/.config/tmux/plugins" ]; then
+    ls -1 "{{ .chezmoi.homeDir }}/.config/tmux/plugins" | grep -v "^tpm$" | sed 's/^/  - /'
+fi

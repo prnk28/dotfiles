@@ -1,0 +1,35 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/bash
+set -euo pipefail
+
+# Ensure Go is in PATH
+export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
+
+if command -v go &> /dev/null; then
+    echo "Installing Go tools..."
+    
+    go_tools=(
+        "github.com/charmbracelet/glow@latest"           # Markdown renderer
+        "github.com/jesseduffield/lazygit@latest"        # Git TUI
+        "github.com/jesseduffield/lazydocker@latest"     # Docker TUI
+        "golang.org/x/tools/gopls@latest"                # Go language server
+        "github.com/golangci/golangci-lint/cmd/golangci-lint@latest"  # Go linter
+        "github.com/go-task/task/v3/cmd/task@latest"     # Task runner
+        "github.com/mikefarah/yq/v4@latest"              # YAML processor
+        "github.com/junegunn/fzf@latest"                 # Fuzzy finder
+        "github.com/direnv/direnv@latest"                # Directory environments
+        "github.com/mikefarah/yq/v4@latest"              # YAML processor
+    )
+    
+    for tool in "${go_tools[@]}"; do
+        tool_name=$(basename "$tool" | cut -d'@' -f1)
+        echo "Installing $tool_name..."
+        go install "$tool"
+    done
+    
+    echo "Go tools installed successfully"
+else
+    echo "Go is not installed. Skipping Go tools installation."
+fi
+{{ end -}}
+

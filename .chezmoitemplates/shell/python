@@ -1,0 +1,9 @@
+
+# Python configuration
+export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
+{{ if eq .chezmoi.os "darwin" -}}
+export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
+{{ end -}}
+
+# Virtual environment for specific tools
+export PATH="{{ .chezmoi.homeDir }}/.egit/.venv/bin:$PATH"

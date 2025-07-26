@@ -1,0 +1,76 @@
+{{ if .repositories -}}
+#!/bin/bash
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+echo "🔄 Managing repositories with ghq..."
+
+# Ensure ghq is installed
+if ! command -v ghq &> /dev/null; then
+    echo -e "${RED}❌ ghq is not installed. Please run the Go tools installation script first.${NC}"
+    exit 1
+fi
+
+# Configuration
+GHQ_ROOT=$(ghq root)
+echo "📁 GHQ root: $GHQ_ROOT"
+
+# Create a temporary file for the repository list
+REPO_LIST=$(mktemp)
+trap "rm -f $REPO_LIST" EXIT
+
+# Write repositories to the temp file
+cat > "$REPO_LIST" <<EOF
+{{ range .repositories.github -}}
+{{ . }}
+{{ end -}}
+EOF
+
+# Count repositories
+REPO_COUNT=$(wc -l < "$REPO_LIST" | tr -d ' ')
+echo "📊 Found $REPO_COUNT repositories to manage"
+
+# Check which repositories are already cloned
+echo ""
+echo "🔍 Checking repository status..."
+NEW_REPOS=()
+EXISTING_REPOS=()
+
+while IFS= read -r repo; do
+    repo_path="$GHQ_ROOT/$repo"
+    if [ -d "$repo_path" ]; then
+        EXISTING_REPOS+=("$repo")
+        echo -e "  ${GREEN}✓${NC} $repo (already cloned)"
+    else
+        NEW_REPOS+=("$repo")
+        echo -e "  ${YELLOW}↓${NC} $repo (will be cloned)"
+    fi
+done < "$REPO_LIST"
+
+# Fetch/update repositories in parallel
+echo ""
+if [ ${#NEW_REPOS[@]} -gt 0 ]; then
+    echo "📥 Cloning ${#NEW_REPOS[@]} new repositories..."
+    printf '%s\n' "${NEW_REPOS[@]}" | ghq get --parallel
+fi
+
+if [ ${#EXISTING_REPOS[@]} -gt 0 ]; then
+    echo "🔄 Updating ${#EXISTING_REPOS[@]} existing repositories..."
+    printf '%s\n' "${EXISTING_REPOS[@]}" | ghq get --update --parallel
+fi
+
+echo ""
+echo -e "${GREEN}✅ Repository management complete!${NC}"
+
+# Optional: Show statistics
+echo ""
+echo "📈 Repository statistics:"
+echo "  - Total managed: $REPO_COUNT"
+echo "  - Newly cloned: ${#NEW_REPOS[@]}"
+echo "  - Updated: ${#EXISTING_REPOS[@]}"
+{{ end -}}

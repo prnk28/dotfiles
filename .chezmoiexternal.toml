@@ -1,0 +1,30 @@
+# TPM - Tmux Plugin Manager
+[".config/tmux/plugins/tpm"]
+type = "git-repo"
+url = "https://github.com/tmux-plugins/tpm.git"
+refreshPeriod = "168h"
+
+# tmux-nerd-font-window-name
+[".config/tmux/plugins/tmux-nerd-font-window-name"]
+type = "git-repo"
+url = "https://github.com/joshmedeski/tmux-nerd-font-window-name.git"
+refreshPeriod = "168h"
+
+# catppuccin tmux theme (specific version) - exclude test files
+[".config/tmux/plugins/catppuccin"]
+type = "archive"
+url = "https://github.com/catppuccin/tmux/archive/v2.1.3.tar.gz"
+stripComponents = 1
+exclude = ["*/tests/*", "*/test/*", "*/.github/*", "*/.*"]
+
+# vim-tmux-navigator
+[".config/tmux/plugins/vim-tmux-navigator"]
+type = "git-repo"
+url = "https://github.com/christoomey/vim-tmux-navigator.git"
+refreshPeriod = "168h"
+
+# tmux-sessionx
+[".config/tmux/plugins/tmux-sessionx"]
+type = "git-repo"
+url = "https://github.com/omerxx/tmux-sessionx.git"
+refreshPeriod = "168h"

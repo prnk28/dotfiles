@@ -1,0 +1,6 @@
+#!/bin/bash
+# Load Doppler secrets as environment variables
+
+{{ range $key, $value := dopplerProjectJson -}}
+export {{ $key }}="{{ $value }}"
+{{ end -}}

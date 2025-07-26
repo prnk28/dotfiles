@@ -1,0 +1,4 @@
+versions:
+  go: "1.24.5"
+  rust: "stable"
+  node: "20" # For future use with nvm

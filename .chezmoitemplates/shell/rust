@@ -1,0 +1,3 @@
+# Rust configuration
+export PATH="{{ .chezmoi.homeDir }}/.cargo/bin:$PATH"
+[[ -s "{{ .chezmoi.homeDir }}/.cargo/env" ]] && source "{{ .chezmoi.homeDir }}/.cargo/env"

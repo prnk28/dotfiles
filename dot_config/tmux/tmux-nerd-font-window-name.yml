@@ -1,0 +1,25 @@
+config:
+  fallback-icon: "\U000F08D9" # show when no definition is found
+  multi-pane-icon: "" # show when window has multiple panes (blank by default)
+  show-name: false # show the window name with the icon (defaults to false)
+  icon-position: "left" # show the icon to the "left" or "right" of the window name (defaults to left)
+icons:
+  mprocs: "\U000F012A"
+  mm: ""
+  macmon: ""
+  make: ""
+  zsh: "\U000F07B7"
+  nvim: ""
+  devbox: ""
+  psql: ""
+  yazi: ""
+  lazygit: ""
+  gh: ""
+  tv: ""
+  docker: "\U000F0868"
+  bun: ""
+  node: ""
+  npm: ""
+  pnpm: ""
+  go: ""
+  bunx: "\U000F012A"

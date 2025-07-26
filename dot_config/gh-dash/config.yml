@@ -1,0 +1,110 @@
+issuesSections:
+  - title: Open
+    filters: is:issue state:open project:sonr-io/55
+  - title: All
+    filters: is:open org:sonr-io repo:sonr sort:created-dsc
+prSections:
+  - title: Open PRs
+    filters: is:open org:sonr-io repo:sonr sort:created-dsc
+  - title: Changelog
+    filter: "is:closed org:sonr-io repo:sonr sort:created-asc updated>={{ nowModify \"-2w\" }}      "
+repo:
+  branchesRefetchIntervalSeconds: 30
+  prsRefetchIntervalSeconds: 60
+defaults:
+  preview:
+    open: true
+    width: 85
+  prsLimit: 20
+  issuesLimit: 20
+  view: issues
+  layout:
+    prs:
+      updatedAt:
+        width: 5
+      repo:
+        width: 20
+      author:
+        width: 15
+      assignees:
+        width: 20
+        hidden: true
+      base:
+        width: 15
+        hidden: true
+      lines:
+        width: 15
+    issues:
+      comments:
+        hidden: true
+      reactions:
+        hidden: true
+      updatedAt:
+        width: 5
+      title:
+        width: 50
+      repo:
+        width: 15
+      creator:
+        width: 15
+        hidden: true
+      type:
+        width: 10
+      assignees:
+        width: 20
+        hidden: true
+  refetchIntervalMinutes: 10
+keybindings:
+  universal:
+    - key: <C-a>
+      command: tmux new-window -c {{.RepoPath}} 'act3'
+    - key: G
+      command: tmux display-popup -h 100% -w 100% -E "cd ~/Developer/github.com/sonr-io/sonr && lazygit"
+  issues:
+    - key: N
+      command: >
+        task -t ~/.config/gh-dash/Taskfile.yml new-issue REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
+
+    - key: E
+      command: >
+        task -t ~/.config/gh-dash/Taskfile.yml edit-issue ISSUE_NUMBER={{.IssueNumber}} REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
+
+    - key: O
+      command: >
+        task -t ~/.config/gh-dash/Taskfile.yml open-issue ISSUE_NUMBER={{.IssueNumber}} REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
+
+    - key: S
+      command: >
+        task -t ~/.config/gh-dash/Taskfile.yml start-issue ISSUE_NUMBER={{.IssueNumber}} REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
+
+  branches: []
+repoPaths:
+  sonr-io/sonr: /Users/prad/Library/Mobile Documents/com~apple~CloudDocs/Developer/github.com/sonr-io/sonr
+  sonr-io/hway: /Users/prad/Library/Mobile Documents/com~apple~CloudDocs/Developer/github.com/sonr-io/hway
+  sonr-io/docs: /Users/prad/Library/Mobile Documents/com~apple~CloudDocs/Developer/github.com/sonr-io/docs
+  sonr-io/beam: /Users/prad/Library/Mobile Documents/com~apple~CloudDocs/Developer/github.com/sonr-io/beam
+  sonr-io/contracts: /Users/prad/Library/Mobile Documents/com~apple~CloudDocs/Developer/github.com/sonr-io/contracts
+theme:
+  ui:
+    sectionsShowCount: true
+    table:
+      showSeparator: true
+      compact: true
+colors:
+  text:
+    primary: "#ffffff"
+    secondary: "#7b8496"
+    inverted: "#1e2124"
+    faint: "#3c4048"
+    warning: "#ffbd5e"
+    error: "#ff6e5e"
+    success: "#5eff6c"
+  background:
+    selected: "#3c4048"
+  border:
+    primary: "#3c4048"
+    secondary: "#3c4048"
+    faint: "#1e2124"
+pager:
+  diff: "diffnav"
+confirmQuit: false

@@ -1,0 +1,43 @@
+{
+  "oneliners": [
+    {
+      "title": "Grid: Split 6",
+      "command": "tmux split-window -h -p 66 \\; split-window -h -p 50 \\; select-pane -t 0 \\; split-window -v -p 50 \\; select-pane -t 2 \\; split-window -v -p 50 \\; select-pane -t 4 \\; split-window -v -p 50 \\; select-pane -t 0",
+      "exit": true
+    },
+    {
+      "title": "Github: View Project",
+      "command": "sunbeam open https://github.com/orgs/sonr-io/projects/55",
+      "exit": true
+    }
+  ],
+  "extensions": {
+    "brew": {
+      "origin": "https://raw.githubusercontent.com/pomdtr/sunbeam/main/extensions/brew.sh"
+    },
+    "devdocs": {
+      "origin": "https://raw.githubusercontent.com/pomdtr/sunbeam/main/extensions/devdocs.sh"
+    },
+    "gists": {
+      "origin": "https://raw.githubusercontent.com/pomdtr/sunbeam/main/extensions/gists.ts"
+    },
+    "github": {
+      "origin": "https://raw.githubusercontent.com/pomdtr/sunbeam/main/extensions/github.ts",
+      "preferences": {
+        "token": "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"
+      }
+    },
+    "google": {
+      "origin": "https://raw.githubusercontent.com/pomdtr/sunbeam/main/extensions/google.sh"
+    },
+    "hackernews": {
+      "origin": "https://raw.githubusercontent.com/pomdtr/sunbeam/main/extensions/hackernews.ts"
+    },
+    "tailscale": {
+      "origin": "https://raw.githubusercontent.com/pomdtr/sunbeam/main/extensions/tailscale.ts"
+    },
+    "tldr": {
+      "origin": "https://raw.githubusercontent.com/pomdtr/sunbeam/main/extensions/tldr.sh"
+    }
+  }
+}

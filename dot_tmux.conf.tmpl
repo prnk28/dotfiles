@@ -1,0 +1,87 @@
+set -g default-terminal "tmux-256color"
+
+# Use consistent plugin path
+set-environment -gF TMUX_PLUGIN_MANAGER_PATH '{{ .chezmoi.homeDir }}/.config/tmux/plugins'
+
+set -g mouse on
+set -g renumber-windows on
+set -g detach-on-destroy on
+set -g status-position top
+
+set -g status-justify left
+set -g prefix C-b
+set -g set-clipboard on
+set -g allow-passthrough on
+
+set -g status-left-length 50
+set -g status-right-length 50
+set -g status-left " "
+set -g status-right " "
+
+# Transparency settings
+setw -g window-style "bg=default"
+setw -g window-active-style "bg=default"
+set -g pane-border-style "bg=default"
+set -g pane-active-border-style "bg=default"
+
+# Mouse support
+set -g mouse on
+bind -n WheelUpPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M' 'select-pane -t=; copy-mode -e; send-keys -M'"
+bind -n WheelDownPane select-pane -t= \; send-keys -M
+bind -n C-WheelUpPane select-pane -t= \; copy-mode -e \; send-keys -M
+bind -T copy-mode-vi    C-WheelUpPane   send-keys -X halfpage-up
+bind -T copy-mode-vi    C-WheelDownPane send-keys -X halfpage-down
+bind -T copy-mode-emacs C-WheelUpPane   send-keys -X halfpage-up
+bind -T copy-mode-emacs C-WheelDownPane send-keys -X halfpage-down
+
+# Window/Session management
+bind R command-prompt -I "#W" "rename-window '%%'"
+bind r source-file {{ .chezmoi.homeDir }}/.tmux.conf \; display-message "Config reloaded!"
+
+# Copy mode
+setw -g mode-keys vi
+unbind -T copy-mode-vi Enter
+{{ if eq .chezmoi.os "darwin" -}}
+bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "pbcopy"
+bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
+{{ else if eq .chezmoi.os "linux" -}}
+bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "xclip -selection clipboard -i"
+bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "xclip -selection clipboard -i"
+{{ end -}}
+
+# Environment variables
+set-environment -g DOTFILES "{{ .chezmoi.homeDir }}/.dotfiles"
+{{ if eq .chezmoi.os "darwin" -}}
+{{   if eq .chezmoi.arch "arm64" -}}
+set-environment -g PATH "{{ .chezmoi.homeDir }}/.local/bin:/opt/homebrew/bin:/usr/local/bin:/bin:/usr/bin:{{ .chezmoi.homeDir }}/.bun/bin:$PATH"
+{{   else -}}
+set-environment -g PATH "{{ .chezmoi.homeDir }}/.local/bin:/usr/local/bin:/bin:/usr/bin:{{ .chezmoi.homeDir }}/.bun/bin:$PATH"
+{{   end -}}
+{{ else -}}
+set-environment -g PATH "{{ .chezmoi.homeDir }}/.local/bin:/usr/local/bin:/bin:/usr/bin:{{ .chezmoi.homeDir }}/.bun/bin:$PATH"
+{{ end -}}
+
+# Basic keybindings
+bind-key x kill-pane
+bind-key t new-window -c "#{pane_current_path}"
+bind-key [ previous-window
+bind-key ] next-window
+
+# Status line (using catppuccin variables)
+set -g status-left "#{E:@catppuccin_status_directory} #[fg=#{@thm_magenta}]⊞ #[fg=#{@thm_blue}]#{window_panes}#[default] "
+
+# Vim-style pane navigation
+bind-key h select-pane -L
+bind-key j select-pane -D
+bind-key k select-pane -U
+bind-key l select-pane -R
+
+# Include modular configuration
+{{ template "tmux/colors.conf" . }}
+{{ template "tmux/window-controls.conf" . }}
+{{ template "tmux/menus.conf" . }}
+{{ template "tmux/plugins.conf" . }}
+{{ template "tmux/terminal.conf" . }}
+
+# Run TPM (keep at the end)
+run '{{ .chezmoi.homeDir }}/.config/tmux/plugins/tpm/tpm'

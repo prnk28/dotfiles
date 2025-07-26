@@ -1,0 +1,21 @@
+
+# macOS specific configurations
+{{ if eq .chezmoi.arch "arm64" -}}
+# Apple Silicon
+export PATH="/opt/homebrew/bin:$PATH"
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+{{ else -}}
+# Intel Mac
+export PATH="/usr/local/bin:$PATH"
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+{{ end -}}
+
+# Nix daemon
+[[ -s "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]] && \
+  source "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+
+# macOS specific paths
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+export DYLD_LIBRARY_PATH="{{ .chezmoi.homeDir }}/.local/lib:$DYLD_LIBRARY_PATH"
