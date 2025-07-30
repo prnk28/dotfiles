@@ -145,6 +145,7 @@ return {
             ".cz.toml",
             ".goreleaser.yaml",
             "*_test.go",
+            "*_mock.go",
           },
           hide_by_name = {
             "OpenCode.md",
@@ -174,7 +175,6 @@ return {
             "LICENSE.md",
             ".tmuxinator.yml",
             ".envrc",
-            ".github",
             "CLAUDE.md",
             ".gh-dash.yml",
             ".templui.json",
