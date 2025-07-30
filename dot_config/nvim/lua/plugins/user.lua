@@ -4,6 +4,16 @@
 
 ---@type LazySpec
 return {
+  -- Lazy.nvim
+  {
+    "xvzc/chezmoi.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("chezmoi").setup {
+        -- your configurations
+      }
+    end,
+  },
   {
     "nvim-neotest/neotest",
     dependencies = {
