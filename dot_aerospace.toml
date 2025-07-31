@@ -148,7 +148,7 @@ run = 'move-node-to-workspace 10'
 # =====================
 
 [[on-window-detected]]
-if.app-id="com.mitchellh.ghostty"
+if.app-id="com.googlecode.iterm2"
 run = 'move-node-to-workspace 3'
 
 [[on-window-detected]]
