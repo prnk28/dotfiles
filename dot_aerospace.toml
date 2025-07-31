@@ -9,10 +9,10 @@ after-startup-command = [
 [gaps]
 inner.horizontal = 12
 inner.vertical = 12
-outer.left = 8
-outer.bottom = 8
-outer.top = 8
-outer.right = 8
+outer.left = 10
+outer.bottom = 10
+outer.top = 10
+outer.right = 10
 
 [workspace-to-monitor-force-assignment]
 1 = '3'
