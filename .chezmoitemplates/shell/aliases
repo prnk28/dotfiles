@@ -145,8 +145,8 @@ alias chrome="/Applications/Google Chrome Dev.app/Contents/MacOS/Google Chrome D
 # Quick Commands
 # ============================================
 alias /a="aider"
-alias /c="claude --dangerously-skip-permissions"
-alias /cr="claude --continue --dangerously-skip-permissions"
+alias /c="claude"
+alias /cr="claude --continue"
 alias /g="gemini"
 alias /o="opencode"
 alias /v="npx vibe-kanban"
