@@ -315,4 +315,9 @@ key = ","
 mods = "Command"
 chars = "\u0002," # Maps to tmux copy mode
 
+[[keyboard.bindings]]
+key = "Enter"
+mods = "Shift"
+chars = "\u001b\r"
+
 
