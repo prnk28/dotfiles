@@ -146,11 +146,6 @@ run = 'move-node-to-workspace 10'
 # =====================
 # Right Display
 # =====================
-
-[[on-window-detected]]
-if.app-id="dev.kdrag0n.MacVirt"
-run = 'move-node-to-workspace 3'
-
 [[on-window-detected]]
 if.app-id = 'com.raycast.macos'
 run = 'move-node-to-workspace 3'
@@ -169,6 +164,10 @@ run = 'move-node-to-workspace 6'
 
 [[on-window-detected]]
 if.app-id = 'at.eggerapps.Postico.2.MacAppStore'
+run = 'move-node-to-workspace 9'
+
+[[on-window-detected]]
+if.app-id="dev.kdrag0n.MacVirt"
 run = 'move-node-to-workspace 9'
 
 [[on-window-detected]]
