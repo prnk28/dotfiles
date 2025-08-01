@@ -47,6 +47,16 @@ linux)
   ;;
 esac
 
-# Login to Doppler (this will prompt for authentication)
-echo "Please authenticate with Doppler..."
-doppler login
+# Authenticate with Doppler using API token
+echo "Please authenticate with Doppler using an API token..."
+echo "You can create a token at: https://dashboard.doppler.com/workplace/tokens"
+echo ""
+read -p "Enter your Doppler API token: " -s DOPPLER_TOKEN
+echo ""
+
+if [ -n "$DOPPLER_TOKEN" ]; then
+  echo "$DOPPLER_TOKEN" | doppler configure set token --scope /
+  echo "Doppler authentication successful!"
+else
+  echo "No token provided. You can authenticate later with: doppler configure set token"
+fi
