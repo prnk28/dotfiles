@@ -43,9 +43,3 @@ fi
 
 echo "✅ Tmux plugins installation complete!"
 
-# List installed plugins
-echo ""
-echo "📋 Installed tmux plugins:"
-if [ -d "{{ .chezmoi.homeDir }}/.tmux/plugins" ]; then
-    ls -1 "{{ .chezmoi.homeDir }}/.tmux/plugins" | grep -v "^tpm$" | sed 's/^/  - /'
-fi
