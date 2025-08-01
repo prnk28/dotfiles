@@ -1,5 +1,5 @@
 [general]
-import = ["~/.config/alacritty/themes/themes/base16_default_dark.toml"]
+import = ["~/.config/alacritty/themes/cyberdream.toml"]
 live_config_reload = true
 working_directory = "/Users/prad/Developer"
 

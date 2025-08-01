@@ -2,7 +2,6 @@ blacklist = ["scratch", "popup"]
 
 sort_order = [
     "tmuxinator", # show first
-    "config",
     "tmux",
     "zoxide", # show last
 ]

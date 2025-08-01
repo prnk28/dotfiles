@@ -1,6 +1,7 @@
-import = ["~/.config/alacritty/themes-2/gotham.toml"]
-
+[general]
+import = ["~/.config/alacritty/themes/cyberdream.toml"]
 live_config_reload = true
+working_directory = "/Users/prad/Developer"
 
 [env]
 TERM = "xterm-256color"
@@ -10,43 +11,34 @@ program = "/usr/bin/ssh"
 args = ["prad@192.168.2.118"]
 
 [window]
-decorations = "Buttonless"
 dynamic_padding = true
+decorations = "Buttonless"
 opacity = 0.80
-blur = false
+blur = true
 option_as_alt = "Both"
-startup_mode = "Windowed"
 
 [window.dimensions]
 columns = 0
 lines = 0
 
-[window.padding]
-x = 0
-y = 0
-
 [font]
-size = 15
+size = 16
 
 [font.bold]
-family = "VictorMono Nerd Font"
+family = "VictorMono Nerd Font Mono"
 style = "Light"
 
 [font.bold_italic]
-family = "VictorMono Nerd Font"
+family = "VictorMono Nerd Font Mono"
 style = "Light Italic"
 
 [font.italic]
-family = "VictorMono Nerd Font"
+family = "VictorMono Nerd Font Mono"
 style = "ExtraLight Italic"
 
 [font.normal]
-family = "VictorMono Nerd Font"
+family = "VictorMono Nerd Font Mono"
 style = "ExtraLight"
-
-[selection]
-semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
-save_to_clipboard = true
 
 [mouse]
 hide_when_typing = true
@@ -57,6 +49,11 @@ cursor = "0xd8d8d8"
 text = "0x181818"
 
 [[keyboard.bindings]]
+key = "F"
+mods = "Command|Shift"
+chars = "\u0002F"
+
+[[keyboard.bindings]]
 key = "Left"
 mods = "Command"
 chars = "\u001bOH"
@@ -65,7 +62,6 @@ chars = "\u001bOH"
 key = "Right"
 mods = "Command"
 chars = "\u001bOF"
-
 
 [[keyboard.bindings]]
 key = "Up"
@@ -78,62 +74,94 @@ mods = "Command"
 chars = "\u001b[1;5F"
 
 [[keyboard.bindings]]
-key = "K"
-mods = "Command"
-chars = "\u0002K"
-
-[[keyboard.bindings]]
-key = "Tab"
-mods = "Control"
-chars = "\u0002O"
-
-[[keyboard.bindings]]
-key = "J"
-mods = "Command"
-chars = "\u0002J"
-
-[[keyboard.bindings]]
-key = "J"
+key = "R"
 mods = "Command|Shift"
-chars = "\u0002z"
-
-[[keyboard.bindings]]
-key = "D"
-mods = "Command"
-chars = "\u0002w"
+chars = "\u0002r"
 
 [[keyboard.bindings]]
 key = ","
 mods = "Command"
-chars = "\u0002r"
+chars = "\u0002,"
 
 [[keyboard.bindings]]
-key = "["
-mods = "Command"
-chars = "\u0002h"
-
-[[keyboard.bindings]]
-key = "]"
-mods = "Command"
-chars = "\u0002l"
-
-[[keyboard.bindings]]
-key = "{"
+key = "H"
 mods = "Command|Shift"
-chars = "\u0002j"
+chars = "\u0002H"
 
 [[keyboard.bindings]]
-key = "}"
+key = "J"
 mods = "Command|Shift"
-chars = "\u0002k"
+chars = "\u0002J"
+
+[[keyboard.bindings]]
+key = "K"
+mods = "Command"
+chars = "\u0002o"
+
+[[keyboard.bindings]]
+key = "K"
+mods = "Command|Shift"
+chars = "\u0002K"
+
+[[keyboard.bindings]]
+key = "L"
+mods = "Command|Shift"
+chars = "\u0002L"
 
 [[keyboard.bindings]]
 key = "O"
 mods = "Command"
-chars = "\u0002O"
+chars = "\u0002o"
 
 [[keyboard.bindings]]
 key = "T"
+mods = "Command|Shift"
+chars = "\u0002T"
+
+[[keyboard.bindings]]
+key = "["
+mods = "Command"
+chars = "\u0002["
+
+[[keyboard.bindings]]
+key = "]"
+mods = "Command"
+chars = "\u0002]"
+
+[[keyboard.bindings]]
+key = "I"
+mods = "Command"
+chars = "\u0002N"
+
+[[keyboard.bindings]]
+key = "u"
+mods = "Command"
+chars = "\u0002U"
+
+# Yazi Open
+[[keyboard.bindings]]
+key = "."
+mods = "Command"
+chars = "\u0002."
+
+# Letf/Right Tabs
+[[keyboard.bindings]]
+key = ","
+mods = "Command|Shift"
+chars = "\u0002p"
+
+[[keyboard.bindings]]
+key = "E"
+mods = "Control"
+chars = "\u0005"
+
+[[keyboard.bindings]]
+key = "J"
+mods = "Command"
+chars = "\u00020"
+
+[[keyboard.bindings]]
+key = "L"
 mods = "Command"
 chars = "\u0002t"
 
@@ -183,77 +211,107 @@ mods = "Command"
 chars = "\u00028"
 
 [[keyboard.bindings]]
-key = "g"
+key = "A"
 mods = "Command"
-chars = "\u0002G"
+chars = "\u0001" # This represents Ctrl+A
 
 [[keyboard.bindings]]
-key = "f"
+key = "S"
 mods = "Command"
-chars = "\u0002F"
-
-[[keyboard.bindings]]
-key = "u"
-mods = "Command"
-chars = "\u0002U"
-
-[[keyboard.bindings]]
-key = "Enter"
-mods = "Command"
-chars = "\u0002O"
-
-[[keyboard.bindings]]
-key = "Enter"
-mods = "Control"
-chars = "\u0002O"
-
-[[keyboard.bindings]]
-key = "Space"
-mods = "Option"
-chars = "\u0002O"
+chars = "\u0013" # This represents Ctrl+S
 
 [[keyboard.bindings]]
 key = "Q"
 mods = "Command"
-chars = "\u0002x"
+chars = "\u0002x" # Maps to tmux copy mode
+
+[[keyboard.bindings]]
+key = "T"
+mods = "Command"
+chars = "\u0002t"
+
+[[keyboard.bindings]]
+key = "N"
+mods = "Command|Shift"
+action = "CreateNewWindow" # This represents Ctrl+S
+
+[[keyboard.bindings]]
+key = "C"
+mods = "Command"
+action = "Copy" # System clipboard copy
+
+[[keyboard.bindings]]
+key = "V"
+mods = "Command"
+action = "Paste" # System clipboard paste
+
+[selection]
+semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
+save_to_clipboard = true # Automatically copy selection to system clipboard
+
+[[keyboard.bindings]]
+key = "G"
+mods = "Command"
+chars = "\u0002\u001bg" # This represents tmux prefix (<C-b>) followed by Alt+g
+
+[[keyboard.bindings]]
+key = "D"
+mods = "Command"
+chars = "\u0002\u001bD" # This represents tmux prefix (<C-b>) followed by Alt+g
+
+[[keyboard.bindings]]
+key = "S"
+mods = "Command|Shift"
+chars = "\u0002\u001br" # This represents tmux prefix (<C-b>) followed by Alt+g
+
+[[keyboard.bindings]]
+key = "P"
+mods = "Command"
+chars = "\u0002\u001bs" # This represents tmux prefix (<C-b>) followed by Alt+g
+
+[[keyboard.bindings]]
+key = "W"
+mods = "Command"
+chars = "\u0003"  # Control-C character
+
+[[keyboard.bindings]]
+key = "W"
+mods = "Command"
+chars = "\u0018" # This sends Ctrl+X
+
+[[keyboard.bindings]]
+key = "E"
+mods = "Command"
+chars = "\u0005"  # Control-E character
+
+[[keyboard.bindings]]
+key = "Space"
+mods = "Control"
+chars = "\u0002o" # Maps to tmux copy mode
+
+[[keyboard.bindings]]
+key = "Tab"
+mods = "Control"
+chars = "\u0002z" # Maps to tmux copy mode
+
+[[keyboard.bindings]]
+key = "R"
+mods = "Command"
+chars = "\u0002R" # Maps to tmux copy mode
+
+[[keyboard.bindings]]
+key = "J"
+mods = "Control|Shift"
+chars = "\u0002z" # Maps to tmux copy mode
 
 [[keyboard.bindings]]
 key = ","
 mods = "Command"
-chars = "\u0002M"
+chars = "\u0002," # Maps to tmux copy mode
 
 [[keyboard.bindings]]
-key = "."
-mods = "Command"
-chars = "\u0002."
-
-# Additions for remapping PgUp to Home and PgDown to End
-[[keyboard.bindings]]
-key = "PageUp"
-chars = "\u001b[H"
-
-[[keyboard.bindings]]
-key = "PageDown"
-chars = "\u001b[F"
-
-# Neovim bindings for top of page and bottom of page
-[[keyboard.bindings]]
-key = "PageUp"
+key = "Enter"
 mods = "Shift"
-chars = "gg"
+chars = "\u001b\r"
 
-[[keyboard.bindings]]
-key = "PageDown"
-mods = "Shift"
-chars = "G"
 
-# Additions for remapping Command-w to Ctrl-w and Command-Shift-w to Ctrl-Shift-w
-[[keyboard.bindings]]
-key = "W"
-mods = "Command"
-chars = "\u0003w"
-
-[[keyboard.bindings]]
-key = "W"
-mods = "Command|Shift"
-chars = "\u001b[1;5W"
