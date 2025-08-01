@@ -148,7 +148,7 @@ run = 'move-node-to-workspace 10'
 # =====================
 
 [[on-window-detected]]
-if.app-id="com.googlecode.iterm2"
+if.app-id="dev.kdrag0n.MacVirt"
 run = 'move-node-to-workspace 3'
 
 [[on-window-detected]]
