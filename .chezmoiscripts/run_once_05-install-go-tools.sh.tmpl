@@ -1,34 +1,52 @@
-{{ if eq .chezmoi.os "linux" -}}
 #!/bin/bash
 set -euo pipefail
 
 # Ensure Go is in PATH
+{{ if eq .chezmoi.os "linux" -}}
 export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
+{{ else -}}
+export PATH=$PATH:/opt/homebrew/bin:/usr/local/bin:$HOME/go/bin
+{{ end -}}
 
 if command -v go &> /dev/null; then
     echo "Installing Go tools..."
     
     go_tools=(
         "github.com/charmbracelet/glow@latest"           # Markdown renderer
-        "github.com/jesseduffield/lazydocker@latest"     # Docker TUI
         "golang.org/x/tools/gopls@latest"                # Go language server
         "github.com/golangci/golangci-lint/cmd/golangci-lint@latest"  # Go linter
         "github.com/go-task/task/v3/cmd/task@latest"     # Task runner
-        "github.com/mikefarah/yq/v4@latest"              # YAML processor
-        "github.com/junegunn/fzf@latest"                 # Fuzzy finder
         "github.com/direnv/direnv@latest"                # Directory environments
-        "github.com/mikefarah/yq/v4@latest"              # YAML processor
+        "github.com/x-motemen/ghq@latest"                # Git repository manager
     )
     
+    # Conditional tools - only install if not available via package manager
+    conditional_tools=(
+        "github.com/junegunn/fzf@latest"                 # Fuzzy finder (available via apt on Linux)
+        "github.com/jesseduffield/lazydocker@latest"     # Docker TUI (not in standard apt)
+        "github.com/mikefarah/yq/v4@latest"              # YAML processor (complex apt setup)
+    )
+    
+    # Install standard Go tools
     for tool in "${go_tools[@]}"; do
         tool_name=$(basename "$tool" | cut -d'@' -f1)
         echo "Installing $tool_name..."
         go install "$tool"
     done
     
+    # Install conditional tools only if not already available
+    for tool in "${conditional_tools[@]}"; do
+        tool_name=$(basename "$tool" | cut -d'@' -f1)
+        if ! command -v "$tool_name" &> /dev/null; then
+            echo "Installing $tool_name (not found via package manager)..."
+            go install "$tool"
+        else
+            echo "$tool_name already available via package manager, skipping Go install"
+        fi
+    done
+    
     echo "Go tools installed successfully"
 else
     echo "Go is not installed. Skipping Go tools installation."
 fi
-{{ end -}}
 
