@@ -6,10 +6,14 @@ echo "🔌 Managing tmux plugins with TPM..."
 
 TPM_DIR="{{ .chezmoi.homeDir }}/.config/tmux/plugins/tpm"
 
-# Check if TPM is installed
+# Install TPM if not present
 if [ ! -d "$TPM_DIR" ]; then
-    echo "❌ TPM is not installed. Please ensure .chezmoiexternal.toml is configured correctly."
-    exit 1
+    echo "📥 Installing TPM (Tmux Plugin Manager)..."
+    mkdir -p "$(dirname "$TPM_DIR")"
+    git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
+    echo "✅ TPM installed successfully"
+else
+    echo "✅ TPM is already installed"
 fi
 
 # Check if TPM scripts exist

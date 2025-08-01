@@ -1,0 +1,42 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/bash
+set -euo pipefail
+
+echo "Setting up default shell..."
+
+# Check if zsh is installed
+if ! command -v zsh &> /dev/null; then
+    echo "zsh is not installed. Please install zsh first."
+    exit 1
+fi
+
+# Get the path to zsh
+ZSH_PATH=$(which zsh)
+echo "Found zsh at: $ZSH_PATH"
+
+# Check if zsh is already the default shell
+if [ "$SHELL" = "$ZSH_PATH" ]; then
+    echo "zsh is already the default shell"
+    exit 0
+fi
+
+# Check if zsh is in /etc/shells
+if ! grep -q "^$ZSH_PATH$" /etc/shells; then
+    echo "Adding zsh to /etc/shells..."
+    echo "$ZSH_PATH" | sudo tee -a /etc/shells > /dev/null
+else
+    echo "zsh is already in /etc/shells"
+fi
+
+# Change default shell to zsh
+echo "Changing default shell to zsh..."
+if chsh -s "$ZSH_PATH"; then
+    echo "Default shell changed to zsh successfully"
+    echo "Please log out and log back in for the change to take effect"
+else
+    echo "Failed to change default shell. You may need to run 'chsh -s $ZSH_PATH' manually"
+    exit 1
+fi
+
+echo "Default shell setup complete"
+{{ end -}}
