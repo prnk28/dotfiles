@@ -11,13 +11,12 @@ program = "/usr/bin/ssh"
 args = ["dev-server"]
 
 [window]
-dynamic_padding = false
+dynamic_padding = true
 decorations = "Buttonless"
 opacity = 0.80
 blur = true
 option_as_alt = "Both"
 title = "Remote@dev-server"
-dynamic_title = false
 
 [window.dimensions]
 columns = 0
