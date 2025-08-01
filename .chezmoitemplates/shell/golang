@@ -1,7 +1,11 @@
 # Go configuration
 export GOPATH="{{ .chezmoi.homeDir }}/go"
 export GOBIN="$GOPATH/bin"
-export PATH="$GOBIN:$PATH"
+
 {{ if eq .chezmoi.os "linux" -}}
-export PATH="/usr/local/go/bin:$PATH"
+# goup installs itself to ~/.go/bin and Go binaries to ~/.go/current/bin
+export PATH="{{ .chezmoi.homeDir }}/.go/bin:{{ .chezmoi.homeDir }}/.go/current/bin:$GOBIN:$PATH"
+{{ else -}}
+# Traditional Go setup for macOS
+export PATH="/usr/local/go/bin:$GOBIN:$PATH"
 {{ end -}}
