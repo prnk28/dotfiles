@@ -3,8 +3,10 @@ set -euo pipefail
 
 # Ensure Go is in PATH
 {{ if eq .chezmoi.os "linux" -}}
-export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
+# Use goup paths for Linux
+export PATH="{{ .chezmoi.homeDir }}/.go/bin:{{ .chezmoi.homeDir }}/.go/current/bin:$HOME/go/bin:$PATH"
 {{ else -}}
+# Traditional paths for macOS
 export PATH=$PATH:/opt/homebrew/bin:/usr/local/bin:$HOME/go/bin
 {{ end -}}
 
