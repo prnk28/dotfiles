@@ -132,7 +132,6 @@ alias pp="plexsearch"
 
 # AI & Chat
 alias ai="elia -m claude-3-5-sonnet-20240620"
-alias claude="{{ .chezmoi.homeDir }}/.claude/local/claude"
 
 # Misc tools
 alias dl="daylight"
