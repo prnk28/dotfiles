@@ -15,7 +15,6 @@ TERM = "xterm-256color"
 program = "/bin/zsh"
 args = ["-l"]
 
-
 [window]
 dynamic_padding = true
 decorations = "Buttonless"
