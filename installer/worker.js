@@ -68,6 +68,33 @@ echo "✅ Dotfiles applied successfully!"
             color: #22d3ee;
         }
         .command { user-select: all; }
+        .command-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #374151;
+            border: 1px solid #4b5563;
+            color: #d1d5db;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            background: #4b5563;
+            border-color: #6b7280;
+        }
+        .copy-btn.copied {
+            background: #059669;
+            border-color: #10b981;
+            color: white;
+        }
         .description { 
             color: #94a3b8; 
             margin: 1rem 0;
@@ -96,13 +123,19 @@ echo "✅ Dotfiles applied successfully!"
     <p class="description">
         Install chezmoi and apply all dotfiles on a new machine:
     </p>
-    <pre><code class="command">curl -fsLS prad.codes/apply | sh</code></pre>
+    <div class="command-container">
+        <pre><code class="command">curl -fsLS prad.codes/apply | sh</code></pre>
+        <button class="copy-btn" onclick="copyCommand(this, 'curl -fsLS prad.codes/apply | sh')">Copy</button>
+    </div>
     
     <h2>🚀 One-Shot Installation</h2>
     <p class="description">
         For containers, VMs, or temporary environments (doesn't persist chezmoi):
     </p>
-    <pre><code class="command">curl -fsLS prad.codes/oneshot | sh</code></pre>
+    <div class="command-container">
+        <pre><code class="command">curl -fsLS prad.codes/oneshot | sh</code></pre>
+        <button class="copy-btn" onclick="copyCommand(this, 'curl -fsLS prad.codes/oneshot | sh')">Copy</button>
+    </div>
     
     <h2>🔧 Manual Installation</h2>
     <p class="description">
@@ -133,6 +166,38 @@ chezmoi init --apply ${GITHUB_USER}</code></pre>
         <li><a href="/apply">View apply script</a></li>
         <li><a href="/oneshot">View oneshot script</a></li>
     </ul>
+
+    <script>
+        function copyCommand(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
 </body>
 </html>
 `,
@@ -173,6 +238,34 @@ chezmoi init --apply ${GITHUB_USER}</code></pre>
             margin-bottom: 2rem;
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         }
+        .command-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #374151;
+            border: 1px solid #4b5563;
+            color: #d1d5db;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .copy-btn:hover {
+            background: #4b5563;
+            border-color: #6b7280;
+        }
+        .copy-btn.copied {
+            background: #059669;
+            border-color: #10b981;
+            color: white;
+        }
         a { color: #60a5fa; }
         code { color: #22d3ee; }
     </style>
@@ -180,10 +273,48 @@ chezmoi init --apply ${GITHUB_USER}</code></pre>
 <body>
     <div class="header">
         <h1>Dotfiles Installation Script</h1>
-        <p>Run with: <code>curl -fsLS prad.codes${path} | sh</code></p>
+        <div class="command-container">
+            <p>Run with: <code>curl -fsLS prad.codes${path} | sh</code></p>
+            <button class="copy-btn" onclick="copyCommand(this, 'curl -fsLS prad.codes${path} | sh')">Copy</button>
+        </div>
         <p><a href="${path}?raw=true">View raw</a> | <a href="/">Back to home</a></p>
     </div>
-    <pre>${scripts[path].replace(/</g, "&lt;").replace(/>/g, "&gt;")}</pre>
+    <div class="command-container">
+        <pre>${scripts[path].replace(/</g, "&lt;").replace(/>/g, "&gt;")}</pre>
+        <button class="copy-btn" onclick="copyCommand(this, \`${scripts[path].replace(/`/g, "\\`").replace(/\$/g, "\\$")}\`)">Copy Script</button>
+    </div>
+    
+    <script>
+        function copyCommand(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
 </body>
 </html>`,
           {

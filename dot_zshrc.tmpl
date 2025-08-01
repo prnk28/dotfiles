@@ -10,6 +10,9 @@ else
   compinit -C
 fi
 
+# Starship configuration
+export STARSHIP_CONFIG="$HOME/.config/starship.toml"
+
 # Load language/tool specific configurations
 {{ template "shell/golang" . }}
 {{ template "shell/rust" . }}

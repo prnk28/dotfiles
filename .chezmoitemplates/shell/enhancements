@@ -26,12 +26,15 @@ _smart_tab() {
 zle -N _smart_tab
 bindkey '^I' _smart_tab
 
-# Starship bottom prompt
-if command -v starship &> /dev/null; then
-  function starship_bottom_prompt() {
+# Zsh bottom prompt configuration
+if [[ -n "$ZSH_VERSION" ]]; then
+  # Function to move prompt to bottom
+  function move_prompt_to_bottom() {
     local rows=$(tput lines)
-    print -Pn "\033[${rows};0H"
-    starship prompt
+    echo -ne "\033[${rows};0H"
   }
-  export PROMPT='$(starship_bottom_prompt)'
+  
+  # Add to precmd functions to run before each prompt
+  autoload -Uz add-zsh-hook
+  add-zsh-hook precmd move_prompt_to_bottom
 fi

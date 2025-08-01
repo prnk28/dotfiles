@@ -30,3 +30,8 @@ packages:
       - 'python3-dev'
       - 'postgresql-client'
       - 'sqlite3'
+      - 'docker-ce'
+      - 'docker-ce-cli'
+      - 'containerd.io'
+      - 'docker-buildx-plugin'
+      - 'docker-compose-plugin'

@@ -10,3 +10,25 @@
   source "{{ .chezmoi.homeDir }}/.nix-profile/etc/profile.d/nix.sh"
 
 export LD_LIBRARY_PATH="{{ .chezmoi.homeDir }}/.local/lib:$LD_LIBRARY_PATH"
+
+# Auto-start tmux on Linux
+if command -v tmux &> /dev/null && [ -z "$TMUX" ] && [ -z "$INSIDE_EMACS" ] && [ -z "$VSCODE_INJECTION" ]; then
+  # Check if this is an interactive shell and not a login shell from SSH
+  if [[ $- == *i* ]] && [[ -z "$SSH_TTY" || "$SHLVL" -eq 1 ]]; then
+    # Don't auto-start tmux in certain terminals or environments
+    case "$TERM_PROGRAM" in
+      "vscode"|"cursor"|"code") ;;
+      *)
+        # Try to attach to existing session or create new one
+        if tmux has-session 2>/dev/null; then
+          # Attach to first available session
+          exec tmux attach-session
+        else
+          # Create new session with current directory name
+          session_name=$(basename "$PWD" | tr '.' '_')
+          exec tmux new-session -s "$session_name"
+        fi
+        ;;
+    esac
+  fi
+fi

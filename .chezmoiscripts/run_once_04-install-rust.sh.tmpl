@@ -52,7 +52,7 @@ if command -v cargo &> /dev/null; then
     }
     
     # Install tools without special flags
-    for tool in bat eza fd-find ripgrep zoxide starship cargo-edit cargo-watch cargo-audit cargo-outdated cargo-expand; do
+    for tool in bat eza fd-find ripgrep zoxide cargo-edit cargo-watch cargo-audit cargo-outdated cargo-expand; do
         install_cargo_tool "$tool" "false"
     done
     

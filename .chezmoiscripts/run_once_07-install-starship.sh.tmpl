@@ -1,0 +1,28 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "🚀 Installing Starship prompt..."
+
+# Check if starship is already installed
+if command -v starship &> /dev/null; then
+    current_version=$(starship --version | head -n1 | cut -d' ' -f2 || echo "unknown")
+    echo "Starship is already installed (version: $current_version)"
+    echo "Run 'starship update' to update to the latest version"
+    exit 0
+fi
+
+# Install starship using the official installer
+echo "📥 Downloading and installing starship..."
+curl -sS https://starship.rs/install.sh | sh -s -- --yes
+
+# Verify installation
+if command -v starship &> /dev/null; then
+    version=$(starship --version | head -n1 | cut -d' ' -f2 || echo "unknown")
+    echo "✅ Starship installed successfully (version: $version)"
+    echo "🔧 Starship will be automatically initialized in your shell configuration"
+else
+    echo "❌ Starship installation failed"
+    exit 1
+fi
+
+echo "🌟 Starship installation complete!"

@@ -1,10 +1,7 @@
 repositories:
   github:
-    - 'github.com/cyberagiinc/DevDocs'
     - 'github.com/go-sonr/coins'
     - 'github.com/go-sonr/crypto'
-    - 'github.com/prnk28/prad.bio'
-    - 'github.com/prnk28/prad.nu'
     - 'github.com/rollchains/spawn'
     - 'github.com/sonr-io/coder'
     - 'github.com/sonr-io/contracts'
@@ -14,7 +11,6 @@ repositories:
     - 'github.com/sonr-io/npx-tools'
     - 'github.com/sonr-io/pkljar'
     - 'github.com/sonr-io/sonr'
-    - 'github.com/stan-smith/FossFLOW'
   gitlab: []
   bitbucket: []
   options:
