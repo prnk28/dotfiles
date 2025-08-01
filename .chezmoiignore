@@ -2,3 +2,12 @@
 README.md
 CLAUDE.md
 installer
+
+{{- if eq .chezmoi.os "linux" }}
+dot_raycast
+dot_config/ghostty
+dot_config/karabiner
+dot_config/sketchybar
+{{- end }}
+
+
