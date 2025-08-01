@@ -10,14 +10,17 @@ NC='\033[0m' # No Color
 
 echo "🔄 Managing repositories with ghq..."
 
+# Use direct path to ghq binary
+GHQ_BIN="{{ .chezmoi.homeDir }}/go/bin/ghq"
+
 # Ensure ghq is installed
-if ! command -v ghq &> /dev/null; then
-    echo -e "${RED}❌ ghq is not installed. Please run the Go tools installation script first.${NC}"
+if [ ! -f "$GHQ_BIN" ]; then
+    echo -e "${RED}❌ ghq is not installed at $GHQ_BIN. Please run the Go tools installation script first.${NC}"
     exit 1
 fi
 
 # Configuration
-GHQ_ROOT=$(ghq root)
+GHQ_ROOT=$($GHQ_BIN root)
 echo "📁 GHQ root: $GHQ_ROOT"
 
 # Create a temporary file for the repository list
@@ -56,12 +59,12 @@ done < "$REPO_LIST"
 echo ""
 if [ ${#NEW_REPOS[@]} -gt 0 ]; then
     echo "📥 Cloning ${#NEW_REPOS[@]} new repositories..."
-    printf '%s\n' "${NEW_REPOS[@]}" | ghq get --parallel
+    printf '%s\n' "${NEW_REPOS[@]}" | "$GHQ_BIN" get --parallel
 fi
 
 if [ ${#EXISTING_REPOS[@]} -gt 0 ]; then
     echo "🔄 Updating ${#EXISTING_REPOS[@]} existing repositories..."
-    printf '%s\n' "${EXISTING_REPOS[@]}" | ghq get --update --parallel
+    printf '%s\n' "${EXISTING_REPOS[@]}" | "$GHQ_BIN" get --update --parallel
 fi
 
 echo ""
