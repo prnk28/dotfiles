@@ -11,7 +11,7 @@ program = "/usr/bin/ssh"
 args = ["dev-server"]
 
 [window]
-dynamic_padding = true
+dynamic_padding = false
 decorations = "Buttonless"
 opacity = 0.80
 blur = true
@@ -24,7 +24,7 @@ columns = 0
 lines = 0
 
 [font]
-size = 16
+size = 17
 
 [font.bold]
 family = "VictorMono Nerd Font Mono"
