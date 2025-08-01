@@ -2,6 +2,8 @@
 README.md
 CLAUDE.md
 installer
+.aider.chat.history.md
+.aider.input.history
 
 {{- if eq .chezmoi.os "linux" }}
 dot_raycast

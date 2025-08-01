@@ -1,3 +1,4 @@
 old-dots
 .DS_Store
 .claude*
+.aider.chat.history.md
