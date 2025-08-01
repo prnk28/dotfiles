@@ -4,7 +4,7 @@ set -euo pipefail
 
 echo "🔌 Managing tmux plugins with TPM..."
 
-TPM_DIR="{{ .chezmoi.homeDir }}/.config/tmux/plugins/tpm"
+TPM_DIR="{{ .chezmoi.homeDir }}/.tmux/plugins/tpm"
 
 # Install TPM if not present
 if [ ! -d "$TPM_DIR" ]; then
@@ -46,6 +46,6 @@ echo "✅ Tmux plugins installation complete!"
 # List installed plugins
 echo ""
 echo "📋 Installed tmux plugins:"
-if [ -d "{{ .chezmoi.homeDir }}/.config/tmux/plugins" ]; then
-    ls -1 "{{ .chezmoi.homeDir }}/.config/tmux/plugins" | grep -v "^tpm$" | sed 's/^/  - /'
+if [ -d "{{ .chezmoi.homeDir }}/.tmux/plugins" ]; then
+    ls -1 "{{ .chezmoi.homeDir }}/.tmux/plugins" | grep -v "^tpm$" | sed 's/^/  - /'
 fi
