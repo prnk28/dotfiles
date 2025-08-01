@@ -63,6 +63,8 @@ packages:
       - 'ffmpeg'
       - 'gh'
       - 'goread'
+      - 'gum'
+      - 'helm'
       - 'grpcui'
       - 'grpcurl'
       - 'httpie'
