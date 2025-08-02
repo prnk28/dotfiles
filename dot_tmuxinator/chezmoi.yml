@@ -40,5 +40,4 @@ startup_window: 1
 # Controls whether the tmux session should be attached to automatically. Defaults to true.
 # attach: false
 windows:
-  - 📝: nvim
-  - 🤖: mods --settings
+  - ⚙️: nvim

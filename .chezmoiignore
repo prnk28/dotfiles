@@ -11,6 +11,7 @@ dot_config/borders
 dot_config/ghostty
 dot_config/karabiner
 dot_config/sketchybar
+Library
 {{- end }}
 
 
