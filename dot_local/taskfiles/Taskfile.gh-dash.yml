@@ -19,7 +19,7 @@ tasks:
     dir: "{{.PATH}}"
     cmds:
       - echo "Creating branch to start issue {{.NUMBER}}..."
-      - title=$(gh issue view {{.NUMBER}} | mods); gh issue develop {{.NUMBER}} -n $title -c
+      - title=$(gh issue view {{.NUMBER}} | mods -R branch-namer); gh issue develop {{.NUMBER}} -n $title -c
   open-issue:
     desc: Open an existing issue
     requires:

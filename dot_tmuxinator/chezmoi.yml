@@ -41,3 +41,4 @@ startup_window: 1
 # attach: false
 windows:
   - 📝: nvim
+  - 🤖: mods --settings
