@@ -462,7 +462,7 @@ customCommands:
     context: "localBranches"
     output: log
   - key: "S"
-    command: "gh repo sync && git checkout master && gh clean-branches"
+    command: "gh repo sync && gh clean-branches --force"
     context: "localBranches"
     output: log
   - key: "a"
