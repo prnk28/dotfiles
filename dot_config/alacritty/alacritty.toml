@@ -294,7 +294,7 @@ chars = "\u0002o" # Maps to tmux copy mode
 [[keyboard.bindings]]
 key = "Tab"
 mods = "Control"
-chars = "\u0002z" # Maps to tmux copy mode
+chars = "\u0002@" # Maps to tmux copy mode
 
 [[keyboard.bindings]]
 key = "R"
@@ -310,11 +310,6 @@ chars = "\u0002z" # Maps to tmux copy mode
 key = ","
 mods = "Command"
 chars = "\u0002," # Maps to tmux copy mode
-
-[[keyboard.bindings]]
-key = "Tab"
-mods = "Control"
-chars = "\u0002@" # Maps to tmux copy mode
 
 [[keyboard.bindings]]
 key = "Enter"
