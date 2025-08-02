@@ -147,6 +147,7 @@ alias /a="aider"
 alias /c="claude"
 alias /cr="claude --continue"
 alias /g="gemini"
+alias /m="mods"
 alias /o="opencode"
 alias /v="npx vibe-kanban"
 
