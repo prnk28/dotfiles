@@ -168,3 +168,10 @@ alias cm.="chezmoi apply"
 
 # bmad
 alias bmad-install="npx bmad-method install"
+
+# ============================================
+# Taskfile shortcuts
+# ============================================
+alias task-gh-dash="task -t ~/.local/taskfiles/Taskfile.gh-dash.yml"
+alias task-lazygit="task -t ~/.local/taskfiles/Taskfile.lazygit.yml"
+alias task-tmux="task -t ~/.local/taskfiles/Taskfile.tmux.yml"

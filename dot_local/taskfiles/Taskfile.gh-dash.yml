@@ -1,0 +1,29 @@
+# https://taskfile.dev
+version: "3"
+silent: true
+tasks:
+  default:
+    cmds:
+      - echo "new-issue - Create a new issue"
+      - echo "start-issue - Start a new issue"
+      - echo "edit-issue - Edit an existing issue"
+      - echo "open-issue - Open an existing issue"
+  new-issue:
+    desc: Create a new issue
+    cmds:
+      - echo "unimplemented"
+  start-issue:
+    desc: Start a new issue
+    requires:
+      vars: [NUMBER, PATH]
+    dir: "{{.PATH}}"
+    cmds:
+      - echo "Creating branch to start issue {{.NUMBER}}..."
+      - title=$(gh issue view {{.NUMBER}} | mods); gh issue develop {{.NUMBER}} -n $title -c
+  open-issue:
+    desc: Open an existing issue
+    requires:
+      vars: [NUMBER, PATH]
+    dir: "{{.PATH}}"
+    cmds:
+      - gh issue view {{.NUMBER}} --web

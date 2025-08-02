@@ -23,7 +23,7 @@ extensions=(
 )
 
 # Check if gh is installed
-if ! command -v gh &> /dev/null; then
+if ! command -v gh &>/dev/null; then
     echo "GitHub CLI (gh) is not installed. Please install it first."
     exit 1
 fi
@@ -39,3 +39,4 @@ for extension in "${extensions[@]}"; do
 done
 
 echo "GitHub CLI extensions installation complete!"
+

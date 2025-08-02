@@ -461,6 +461,10 @@ customCommands:
     command: "git fetch --prune"
     context: "localBranches"
     output: log
+  - key: "S"
+    command: "gh repo sync && git checkout master && gh clean-branches"
+    context: "localBranches"
+    output: log
   - key: "a"
     context: "files"
     command: "git {{if .SelectedFile.HasUnstagedChanges}} add {{else}} reset {{end}} {{.SelectedFile.Name | quote}}"
@@ -468,7 +472,7 @@ customCommands:
   - key: "A"
     context: "files"
     command: "git add ."
-  - key: "H"
+  - key: "G"
     context: "files"
     command: "gh dash"
     output: terminal
@@ -478,16 +482,4 @@ customCommands:
   - key: "A"
     context: "localBranches"
     command: "act3"
-    output: terminal
-  - key: "D"
-    context: "localBranches"
-    command: "git-delete-merged-branches"
-    output: terminal
-  - key: "n"
-    context: "localBranches"
-    command: "task -g issue:start"
-    output: terminal
-  - key: "v"
-    context: "localBranches"
-    command: "task -g issue:view"
     output: terminal
