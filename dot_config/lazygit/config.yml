@@ -479,7 +479,3 @@ customCommands:
   - key: "O"
     context: "files"
     command: "gh browse"
-  - key: "A"
-    context: "localBranches"
-    command: "act3"
-    output: terminal
