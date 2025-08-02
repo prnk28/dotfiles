@@ -20,6 +20,7 @@ extensions=(
     "mona-actions/gh-repo-stats"
     "github/gh-skyline"
     "gpmtools/gh-task"
+    "jake-low/gh-log"
 )
 
 # Check if gh is installed
@@ -39,4 +40,3 @@ for extension in "${extensions[@]}"; do
 done
 
 echo "GitHub CLI extensions installation complete!"
-

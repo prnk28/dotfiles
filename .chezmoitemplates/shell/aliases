@@ -165,6 +165,7 @@ alias cmc="chezmoi cd"
 alias cma="chezmoi add"
 alias cme="chezmoi edit"
 alias cm.="chezmoi apply"
+alias !!="chezmoi apply && exec zsh && tmux source {{ .chezmoi.homeDir }}/.tmux.conf && clear"
 
 # bmad
 alias bmad-install="npx bmad-method install"
