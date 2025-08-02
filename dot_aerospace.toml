@@ -15,13 +15,13 @@ outer.top = 8
 outer.right = 8
 
 [workspace-to-monitor-force-assignment]
-1 = '2'
+1 = '3'
 2 = 'Built-in Retina Display'
 3 = '16PM1QB' 
 4 = 'Built-in Retina Display'
-5 = '2'
+5 = '3'
 6 = '16PM1QB' 
-7 = '2'
+7 = '3'
 8 = 'Built-in Retina Display'
 9 = '16PM1QB' 
 10 = 'Built-in Retina Display'
@@ -118,6 +118,9 @@ run = 'move-node-to-workspace 7'
 if.app-name-regex-substring = 'alacritty'
 run = 'move-node-to-workspace 2'
 
+[[on-window-detected]]
+if.app-id="com.mitchellh.ghostty"
+run = 'move-node-to-workspace 4'
 
 [[on-window-detected]]
 if.app-id = 'io.pitch.pitch-macos'

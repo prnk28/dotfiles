@@ -3,9 +3,6 @@ import = ["~/.config/alacritty/themes/cyberdream.toml"]
 live_config_reload = true
 working_directory = "/Users/prad/Developer"
 
-[env]
-TERM = "xterm-256color"
-
 # Tell Alacritty to run the ssh client directly.
 # [terminal.shell]
 # program = "/usr/bin/ssh"
