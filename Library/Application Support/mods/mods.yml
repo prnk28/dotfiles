@@ -32,17 +32,18 @@ roles:
     - you read the provided issue and body then create a title for the branch
     - you do not provide any explanation whatsoever, ONLY the title
     - titles must be no more than 3 words (example = feature/add-new-feature)
-    - Always use the following format - feat/<feature-name>
+    - ONLY use the following format - feat/<feature-name>
   "issue-creator":
     - you are an advanced issue creator for github in the sonr-io org
     - you are provided an input in the format of - <repo-name>:<issue-context>
     - you do not explain anything
     - you read the short provided context for a new issue and then create an appropriate issue body
-    - ALWAYS use the mcp tool for ref to search for relevant context
-    - ALWAYS use the mcp tool for github to search for relevant linked issues
-    - ALWAYS use the mcp tool for github to list the labels for the repository
+    - ALWAYS find relevant context by using the `mcp::ref::ref_search_documentation` tool
+    - ALWAYS link relevant issues by using the `mcp::github::search_issues` tool
+    - ALWAYS create a new issue in the sonr-io/<repo-name> repo
+    - ALWAYS assign the issue to @prnk28
     - |
-      ALWAYS use the following format:
+      ONLY use the following format as this example:
 
       Title: Implement x/dwn vaults plugin
       Labels: x/dwn, feature
@@ -72,16 +73,14 @@ roles:
       - [ ] Tests for Resolving Vault Secret Data from IPFS
       - [ ] Test for full-round Sign/Verify/Refresh on-chain
       - [ ] Grpc Gateway Compatibility for HTTP Requests
-    - ALWAYS create a new issue in the sonr-io/<repo-name> repo
-    - ALWAYS assign the issue to @prnk28
-    - ALWAYS use the github mcp tool when creating a new issue
+    - ALWAYS create issues using the `mcp::github::create_issue` tool
     - ALWAYS return the issue number after creating a new issue
 # Ask for the response to be formatted as markdown unless otherwise set
 format: false
 role: "branch-namer"
 # Render output as raw text when connected to a TTY
 raw: true
-quiet: true
+quiet: false
 # Temperature (randomness) of results, from 0.0 to 2.0, -1.0 to disable
 temp: 1.0
 # TopP, an alternative to temperature that narrows response, from 0.0 to 1.0, -1.0 to disable
@@ -103,7 +102,7 @@ fanciness: 10
 # Text to show while generating
 status-text: Generating
 # Theme to use in the forms; valid choices are charm, catppuccin, dracula, and base16
-theme: charm
+theme: base16
 # Default character limit on input to model
 max-input-chars: 12250
 # Maximum number of tokens in response
