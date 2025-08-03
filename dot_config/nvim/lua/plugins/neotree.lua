@@ -178,6 +178,7 @@ return {
             "CLAUDE.md",
             ".gh-dash.yml",
             ".templui.json",
+            ".golangci.yml",
           },
           never_show_by_pattern = {
             "contrib",
