@@ -80,7 +80,7 @@ format: false
 role: "branch-namer"
 # Render output as raw text when connected to a TTY
 raw: true
-quiet: false
+quiet: true
 # Temperature (randomness) of results, from 0.0 to 2.0, -1.0 to disable
 temp: 1.0
 # TopP, an alternative to temperature that narrows response, from 0.0 to 1.0, -1.0 to disable

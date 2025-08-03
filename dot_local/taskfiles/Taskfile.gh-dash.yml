@@ -24,6 +24,7 @@ tasks:
     cmds:
       - echo "Creating branch to start issue {{.NUMBER}}..."
       - title=$(gh issue view {{.NUMBER}} | mods -R branch-namer); gh issue develop {{.NUMBER}} -n $title -c
+      - tmux new-window -n "#{{.NUMBER}}" nvim
   open-pr:
     desc: Open an existing issue
     requires:

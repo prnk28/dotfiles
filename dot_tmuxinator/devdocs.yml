@@ -39,4 +39,4 @@ root: ~/Developer/github.com/cyberagiinc/DevDocs
 # Controls whether the tmux session should be attached to automatically. Defaults to true.
 attach: false
 windows:
-  - 🐋: ./docker-start.sh
+  - : ./docker-start.sh

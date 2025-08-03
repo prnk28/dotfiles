@@ -41,6 +41,6 @@ startup_window: 1
 # Controls whether the tmux session should be attached to automatically. Defaults to true.
 # attach: false
 windows:
-  - 📁: yazi
-  - 📝: nvim
-  - 🤖: claude
+  - : yazi
+  - : nvim
+  - "\U000F1844": claude

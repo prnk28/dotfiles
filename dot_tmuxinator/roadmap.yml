@@ -34,12 +34,13 @@ root: ~/Developer/github.com/sonr-io/roadmap
 # tmux_command: byobu
 
 # Specifies (by name or index) which window will be selected on project startup. If not set, the first window is used.
-startup_window: 📝
+startup_window: 1
 # Specifies (by index) which pane of the specified window will be selected on project startup. If not set, the first pane is used.
 # startup_pane: 1
 
 # Controls whether the tmux session should be attached to automatically. Defaults to true.
 # attach: false
 windows:
-  - 📝: nvim
-  - 🤖: claude
+  - : yazi
+  - : nvim
+  - "\U000F1844": claude
