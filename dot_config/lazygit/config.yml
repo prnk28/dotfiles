@@ -438,6 +438,10 @@ keybinding:
   commitMessage:
     commitMenu: <c-o>
 customCommands:
+  - key: "F"
+    command: "gh repo sync && gh clean-branches --force"
+    context: "files"
+    output: log
   - key: "C"
     description: "pick AI commit"
     command: 'git commit -m "{{.Form.Msg}}" && git push origin HEAD'
