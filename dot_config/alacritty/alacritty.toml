@@ -24,7 +24,7 @@ columns = 0
 lines = 0
 
 [font]
-size = 16
+size = 17
 
 [font.bold]
 family = "GeistMono Nerd Font Mono"
