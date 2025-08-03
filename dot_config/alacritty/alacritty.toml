@@ -24,23 +24,23 @@ columns = 0
 lines = 0
 
 [font]
-size = 19
+size = 18
 
 [font.bold]
-family = "GeistMono Nerd Font Mono"
+family = "VictorMono Nerd Font Mono"
 style = "Light"
 
 [font.bold_italic]
-family = "GeistMono Nerd Font Mono"
+family = "VictorMono Nerd Font Mono"
 style = "Light Italic"
 
 [font.italic]
-family = "GeistMono Nerd Font Mono"
-style = "UltraLight Italic"
+family = "VictorMono Nerd Font Mono"
+style = "ExtraLight Italic"
 
 [font.normal]
-family = "GeistMono Nerd Font Mono"
-style = "UltraLight"
+family = "VictorMono Nerd Font Mono"
+style = "ExtraLight"
 
 [mouse]
 hide_when_typing = true
