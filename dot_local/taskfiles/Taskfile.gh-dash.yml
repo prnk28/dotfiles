@@ -1,6 +1,8 @@
 # https://taskfile.dev
 version: "3"
 silent: true
+vars:
+  KVN: 3a872e35b85c49bb8f5fe753198b5848
 tasks:
   default:
     cmds:
@@ -23,8 +25,15 @@ tasks:
     dir: "{{.PATH}}"
     cmds:
       - echo "Creating branch to start issue {{.NUMBER}}..."
-      - title=$(gh issue view {{.NUMBER}} | mods -R branch-namer); gh issue develop {{.NUMBER}} -n $title -c
+      - title=$(gh issue view {{.NUMBER}} | mods -R branch-namer); npx wrangler kv key put --namespace-id={{.KVN}} "$title" "{{.NUMBER}}"; gh issue develop {{.NUMBER}} -n $title -c
       - tmux new-window -n "#{{.NUMBER}}" nvim
+  current-issue:
+    desc: Show the current issue
+    requires:
+      vars: [PATH]
+    dir: "{{.PATH}}"
+    cmds:
+      - branch=$(git branch --show-current); gh issue view $(npx wrangler kv key get --namespace-id={{.KVN}} "$branch" --text) | glow -p
   open-pr:
     desc: Open an existing issue
     requires:

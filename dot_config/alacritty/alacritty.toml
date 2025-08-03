@@ -27,20 +27,20 @@ lines = 0
 size = 16
 
 [font.bold]
-family = "VictorMono Nerd Font Mono"
+family = "GeistMono Nerd Font Mono"
 style = "Light"
 
 [font.bold_italic]
-family = "VictorMono Nerd Font Mono"
+family = "GeistMono Nerd Font Mono"
 style = "Light Italic"
 
 [font.italic]
-family = "VictorMono Nerd Font Mono"
-style = "ExtraLight Italic"
+family = "GeistMono Nerd Font Mono"
+style = "UltraLight Italic"
 
 [font.normal]
-family = "VictorMono Nerd Font Mono"
-style = "ExtraLight"
+family = "GeistMono Nerd Font Mono"
+style = "UltraLight"
 
 [mouse]
 hide_when_typing = true

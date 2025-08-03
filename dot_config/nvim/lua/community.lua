@@ -25,6 +25,7 @@ return {
   { import = "astrocommunity.completion.blink-cmp" },
   { import = "astrocommunity.editing-support.auto-save-nvim" },
   { import = "astrocommunity.editing-support.conform-nvim" },
+  { import = "astrocommunity.icon.mini-icons" },
   { import = "astrocommunity.lsp.inc-rename-nvim" },
   { import = "astrocommunity.lsp.nvim-lsp-file-operations" },
   { import = "astrocommunity.recipes.vscode-icons" },
