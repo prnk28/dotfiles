@@ -257,6 +257,12 @@ mods = "Command"
 chars = "\u0002\u001bg" # This represents tmux prefix (<C-b>) followed by Alt+g
 
 [[keyboard.bindings]]
+key = "G"
+mods = "Command|Shift"
+chars = "\u0002\u001bv" # This represents tmux prefix (<C-b>) followed by Alt+g
+
+
+[[keyboard.bindings]]
 key = "D"
 mods = "Command"
 chars = "\u0002\u001bD" # This represents tmux prefix (<C-b>) followed by Alt+g
