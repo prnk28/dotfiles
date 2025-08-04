@@ -158,11 +158,6 @@ mods = "Control"
 chars = "\u0005"
 
 [[keyboard.bindings]]
-key = "J"
-mods = "Command"
-chars = "\u00020"
-
-[[keyboard.bindings]]
 key = "L"
 mods = "Command"
 chars = "\u0002t"
