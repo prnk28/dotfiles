@@ -7,7 +7,6 @@ return {
   "AstroNvim/astrocommunity",
   { import = "astrocommunity.pack.lua" },
   { import = "astrocommunity.pack.go" },
-  { import = "astrocommunity.pack.golangci-lint" },
   { import = "astrocommunity.pack.markdown" },
   { import = "astrocommunity.pack.json" },
   { import = "astrocommunity.pack.mdx" },
@@ -34,4 +33,5 @@ return {
   { import = "astrocommunity.terminal-integration.vim-tmux-navigator" },
   { import = "astrocommunity.terminal-integration.toggleterm-manager-nvim" },
   { import = "astrocommunity.utility.mason-tool-installer-nvim" },
+  { import = "astrocommunity.utility.noice-nvim" },
 }

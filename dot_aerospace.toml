@@ -15,15 +15,15 @@ outer.top = 8
 outer.right = 8
 
 [workspace-to-monitor-force-assignment]
-1 = '3'
+1 = '2'
 2 = 'Built-in Retina Display'
-3 = '16PM1QB' 
+3 = '3' 
 4 = 'Built-in Retina Display'
-5 = '3'
-6 = '16PM1QB' 
-7 = '3'
+5 = '2'
+6 = '3'
+7 = '2'
 8 = 'Built-in Retina Display'
-9 = '16PM1QB' 
+9 = '3'
 10 = 'Built-in Retina Display'
 
 [mode.main.binding]
