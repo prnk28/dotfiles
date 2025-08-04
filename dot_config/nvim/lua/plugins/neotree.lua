@@ -10,14 +10,13 @@ return {
       git_status_async = true, -- Asynchronous git status. Improves performance.
       hide_root_node = true, -- Hide the root node.
       retain_hidden_root_indent = true, -- IF the root node is hidden, keep the indentation anyhow.
-      use_libuv_file_watcher = false,
+      use_libuv_file_watcher = true,
       sort = {
         sorter = "name",
       },
-      -- Add custom title function to show host/org/repo
       window = {
         position = "left",
-        width = 30,
+        width = 34,
         mappings = {
           ["H"] = "navigate_up",
           ["L"] = "set_root",
@@ -28,6 +27,7 @@ return {
           ["<c-x>"] = "clear_filter",
           ["<CR>"] = "open_and_close_neotree",
           ["<S-CR>"] = "open",
+          -- Mappings for Mason and formatting
         },
         header = {
           highlight = "NeoTreeHeader",
@@ -108,13 +108,29 @@ return {
           -- If item is a file it will close neotree after opening it.
           open_and_close_neotree = function(state)
             require("neo-tree.sources.filesystem.commands").open(state)
-
             local tree = state.tree
             local success, node = pcall(tree.get_node, tree)
-
             if not success then return end
-
             if node.type == "file" then require("neo-tree.command").execute { action = "close" } end
+          end,
+
+          -- Custom command to open Mason
+          mason_open = function() vim.cmd "Mason" end,
+
+          -- Custom command to format a file using the LSP
+          format_file = function(state)
+            local node = state.tree:get_node()
+            if node and node.type == "file" then
+              -- Format the file in a temporary buffer without opening it in a window
+              local bufnr = vim.api.nvim_create_buf(false, true)
+              vim.api.nvim_buf_set_name(bufnr, node.path)
+              vim.api.nvim_buf_load(bufnr)
+              vim.lsp.buf.format { bufnr = bufnr, async = false, timeout_ms = 5000 }
+              vim.api.nvim_buf_call(bufnr, function() vim.cmd "write" end)
+              vim.notify("Formatted " .. vim.fs.basename(node.path), vim.log.levels.INFO, { title = "Neo-tree" })
+            else
+              vim.notify("Not a file", vim.log.levels.WARN, { title = "Neo-tree" })
+            end
           end,
         },
         bind_to_cwd = true,
