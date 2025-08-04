@@ -15,12 +15,9 @@ require("overseer").setup {
   },
 }
 
-vim.filetype.add { extension = { templ = "templ" } }
-vim.api.nvim_create_autocmd({ "BufWritePre" }, { pattern = { "*.templ" }, callback = vim.lsp.buf.format })
-
 require("conform").setup {
   format_on_save = {
-    timeout_ms = 500,
+    timeout_ms = 1500,
     lsp_format = "fallback",
   },
   formatters_by_ft = {
