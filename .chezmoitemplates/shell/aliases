@@ -92,9 +92,7 @@ alias python="python3"
 alias pip="pip3"
 
 # Task management
-alias t="task"
-alias tk="task"
-alias tkg="task -g"
+alias t="dstask"
 
 # Docker
 alias dd="lazydocker"
