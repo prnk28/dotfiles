@@ -5,12 +5,12 @@ return {
       popup_border_style = "rounded",
       enable_git_status = true,
       enable_diagnostics = true,
-      sort_case_insensitive = true,
+      sort_case_insensitive = false,
       auto_expand_width = true,
       git_status_async = true, -- Asynchronous git status. Improves performance.
       hide_root_node = true, -- Hide the root node.
       retain_hidden_root_indent = true, -- IF the root node is hidden, keep the indentation anyhow.
-      use_libuv_file_watcher = true,
+      use_libuv_file_watcher = false,
       sort = {
         sorter = "name",
       },
@@ -167,7 +167,6 @@ return {
             "OpenCode.md",
             "AGENT.md",
             "AGENTS.md",
-            "tests",
             "svgo.config.mjs",
             ".prettierrc.cjs",
             ".eslintrc.cjs",

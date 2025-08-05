@@ -24,7 +24,6 @@ return {
         "protols",
         "protolint",
         "templ",
-        "yamllint",
         "yamlfmt",
       },
     },
