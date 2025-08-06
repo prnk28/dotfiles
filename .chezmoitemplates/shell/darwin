@@ -20,6 +20,9 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 export DYLD_LIBRARY_PATH="{{ .chezmoi.homeDir }}/.local/lib:$DYLD_LIBRARY_PATH"
 
+export CPATH="$(brew --prefix)/include"
+export LIBRARY_PATH="$(brew --prefix)/lib"
+
 # Check if the shell is interactive and if not already in a tmux session
 if [[ "$-" == *i* ]] && [[ -z "$TMUX" ]] && [ -x "$(command -v tt)" ]; then
   # Attempt to attach to a session named 'main', or create it if it doesn't exist

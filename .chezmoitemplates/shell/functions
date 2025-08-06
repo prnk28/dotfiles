@@ -159,13 +159,13 @@ function b.() {
 # Git & GitHub Functions
 # ============================================
 function gog() {
-  gum spinner --title "Fetching $1..." -- ghq get git.sonr.io/$1
-  gum spinner --title "Adding $1..." -- zoxide add $GHQ_ROOT/git.sonr.io/$1
+  gum spin --title "Fetching $1..." -- ghq get git.sonr.io/$1
+  gum spin --title "Adding $1..." -- zoxide add $GHQ_ROOT/git.sonr.io/$1
 }
 
 function ghg() {
-  gum spinner --title "Fetching $1..." -- ghq get $1
-  gum spinner --title "Adding $1..." -- zoxide add $GHQ_ROOT/github.com/$1
+  gum spin --title "Fetching $1..." -- ghq get $1
+  gum spin --title "Adding $1..." -- zoxide add $GHQ_ROOT/github.com/$1
 }
 
 function gogu() {
