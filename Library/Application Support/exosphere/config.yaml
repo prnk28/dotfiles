@@ -1,0 +1,30 @@
+# Exosphere configuration populated from SSH config
+#
+# See the Exosphere documentation for more advanced configuration options:
+# https://exosphere.readthedocs.io/en/stable/configuration.html
+
+hosts:
+  - name: dev-server
+    description: Dev Server (Singapore)
+    ip: 100.109.8.102
+    username: root
+
+  - name: chain-server
+    description: Chain Server (US East)
+    ip: 100.68.177.73
+    username: root
+
+  - name: data-server
+    description: Data Server (US East)
+    ip: 100.100.152.64
+    username: root
+
+  - name: crm-server
+    description: CRM Server (US East)
+    ip: 100.101.42.80
+    username: root
+
+  - name: local-server-rack
+    description: Self Managed Rack (Ashburn, VA)
+    ip: 100.103.121.40
+    username: prad

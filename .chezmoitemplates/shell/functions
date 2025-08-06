@@ -164,8 +164,8 @@ function gog() {
 }
 
 function ghg() {
-  ghq get $1
-  zoxide add $GHQ_ROOT/github.com/$1
+  gum spinner --title "Fetching $1..." -- ghq get $1
+  gum spinner --title "Adding $1..." -- zoxide add $GHQ_ROOT/github.com/$1
 }
 
 function gogu() {

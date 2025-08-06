@@ -23,14 +23,9 @@ tasks:
     requires:
       vars: [NUMBER, PATH]
     dir: "{{.PATH}}"
-    vars:
-      DIR:
-        sh: basename $(git rev-parse --show-toplevel)
-      WORKTREE: "{{.DIR}}-{{.NUMBER}}"
     cmds:
       - echo "Creating branch to start issue {{.NUMBER}}..."
       - title=$(gh issue view {{.NUMBER}} | mods -R branch-namer); npx wrangler kv key put --namespace-id={{.KVN}} "$title" "{{.NUMBER}}"; gh issue develop {{.NUMBER}} -n $title -c
-      - branch=$(git branch --show-current); git worktree add ../{{.WORKTREE}} $branch
       - tmux new-window -n "#{{.NUMBER}}" nvim
   current-issue:
     desc: Show the current issue
