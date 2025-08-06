@@ -139,8 +139,8 @@ return {
           leave_dirs_open = true,
         },
         filtered_items = {
-          force_visible_in_empty_folder = false,
-          group_empty = true,
+          force_visible_in_empty_folder = true,
+          group_empty = false,
           show_hidden_count = false,
           hide_dotfiles = false,
           hide_gitignored = true,
