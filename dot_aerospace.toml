@@ -97,6 +97,10 @@ run = 'move-node-to-workspace 1'
 [[on-window-detected]]
 if.app-id = 'com.apple.Safari'
 run = 'move-node-to-workspace 5'
+
+[[on-window-detected]]
+if.app-id = 'io.pitch.pitch-macos'
+run = 'move-node-to-workspace 5'
  
 [[on-window-detected]]
 if.app-id = 'com.readdle.SparkDesktop.appstore'
@@ -120,10 +124,6 @@ run = 'move-node-to-workspace 2'
 
 [[on-window-detected]]
 if.app-id="com.mitchellh.ghostty"
-run = 'move-node-to-workspace 4'
-
-[[on-window-detected]]
-if.app-id = 'io.pitch.pitch-macos'
 run = 'move-node-to-workspace 4'
 
 [[on-window-detected]]
