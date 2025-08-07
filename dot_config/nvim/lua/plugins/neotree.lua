@@ -194,6 +194,10 @@ return {
             ".gh-dash.yml",
             ".templui.json",
             ".golangci.yml",
+            "api",
+            "docs",
+            "crypto",
+            "scripts",
           },
           never_show_by_pattern = {
             "contrib",
