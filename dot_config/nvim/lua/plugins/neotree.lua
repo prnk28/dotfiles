@@ -197,6 +197,7 @@ return {
             "api",
             "docs",
             "crypto",
+            "chains",
             "scripts",
           },
           never_show_by_pattern = {

@@ -21,6 +21,7 @@ return {
           "Pipfile",
           "buf.yaml",
           "requirements.txt",
+          "docs.json",
         }, -- lastly check for a file named `main`
       },
       -- ignore things from root detection
