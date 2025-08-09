@@ -49,8 +49,8 @@ alt-shift-l = 'move right'
 alt-shift-minus = 'resize smart -50'
 alt-shift-equal = 'resize smart +50'
 
-ctrl-shift-minus = 'resize smart -100'
-ctrl-shift-equal = 'resize smart +100'
+alt-left = 'resize smart -100'
+alt-right = 'resize smart +100'
 
 alt-space = 'fullscreen'
 alt-z = 'layout tiles horizontal vertical' # 'layout toggle split' in i3
