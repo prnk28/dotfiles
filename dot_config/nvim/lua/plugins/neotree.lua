@@ -188,6 +188,7 @@ return {
             "translations",
             "LICENSE.md",
             ".envrc",
+            "test",
             "CLAUDE.md",
             "api",
             "scripts",
