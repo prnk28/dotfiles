@@ -7,7 +7,7 @@ prSections:
   - title: Open PRs
     filters: is:open org:sonr-io repo:sonr sort:created-dsc
   - title: Changelog
-    filter: "is:closed org:sonr-io sort:created-asc updated>={{ nowModify \"-4w\" }}"
+    filter: 'is:closed org:sonr-io sort:created-asc updated>={{ nowModify "-4w" }}'
 repo:
   branchesRefetchIntervalSeconds: 30
   prsRefetchIntervalSeconds: 60
@@ -61,16 +61,8 @@ keybindings:
       command: >
         task -t ~/.config/gh-dash/Taskfile.yml new-issue REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
 
-    - key: E
-      command: >
-        task -t ~/.config/gh-dash/Taskfile.yml edit-issue ISSUE_NUMBER={{.IssueNumber}} REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
-
-    - key: O
-      command: >
-        task -t ~/.config/gh-dash/Taskfile.yml open-issue ISSUE_NUMBER={{.IssueNumber}} REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
-
     - key: S
-      command: "task -t ~/.local/taskfiles/Taskfile.gh-dash.yml start-issue NUMBER={{.IssueNumber}} PATH={{.RepoPath}}"
+      command: "issue-start -n {{.IssueNumber}} -p {{.RepoPath}}"
   branches: []
 repoPaths:
   sonr-io/sonr: /Users/prad/Developer/github.com/sonr-io/sonr
