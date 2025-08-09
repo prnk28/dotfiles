@@ -11,6 +11,8 @@ dot_config/borders
 dot_config/ghostty
 dot_config/karabiner
 dot_config/sketchybar
+dot_compose-apps
+dot_prompt-templates
 Library
 {{- end }}
 
