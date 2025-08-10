@@ -4,7 +4,9 @@ packages:
       # Development tools and languages (not installed via go/rust)
       - "gcc"
       - "gum"
+      - "cloudflared"
       - "glow"
+      - "zig"
       - "cmake"
       - "node"
       - "ruby"
