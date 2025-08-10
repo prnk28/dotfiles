@@ -1,26 +1,47 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "my-local-mcp-server": {
+    "sequential-thinking": {
       "type": "local",
       "command": [
-        "bun",
-        "x",
-        "my-mcp-command"
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "enabled": true
+    },
+    "context7": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "enabled": true
+    },
+    "cclsp": {
+      "type": "local",
+      "command": [
+        "npx",
+        "cclsp@latest"
       ],
       "enabled": true,
       "environment": {
-        "MY_ENV_VAR": "${env:MY_ENV_VAR}"
+        "CCLSP_CONFIG_PATH": "/Users/prad/.config/claude/cclsp.json"
       }
     },
-    "my-different-local-mcp-server": {
+    "filesystem": {
       "type": "local",
       "command": [
-        "bun",
-        "x",
-        "my-other-mcp-command"
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/prad/Developer/github.com/sonr-io"
       ],
-      "enabled": true
+      "enabled": true,
+      "environment": {
+        "CCLSP_CONFIG_PATH": "/Users/prad/.config/claude/cclsp.json"
+      }
     }
   }
 }
