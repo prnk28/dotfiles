@@ -15,8 +15,8 @@ args = ["-l"]
 [window]
 dynamic_padding = true
 decorations = "Buttonless"
-opacity = 0.85
-blur = true
+opacity = 0.95
+blur = false
 option_as_alt = "Both"
 
 [window.dimensions]
