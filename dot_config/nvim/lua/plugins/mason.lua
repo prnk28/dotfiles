@@ -12,6 +12,7 @@ return {
         -- install language servers
         "lua-language-server",
         "sonarlint-language-server",
+        "golangci-lint-langserver",
 
         -- install formatters
         "stylua",
