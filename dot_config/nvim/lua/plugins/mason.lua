@@ -13,6 +13,7 @@ return {
         "lua-language-server",
         "sonarlint-language-server",
         "golangci-lint-langserver",
+        "pkl-lsp",
 
         -- install formatters
         "stylua",

@@ -9,7 +9,7 @@ return {
   { import = "astrocommunity.pack.markdown" },
   { import = "astrocommunity.pack.json" },
   { import = "astrocommunity.pack.mdx" },
-  { import = "astrocommunity.pack.pkl" },
+  { import = "astrocommunity.pack.go" },
   { import = "astrocommunity.pack.templ" },
   { import = "astrocommunity.pack.tailwindcss" },
   { import = "astrocommunity.pack.templ" },
@@ -32,5 +32,4 @@ return {
   { import = "astrocommunity.terminal-integration.vim-tmux-navigator" },
   { import = "astrocommunity.terminal-integration.toggleterm-manager-nvim" },
   { import = "astrocommunity.utility.mason-tool-installer-nvim" },
-  { import = "astrocommunity.utility.noice-nvim" },
 }
