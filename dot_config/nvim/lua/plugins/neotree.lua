@@ -188,12 +188,11 @@ return {
             "translations",
             "LICENSE.md",
             ".envrc",
-            "test",
             "CLAUDE.md",
             "api",
-            "scripts",
           },
           never_show_by_pattern = {
+            ".pkl-lsp",
             "contrib",
             "interchaintest",
             "package-lock.json",

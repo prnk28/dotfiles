@@ -108,6 +108,7 @@ return {
           function() require("snacks").picker.lsp_symbols() end,
           desc = "Find diagnostics",
         },
+        ["<C-t>"] = { "<cmd>ToggleTerm direction=vertical size=50<cr>", desc = "Toggle terminal" },
         -- LSP Source Action <C-.>
         ["<C-a>"] = { function() vim.lsp.buf.code_action() end, desc = "LSP Code Action" },
         ["<C-,>"] = { function() vim.lsp.buf.hover() end, desc = "LSP Hover" },
@@ -127,21 +128,11 @@ return {
       t = {
         ["<Esc>"] = {
           function()
-            -- Check if we're in an Aider terminal buffer
-            local current_buf = vim.api.nvim_get_current_buf()
-            local buf_name = vim.api.nvim_buf_get_name(current_buf)
-
-            -- If the buffer name contains "Aider" (as seen in the screenshot)
-            if buf_name:match "Aider" then
-              vim.cmd "AiderTerminalToggle"
-            else
-              -- Default behavior: exit terminal mode
-              vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes([[<C-\><C-n>]], true, false, true), "n", false)
-            end
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes([[<C-\><C-n>]], true, false, true), "n", false)
           end,
-          desc = "Exit terminal mode or toggle Aider terminal",
+          desc = "Exit terminal mode",
         },
-
+        ["<C-q>"] = { "<C-\\><C-n><C-w>l", desc = "Hide terminal" },
         -- Add tmux-style window navigation
         ["<C-h>"] = {
           function()
