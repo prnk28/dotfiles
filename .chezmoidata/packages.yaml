@@ -162,6 +162,7 @@ packages:
       - "tinygo-org/tools/tinygo"
       - "valkyrie00/bbrew/bbrew"
     casks:
+      - "obsidian"
       - "nikitabobko/tap/aerospace"
       - "alacritty"
       - "chromium"

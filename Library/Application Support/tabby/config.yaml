@@ -1,0 +1,544 @@
+version: 7
+profiles:
+  - name: CRM
+    options:
+      host: 100.101.42.80
+      privateKeys:
+        - /Users/prad/.ssh/id_ed25519
+      x11: true
+      agentForward: true
+      algorithms: {}
+      input: {}
+    group: 0a85aa19-74e1-486f-9a4c-f67bfcae4f3a
+    terminalColorScheme:
+      name: Red Sands
+      foreground: "#d7c9a7"
+      background: "#7a251e"
+      cursor: "#ffffff"
+      colors:
+        - "#000000"
+        - "#ff3f00"
+        - "#00bb00"
+        - "#e7b000"
+        - "#0072ff"
+        - "#bb00bb"
+        - "#00bbbb"
+        - "#bbbbbb"
+        - "#555555"
+        - "#bb0000"
+        - "#00bb00"
+        - "#e7b000"
+        - "#0072ae"
+        - "#ff55ff"
+        - "#55ffff"
+        - "#ffffff"
+    icon: fas fa-layer-group
+    id: ssh:custom:CRM-Server:ed4840cb-88a0-4459-983a-65fbca6ddb6a
+    disableDynamicTitle: true
+    color: "#d9534f"
+    type: ssh
+  - name: Chain
+    options:
+      host: 100.99.39.15
+      privateKeys:
+        - /Users/prad/.ssh/id_ed25519
+      x11: true
+      agentForward: true
+      algorithms:
+        hmac:
+          - hmac-sha1
+          - hmac-sha1-etm@openssh.com
+          - hmac-sha2-256
+          - hmac-sha2-256-etm@openssh.com
+          - hmac-sha2-512
+          - hmac-sha2-512-etm@openssh.com
+        kex:
+          - curve25519-sha256
+          - curve25519-sha256@libssh.org
+          - diffie-hellman-group14-sha256
+          - diffie-hellman-group16-sha512
+          - ext-info-c
+          - ext-info-s
+          - kex-strict-c-v00@openssh.com
+          - kex-strict-s-v00@openssh.com
+        cipher:
+          - aes128-ctr
+          - aes192-ctr
+          - aes256-ctr
+          - aes256-gcm@openssh.com
+          - chacha20-poly1305@openssh.com
+        serverHostKey:
+          - ecdsa-sha2-nistp256
+          - ecdsa-sha2-nistp521
+          - rsa-sha2-256
+          - rsa-sha2-512
+          - ssh-ed25519
+          - ssh-rsa
+        compression:
+          - zlib@openssh.com
+          - zlib
+          - none
+      input: {}
+      scripts: []
+      forwardedPorts: []
+    id: ssh:custom:Chain-Server:6d235f2c-d944-4ec8-a91e-d61151a05a5a
+    group: 0a85aa19-74e1-486f-9a4c-f67bfcae4f3a
+    color: "#17c2ff"
+    icon: fas fa-cubes
+    terminalColorScheme:
+      name: Borland
+      foreground: "#ffff4e"
+      background: "#0000a4"
+      cursor: "#ffa560"
+      colors:
+        - "#4f4f4f"
+        - "#ff6c60"
+        - "#a8ff60"
+        - "#ffffb6"
+        - "#96cbfe"
+        - "#ff73fd"
+        - "#c6c5fe"
+        - "#eeeeee"
+        - "#7c7c7c"
+        - "#ffb6b0"
+        - "#ceffac"
+        - "#ffffcc"
+        - "#b5dcff"
+        - "#ff9cfe"
+        - "#dfdffe"
+        - "#ffffff"
+    disableDynamicTitle: true
+    type: ssh
+  - name: Data
+    options:
+      host: 100.100.152.64
+      privateKeys:
+        - /Users/prad/.ssh/id_ed25519
+      x11: true
+      agentForward: true
+      algorithms: {}
+      input: {}
+    group: 0a85aa19-74e1-486f-9a4c-f67bfcae4f3a
+    color: "#5cb85c"
+    terminalColorScheme:
+      name: Grass
+      foreground: "#fff0a5"
+      background: "#13773d"
+      cursor: "#8c2800"
+      colors:
+        - "#000000"
+        - "#bb0000"
+        - "#00bb00"
+        - "#e7b000"
+        - "#0000a3"
+        - "#950062"
+        - "#00bbbb"
+        - "#bbbbbb"
+        - "#555555"
+        - "#bb0000"
+        - "#00bb00"
+        - "#e7b000"
+        - "#0000bb"
+        - "#ff55ff"
+        - "#55ffff"
+        - "#ffffff"
+    icon: fas fa-database
+    id: ssh:custom:Data:75878460-af1c-4d29-80b6-2a7ea54f5499
+    disableDynamicTitle: true
+    type: ssh
+  - name: Dev
+    options:
+      host: 100.109.8.102
+      privateKeys:
+        - /Users/prad/.ssh/id_ed25519
+      x11: true
+      agentForward: true
+      algorithms: {}
+      input: {}
+    group: 0a85aa19-74e1-486f-9a4c-f67bfcae4f3a
+    terminalColorScheme:
+      name: Dracula
+      foreground: "#f8f8f2"
+      background: "#1e1f29"
+      cursor: "#bbbbbb"
+      colors:
+        - "#000000"
+        - "#ff5555"
+        - "#50fa7b"
+        - "#f1fa8c"
+        - "#bd93f9"
+        - "#ff79c6"
+        - "#8be9fd"
+        - "#bbbbbb"
+        - "#555555"
+        - "#ff5555"
+        - "#50fa7b"
+        - "#f1fa8c"
+        - "#bd93f9"
+        - "#ff79c6"
+        - "#8be9fd"
+        - "#ffffff"
+    icon: fas fa-code
+    id: ssh:custom:Dev:93aa1e73-764d-4692-b97f-e0a8ba3ec0d9
+    color: "#613d7c"
+    disableDynamicTitle: true
+    type: ssh
+  - type: ssh
+    group: e9eb5019-8d54-41a3-9a6c-de2af0d111e3
+    options:
+      agentForward: true
+      x11: true
+      privateKeys:
+        - /Users/prad/.ssh/id_ed25519
+      host: 100.103.121.40
+      user: prad
+      algorithms: {}
+      input: {}
+    icon: fas fa-server
+    name: Ashburn
+    terminalColorScheme:
+      name: ayu_light
+      foreground: "#5c6773"
+      background: "#fafafa"
+      cursor: "#ff6a00"
+      colors:
+        - "#000000"
+        - "#ff3333"
+        - "#86b300"
+        - "#f29718"
+        - "#41a6d9"
+        - "#f07178"
+        - "#4dbf99"
+        - "#ffffff"
+        - "#323232"
+        - "#ff6565"
+        - "#b8e532"
+        - "#ffc94a"
+        - "#73d8ff"
+        - "#ffa3aa"
+        - "#7ff1cb"
+        - "#ffffff"
+    id: ssh:custom:Ashburn:c94bc0c7-2d28-4378-a5f5-5a02f90c6a52
+groups:
+  - id: 0a85aa19-74e1-486f-9a4c-f67bfcae4f3a
+    name: Hostinger
+    defaults:
+      ssh:
+        type: ssh
+        options:
+          algorithms: {}
+          input: {}
+        behaviorOnSessionEnd: keep
+        disableDynamicTitle: false
+  - id: e9eb5019-8d54-41a3-9a6c-de2af0d111e3
+    name: Managed
+configSync:
+  parts: {}
+hotkeys:
+  toggle-window: []
+  copy-current-path: []
+  ctrl-c:
+    - ⌘-Shift-C
+  copy:
+    - ⌘-C
+  paste:
+    - ⌘-V
+  clear:
+    - Ctrl-C
+  select-all:
+    - ⌘-A
+  zoom-in:
+    - ⌘-=
+    - ⌘-Shift-=
+  zoom-out:
+    - ⌘--
+    - ⌘-Shift--
+  reset-zoom:
+    - ⌘-0
+  home:
+    - ⌘-Left
+    - Home
+  end:
+    - ⌘-Right
+    - End
+  previous-word:
+    - ⌥-Left
+  next-word:
+    - ⌥-Right
+  delete-previous-word:
+    - ⌥-Backspace
+  delete-line:
+    - ⌘-Backspace
+  delete-next-word:
+    - ⌥-Delete
+  search:
+    - ⌘-F
+  pane-focus-all:
+    - ⌘-Shift-I
+  focus-all-tabs:
+    - ⌘-⌥-Shift-I
+  scroll-to-top:
+    - Shift-PageUp
+  scroll-page-up:
+    - ⌥-PageUp
+  scroll-up:
+    - Ctrl-Shift-Up
+  scroll-down:
+    - Ctrl-Shift-Down
+  scroll-page-down:
+    - ⌥-PageDown
+  scroll-to-bottom:
+    - Shift-PageDown
+  restart-telnet-session: []
+  restart-ssh-session: []
+  launch-winscp: []
+  settings-tab: {}
+  settings:
+    - ⌘-,
+  serial:
+    - Alt-K
+  restart-serial-session: []
+  new-tab: []
+  new-window:
+    - ⌘-N
+  profile:
+    ssh:custom:Chain-Server:6d235f2c-d944-4ec8-a91e-d61151a05a5a:
+      - ⌘-1
+    ssh:custom:CRM-Server:ed4840cb-88a0-4459-983a-65fbca6ddb6a:
+      - ⌘-2
+    ssh:custom:Data:75878460-af1c-4d29-80b6-2a7ea54f5499:
+      - ⌘-3
+    ssh:custom:Dev:93aa1e73-764d-4692-b97f-e0a8ba3ec0d9:
+      - ⌘-4
+    ssh:custom:Ashburn:c94bc0c7-2d28-4378-a5f5-5a02f90c6a52:
+      - ⌘-5
+  profile-selectors: {}
+  group-selectors: {}
+  toggle-fullscreen:
+    - Ctrl+⌘+F
+  close-tab:
+    - ⌘-W
+  reopen-tab:
+    - ⌘-Shift-T
+  toggle-last-tab: []
+  rename-tab:
+    - ⌘-R
+  next-tab:
+    - Ctrl-Tab
+    - Ctrl-L
+  previous-tab:
+    - Ctrl-Shift-Tab
+    - Ctrl-H
+  move-tab-left:
+    - ⌘-Shift-Left
+  move-tab-right:
+    - ⌘-Shift-Right
+  rearrange-panes:
+    - Ctrl-Shift
+  tab-1:
+    - ⌘-1
+  tab-2:
+    - ⌘-2
+  tab-3:
+    - ⌘-3
+  tab-4:
+    - ⌘-4
+  tab-5:
+    - ⌘-5
+  tab-6:
+    - ⌘-6
+  tab-7:
+    - ⌘-7
+  tab-8:
+    - ⌘-8
+  tab-9:
+    - ⌘-9
+  tab-10: []
+  duplicate-tab: []
+  restart-tab: []
+  reconnect-tab: []
+  disconnect-tab: []
+  explode-tab:
+    - ⌘-Shift-.
+  combine-tabs:
+    - ⌘-Shift-,
+  tab-11: []
+  tab-12: []
+  tab-13: []
+  tab-14: []
+  tab-15: []
+  tab-16: []
+  tab-17: []
+  tab-18: []
+  tab-19: []
+  tab-20: []
+  split-right:
+    - ⌘-Shift-D
+  split-bottom:
+    - ⌘-D
+  split-left: []
+  split-top: []
+  pane-nav-right:
+    - ⌘-⌥-Right
+  pane-nav-down:
+    - ⌘-⌥-Down
+  pane-nav-up:
+    - ⌘-⌥-Up
+  pane-nav-left:
+    - ⌘-⌥-Left
+  pane-nav-previous:
+    - ⌘-⌥-[
+  pane-nav-next:
+    - ⌘-⌥-]
+  pane-nav-1: []
+  pane-nav-2: []
+  pane-nav-3: []
+  pane-nav-4: []
+  pane-nav-5: []
+  pane-nav-6: []
+  pane-nav-7: []
+  pane-nav-8: []
+  pane-nav-9: []
+  pane-maximize:
+    - ⌘-⌥-Enter
+  close-pane:
+    - ⌘-Shift-W
+  pane-increase-vertical: []
+  pane-decrease-vertical: []
+  pane-increase-horizontal: []
+  pane-decrease-horizontal: []
+  profile-selector:
+    - ⌘-K
+    - ⌘-T
+  switch-profile:
+    - ⌘-Shift-E
+  command-selector:
+    - ⌘-Shift-P
+terminal:
+  searchOptions: {}
+  colorScheme:
+    name: Tabby Default
+    foreground: "#cacaca"
+    background: "#171717"
+    cursor: "#bbbbbb"
+    colors:
+      - "#000000"
+      - "#ff615a"
+      - "#b1e969"
+      - "#ebd99c"
+      - "#5da9f6"
+      - "#e86aff"
+      - "#82fff7"
+      - "#dedacf"
+      - "#313131"
+      - "#f58c80"
+      - "#ddf88f"
+      - "#eee5b2"
+      - "#a5c7ff"
+      - "#ddaaff"
+      - "#b7fff9"
+      - "#ffffff"
+  lightColorScheme:
+    name: Rose Pine Moon
+    foreground: "#e0def4"
+    background: "#232136"
+    cursor: "#59546d"
+    colors:
+      - "#393552"
+      - "#eb6f92"
+      - "#3e8fb0"
+      - "#f6c177"
+      - "#9ccfd8"
+      - "#c4a7e7"
+      - "#ea9a97"
+      - "#e0def4"
+      - "#817c9c"
+      - "#eb6f92"
+      - "#3e8fb0"
+      - "#f6c177"
+      - "#9ccfd8"
+      - "#c4a7e7"
+      - "#ea9a97"
+      - "#e0def4"
+  customColorSchemes: []
+  showTabProfileIcon: true
+  hideTabOptionsButton: true
+  hideCloseButton: true
+  altIsMeta: true
+  copyOnSelect: true
+  bell: audible
+  font: ZedMono Nerd Font Mono
+  fontSize: 18
+  ligatures: true
+  fontWeight: 200
+  fontWeightBold: 400
+  cursor: underline
+  hideTabIndex: true
+ssh:
+  knownHosts:
+    - host: 100.99.39.15
+      port: 22
+      type: ecdsa-sha2-nistp256
+      digest: ogy43Dcr7nTBijMP1seEoxNDsZ2U95s3oo2UqnTGGC0=
+    - host: 100.101.42.80
+      port: 22
+      type: ecdsa-sha2-nistp256
+      digest: s6o1eSWuBzd62WsZJzByg5QSGmzAVxnw/H5+oGoeaV0=
+    - host: 100.100.152.64
+      port: 22
+      type: ecdsa-sha2-nistp256
+      digest: I0txVWIZhx8G83zolm57ZjG5eu0uAGf8Xnd6F23YAKk=
+    - host: 100.109.8.102
+      port: 22
+      type: ecdsa-sha2-nistp256
+      digest: eTD6laGr8b7CtajexmG5lVrq0gbdGR5Cf7N7KsoYDiQ=
+    - host: 100.103.121.40
+      port: 22
+      type: ecdsa-sha2-nistp256
+      digest: NanBNzzMvhGXMs7G4HZ8SfUKCKvrByzYNUGUvQ+MP5Y=
+clickableLinks: {}
+accessibility:
+  animations: false
+appearance:
+  colorSchemeMode: system
+  opacity: 0.9
+  lastTabClosesWindow: true
+  tabsLocation: bottom
+  vibrancy: true
+  spaciness: 1.2
+  flexTabs: true
+hacks: {}
+providerBlacklist: []
+commandBlacklist: []
+enableAnalytics: false
+enableWelcomeTab: false
+pluginBlacklist: []
+profileBlacklist:
+  - local:binbash
+  - local:opthomebrewbinbash
+  - local:bincsh
+  - local:default
+  - local:binksh
+  - local:bindash
+  - socket:template
+  - serial:port-devtty-wlan-debug
+  - serial:port-devtty-debug-console
+  - serial:port-devtty-JIBTRUE2
+  - serial:port-devtty-Bluetooth-Incoming-Port
+  - serial:template
+  - serial:port-devtty-usbmodem213101
+  - local:binsh
+  - ssh:template
+  - local:bintcsh
+  - telnet:template
+  - openssh-config:chain-server
+  - openssh-config:crm-server
+  - local:binzsh
+  - openssh-config:data-server
+  - openssh-config:dev-server
+  - openssh-config:local-server-rack
+profileDefaults:
+  ssh:
+    disableDynamicTitle: true
+backgroundPlugin: {}
+hideTray: true

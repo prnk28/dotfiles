@@ -131,10 +131,6 @@ if.app-id = 'io.iconset.app'
 run = 'move-node-to-workspace 4'
 
 [[on-window-detected]]
-if.app-id = 'md.obsidian'
-run = 'move-node-to-workspace 8'
-
-[[on-window-detected]]
 if.app-id = 'notion.id'
 run = 'move-node-to-workspace 8'
 
@@ -151,6 +147,10 @@ run = 'move-node-to-workspace 10'
 # =====================
 [[on-window-detected]]
 if.app-id = 'com.raycast.macos'
+run = 'move-node-to-workspace 3'
+
+[[on-window-detected]]
+if.app-id = 'org.tabby'
 run = 'move-node-to-workspace 3'
 
 [[on-window-detected]]
@@ -174,7 +174,7 @@ if.app-id = 'at.eggerapps.Postico.2.MacAppStore'
 run = 'move-node-to-workspace 9'
 
 [[on-window-detected]]
-if.app-id="dev.kdrag0n.MacVirt"
+if.app-id = "md.obsidian"
 run = 'move-node-to-workspace 9'
 
 [[on-window-detected]]

@@ -190,6 +190,7 @@ return {
             ".envrc",
             "CLAUDE.md",
             "api",
+            "chains",
           },
           never_show_by_pattern = {
             ".pkl-lsp",

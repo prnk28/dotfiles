@@ -23,6 +23,12 @@ export DYLD_LIBRARY_PATH="{{ .chezmoi.homeDir }}/.local/lib:$DYLD_LIBRARY_PATH"
 export CPATH="$(brew --prefix)/include"
 export LIBRARY_PATH="$(brew --prefix)/lib"
 
+# Claude code vars
+export ENABLE_BACKGROUND_TASKS=1
+export FORCE_AUTO_BACKGROUND_TASKS=1
+
+precmd () { echo -n "\x1b]1337;CurrentDir=$(pwd)\x07" }
+
 # Check if the shell is interactive and if not already in a tmux session
 if [[ "$-" == *i* ]] && [[ -z "$TMUX" ]] && [ -x "$(command -v tt)" ]; then
   # Attempt to attach to a session named 'main', or create it if it doesn't exist
