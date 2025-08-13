@@ -165,6 +165,7 @@ return {
             "devbox*",
           },
           hide_by_name = {
+            "api",
             "turbo.json",
             "OpenCode.md",
             "AGENT.md",
