@@ -501,7 +501,7 @@ accessibility:
   animations: false
 appearance:
   colorSchemeMode: system
-  opacity: 0.9
+  opacity: 0.84
   lastTabClosesWindow: true
   tabsLocation: bottom
   vibrancy: true
