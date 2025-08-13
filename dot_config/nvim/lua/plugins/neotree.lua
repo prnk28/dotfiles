@@ -168,6 +168,8 @@ return {
             "api",
             "crypto",
             "deploy",
+            "proto",
+            "docs",
             "turbo.json",
             "OpenCode.md",
             "AGENT.md",
