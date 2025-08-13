@@ -95,7 +95,6 @@ packages:
       - "neovim"
       - "nerdlog"
       - "pandoc"
-      - "pnpm"
       - "prettier"
       - "pssh"
       - "scooter"
