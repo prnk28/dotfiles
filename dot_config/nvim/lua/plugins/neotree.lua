@@ -166,6 +166,7 @@ return {
           },
           hide_by_name = {
             "api",
+            "deploy",
             "turbo.json",
             "OpenCode.md",
             "AGENT.md",
