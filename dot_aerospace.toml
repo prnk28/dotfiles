@@ -17,13 +17,13 @@ outer.right = 8
 [workspace-to-monitor-force-assignment]
 1 = '2'
 2 = 'Built-in Retina Display'
-3 = '3' 
+3 = '2' 
 4 = 'Built-in Retina Display'
 5 = '2'
-6 = '3'
+6 = 'Built-in Retina Display'
 7 = '2'
 8 = 'Built-in Retina Display'
-9 = '3'
+9 = '2'
 10 = 'Built-in Retina Display'
 
 [mode.main.binding]
@@ -131,6 +131,10 @@ if.app-id = 'io.iconset.app'
 run = 'move-node-to-workspace 4'
 
 [[on-window-detected]]
+if.app-id = 'org.tabby'
+run = 'move-node-to-workspace 6'
+
+[[on-window-detected]]
 if.app-id = 'notion.id'
 run = 'move-node-to-workspace 8'
 
@@ -147,10 +151,6 @@ run = 'move-node-to-workspace 10'
 # =====================
 [[on-window-detected]]
 if.app-id = 'com.raycast.macos'
-run = 'move-node-to-workspace 3'
-
-[[on-window-detected]]
-if.app-id = 'org.tabby'
 run = 'move-node-to-workspace 3'
 
 [[on-window-detected]]

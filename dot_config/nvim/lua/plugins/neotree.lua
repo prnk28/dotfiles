@@ -165,7 +165,9 @@ return {
             "devbox*",
           },
           hide_by_name = {
+            "CONSTITUTION.md",
             "api",
+            "contracts",
             "crypto",
             "deploy",
             "proto",
@@ -277,6 +279,8 @@ return {
             ".timemachine",
             "junit.xml",
             ".jj",
+            ".spawn",
+            ".turbo",
           },
         },
       },
