@@ -169,7 +169,6 @@ return {
             "api",
             "contracts",
             "crypto",
-            "deploy",
             "proto",
             "turbo.json",
             "OpenCode.md",
