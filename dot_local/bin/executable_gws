@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-set -e
-
-cd "$(git worktree list | fzf | awk '{$NF=""; $(NF-1)=""; sub(/ *$/, ""); print}')"

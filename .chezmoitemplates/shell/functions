@@ -12,6 +12,26 @@ function smart_fg_or_nvim() {
 zle -N smart_fg_or_nvim
 bindkey '^Z' smart_fg_or_nvim
 
+# Function to change directory to a git worktree selected with fzf
+function gws() {
+  # Use `local` to keep variables from polluting the global shell environment.
+  local selected_line
+  local worktree_path
+
+  # Get the full line selected from fzf.
+  # The `|| return` part ensures that if fzf is cancelled (returns a non-zero exit code),
+  # the function exits gracefully.
+  selected_line=$(git worktree list | fzf --height 30% --reverse) || return
+
+  # Use awk to extract the path by removing the last two columns (commit and branch).
+  # This correctly handles paths that contain spaces.
+  worktree_path=$(printf "%s" "$selected_line" | awk '{$NF=""; $(NF-1)=""; sub(/ *$/, ""); print}')
+  
+  # Change to the selected directory.
+  # The `cd` command is now running in your main shell, not a subshell.
+  cd "$worktree_path"
+}
+
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
 	yazi "$@" --cwd-file="$tmp"
