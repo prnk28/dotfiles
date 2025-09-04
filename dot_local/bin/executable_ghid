@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -e
+
+# Default Variables
+ISSUE=$(gh list-issues)
+BRANCH_NAME=$(gh issue view $ISSUE | mods -R branch-namer)
+
+gum confirm "Start work on #$ISSUE on $BRANCH_NAME?" && gh issue develop $ISSUE -n "$BRANCH_NAME" -c || exit 1
+
