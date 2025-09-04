@@ -7,6 +7,7 @@ alias e="nvim"
 alias vi="nvim"
 alias vim="nvim"
 alias e.usr="cd /usr/local/bin && sudo nvim"
+alias gws='cd "$(git worktree list | fzf | awk '{$NF=""; $(NF-1)=""; sub(/ *$/, ""); print}')"'
 
 # Shell & Terminal
 alias x="clear"
