@@ -170,6 +170,7 @@ return {
             "contracts",
             "crypto",
             "proto",
+            "etc",
             "turbo.json",
             "OpenCode.md",
             "AGENT.md",
