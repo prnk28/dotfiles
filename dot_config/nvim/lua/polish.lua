@@ -13,4 +13,22 @@ require("overseer").setup {
     open_on_start = true,
     hidden = true,
   },
+  form = {
+    win_opts = {
+      winblend = 0,
+      winhighlight = "NormalFloat:MyCustomHighlight",
+    },
+  },
+  confirm = {
+    win_opts = {
+      winblend = 0,
+      winhighlight = "NormalFloat:MyCustomHighlight",
+    },
+  },
+  task_win = {
+    win_opts = {
+      winblend = 0,
+      winhighlight = "NormalFloat:MyCustomHighlight",
+    },
+  },
 }
