@@ -7,14 +7,13 @@ GIT_WORK_TREE="$GIT_ROOT/.gitwork"
 
 ISSUE=$(gh list-issues)
 BRANCH_NAME=$(gh issue view $ISSUE | mods -R branch-namer)
-
+GITWORK_DIR="$GIT_WORK_TREE/$BRANCH_NAME"
 
 copy_issue_to_clipboard() {
   pbcopy <<< $ISSUE
 }
 
 create_worktree() {
-  GITWORK_DIR="$GIT_WORK_TREE/$BRANCH_NAME"
   if [[ -d $GITWORK_DIR ]]; then
     gum log "Worktree already exists: $GITWORK_DIR"
     return 1
@@ -32,13 +31,14 @@ confirm_develop() {
   gum confirm "Start work on #$ISSUE on $BRANCH_NAME?" && start_develop || exit 1
 }
 
-confirm_vt_follow() {
-  gum confirm "Follow #$ISSUE on $BRANCH_NAME?" && vt follow $BRANCH_NAME || exit 1
+sync_r2_claude() {
+  cd $GITWORK_DIR
+  rclone sync -P r2:claude .claude
 }
 
 main() {
   confirm_develop
-  confirm_vt_follow
+  sync_r2_claude
   copy_issue_to_clipboard
 }
 
