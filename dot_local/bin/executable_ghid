@@ -2,8 +2,44 @@
 set -e
 
 # Default Variables
+GIT_ROOT=$(git rev-parse --show-toplevel)
+GIT_WORK_TREE="$GIT_ROOT/.gitwork"
+
 ISSUE=$(gh list-issues)
 BRANCH_NAME=$(gh issue view $ISSUE | mods -R branch-namer)
 
-gum confirm "Start work on #$ISSUE on $BRANCH_NAME?" && gh issue develop $ISSUE -n "$BRANCH_NAME" -c || exit 1
 
+copy_issue_to_clipboard() {
+  pbcopy <<< $ISSUE
+}
+
+create_worktree() {
+  GITWORK_DIR="$GIT_WORK_TREE/$BRANCH_NAME"
+  if [[ -d $GITWORK_DIR ]]; then
+    gum log "Worktree already exists: $GITWORK_DIR"
+    return 1
+  fi
+  git worktree add "$GITWORK_DIR" "$BRANCH_NAME"
+  return 0
+}
+
+start_develop() {
+  gh issue develop $ISSUE -n "$BRANCH_NAME"
+  create_worktree
+}
+
+confirm_develop() {
+  gum confirm "Start work on #$ISSUE on $BRANCH_NAME?" && start_develop || exit 1
+}
+
+confirm_vt_follow() {
+  gum confirm "Follow #$ISSUE on $BRANCH_NAME?" && vt follow $BRANCH_NAME || exit 1
+}
+
+main() {
+  confirm_develop
+  confirm_vt_follow
+  copy_issue_to_clipboard
+}
+
+main "$@"
