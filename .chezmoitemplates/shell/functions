@@ -11,6 +11,16 @@ function smart_fg_or_nvim() {
 }
 zle -N smart_fg_or_nvim
 bindkey '^Z' smart_fg_or_nvim
+3
+
+fdcd() {
+  local dir
+  dir=$(
+    cd &&
+      fd -0 --type d --ignore-file ~/.config/fd/ignore --hidden |
+      fzf --read0
+  ) && cd ~/$dir
+}
 
 # Function to change directory to a git worktree selected with fzf
 function gws() {
