@@ -8,6 +8,7 @@ alias vi="nvim"
 alias vim="nvim"
 alias e.usr="cd /usr/local/bin && sudo nvim"
 alias vtd="open http://prads-macbook-pro-2.moray-bleak.ts.net:4020"
+alias gdi="ghid"
 
 # Shell & Terminal
 alias x="clear"
