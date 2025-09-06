@@ -8,6 +8,8 @@ return {
   {
     "folke/snacks.nvim",
     opts = {
+      input = {},
+      terminal = {},
       dashboard = {
         preset = {
           header = table.concat({
