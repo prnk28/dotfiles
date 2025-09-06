@@ -6,11 +6,11 @@ GIT_ROOT=$(git rev-parse --show-toplevel)
 GIT_WORK_TREE="$GIT_ROOT/.gitwork"
 
 ISSUE=$(gh list-issues)
-BRANCH_NAME=$(gh issue view $ISSUE | mods -R branch-namer)
+BRANCH_NAME=$(gh issue view "$ISSUE" | mods -R branch-namer)
 GITWORK_DIR="$GIT_WORK_TREE/$BRANCH_NAME"
 
 copy_issue_to_clipboard() {
-  pbcopy <<< $ISSUE
+  pbcopy <<<"$ISSUE"
 }
 
 create_worktree() {
@@ -23,7 +23,7 @@ create_worktree() {
 }
 
 start_develop() {
-  gh issue develop $ISSUE -n "$BRANCH_NAME"
+  gh issue develop "$ISSUE" -n "$BRANCH_NAME"
   create_worktree
 }
 
@@ -32,7 +32,7 @@ confirm_develop() {
 }
 
 sync_r2_claude() {
-  cd $GITWORK_DIR
+  cd "$GITWORK_DIR"
   rclone sync -P r2:claude .claude
 }
 

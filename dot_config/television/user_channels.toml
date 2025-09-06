@@ -111,5 +111,3 @@ preview_command = "bat --color=always --style=numbers {0}"
 name = "md"
 source_command = 'fd --type f --color=never  -e md -e markdown -E "node_modules/" -E "vendor/"'
 preview_command = "bat --color=always --style=numbers {0}"
-
-

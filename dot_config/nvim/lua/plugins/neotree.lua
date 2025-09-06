@@ -136,13 +136,13 @@ return {
         bind_to_cwd = true,
         follow_current_file = {
           enabled = true,
-          leave_dirs_open = true,
+          leave_dirs_open = false,
         },
         filtered_items = {
           force_visible_in_empty_folder = false,
-          group_empty = true,
+          group_empty = false,
           show_hidden_count = false,
-          hide_dotfiles = true,
+          hide_dotfiles = false,
           hide_gitignored = true,
           hide_by_pattern = {
             "chain_*.json",

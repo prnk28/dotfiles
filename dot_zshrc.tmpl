@@ -18,27 +18,27 @@ export EDITOR=nvim
 export VISUAL=nvim
 
 # Load language/tool specific configurations
-{{ template "shell/golang" . }}
-{{ template "shell/rust" . }}
-{{ template "shell/node" . }}
-{{ template "shell/python" . }}
+{{ template "zsh/golang" . }}
+{{ template "zsh/rust" . }}
+{{ template "zsh/node" . }}
+{{ template "zsh/python" . }}
 
 # Initialize interactive tools
-{{ template "shell/tools" . }}
+{{ template "zsh/tools" . }}
 
 # Shell enhancements
-{{ template "shell/enhancements" . }}
+{{ template "zsh/enhancements" . }}
 
 # Platform specific configurations
 {{ if eq .chezmoi.os "darwin" -}}
-{{ template "shell/darwin" . }}
+{{ template "zsh/darwin" . }}
 {{ else if eq .chezmoi.os "linux" -}}
-{{ template "shell/linux" . }}
+{{ template "zsh/linux" . }}
 {{ end -}}
 
 # User specific aliases
-{{ template "shell/aliases" . }}
-{{ template "shell/functions" . }}
+{{ template "zsh/aliases" . }}
+{{ template "zsh/functions" . }}
 
 # Load Doppler secrets
 if [ -f {{ .chezmoi.homeDir }}/.config/doppler/env.sh ]; then

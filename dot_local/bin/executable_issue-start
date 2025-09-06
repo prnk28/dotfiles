@@ -14,25 +14,25 @@ OPTIND=1
 # Parse command-line options
 while getopts "n:p:" opt; do
   case "$opt" in
-    n)
-      NUMBER=$OPTARG
-      ;;
-    p)
-      REPO_PATH=$OPTARG
-      ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      exit 1
-      ;;
-    :)
-      echo "Option -$OPTARG requires an argument." >&2
-      exit 1
-      ;;
+  n)
+    NUMBER=$OPTARG
+    ;;
+  p)
+    REPO_PATH=$OPTARG
+    ;;
+  \?)
+    echo "Invalid option: -$OPTARG" >&2
+    exit 1
+    ;;
+  :)
+    echo "Option -$OPTARG requires an argument." >&2
+    exit 1
+    ;;
   esac
 done
 
 # Shift away the parsed options
-shift $((OPTIND-1))
+shift $((OPTIND - 1))
 
 # Validate that required arguments are provided
 if [ -z "$NUMBER" ]; then
@@ -50,9 +50,9 @@ fi
 # ensuring it targets the correct repository without changing the
 # script's working directory.
 function branch-namer() {
-    local title
-    title=$( (cd "$REPO_PATH" && gh issue view "$NUMBER" | mods -R branch-namer) )
-    echo "$title"
+  local title
+  title=$( (cd "$REPO_PATH" && gh issue view "$NUMBER" | mods -R branch-namer))
+  echo "$title"
 }
 
 BRANCH=$(branch-namer)

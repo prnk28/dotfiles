@@ -86,10 +86,6 @@ alias ghca='for id in $(gh run list --limit 5000 --jq ".[] | select(.status == \
 # ============================================
 # Package managers & runtimes
 alias b="bun"
-alias d="devbox"
-alias dx="devbox"
-alias dxd="devbox services down"
-alias dxu="devbox services up"
 alias python="python3"
 alias pip="pip3"
 
@@ -100,7 +96,7 @@ alias ti="dstask-import"
 # Docker
 alias dd="lazydocker"
 alias dkrmi="docker_rm_image"
-alias dkc="docker_stoprm_container"
+alias dkc="docker_storm_container"
 
 # Docker Compose
 alias dcu="docker compose up"
@@ -178,3 +174,17 @@ alias bmad-install="npx bmad-method install"
 alias task-gh-dash="task -t ~/.local/taskfiles/Taskfile.gh-dash.yml"
 alias task-lazygit="task -t ~/.local/taskfiles/Taskfile.lazygit.yml"
 alias task-tmux="task -t ~/.local/taskfiles/Taskfile.tmux.yml"
+
+# ============================================
+# Devbox shortcuts
+# ============================================
+alias dx="devbox"
+alias dxa="devbox add"
+alias dxr="devbox run $(fd "devbox.json" -x jq -r '.shell.scripts | keys[]' {} | fzf --header Select Devbox Script:)"
+alias dxrm="devbox rm"
+alias dxg="devbox global"
+alias dxga="devbox global add"
+alias dxgrm="devbox global rm"
+alias dxs="devbox services"
+alias dxsu="devbox services up"
+alias dxsd="devbox services down"

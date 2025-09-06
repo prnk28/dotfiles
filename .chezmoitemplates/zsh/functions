@@ -11,7 +11,18 @@ function smart_fg_or_nvim() {
 }
 zle -N smart_fg_or_nvim
 bindkey '^Z' smart_fg_or_nvim
-3
+
+dxr() {
+  # Capture the selected script in a local variable
+  local script
+  script=$(fd "devbox.json" -x jq -r '.shell.scripts | keys[]' {} 2>/dev/null | fzf --header "Select Devbox Script" --tmux)
+
+  # Check if the variable is non-empty before executing the command
+  if [ -n "$script" ]; then
+    devbox run "$script"
+  fi
+}
+
 
 fdcd() {
   local dir
@@ -327,32 +338,6 @@ function trc() {
 function inf() {
   INFISICAL_API_URL="https://secrets.gitsonr.io/api"
   infisical $1
-}
-
-function dxr() {
-  # If a command argument is provided, execute it directly
-  if [ -n "$1" ]; then
-    devbox run "$1"
-    return
-  fi
-
-  # Check if devbox.json exists in the current directory
-  if [ ! -f devbox.json ]; then
-    echo "Error: devbox.json not found in the current directory."
-    return 1
-  fi
-
-  # Use jq to extract the script keys, then fzf to prompt user for a selection
-  local selected_command
-  selected_command=$(tv devbox)
-  # If nothing was selected, exit
-  if [ -z "$selected_command" ]; then
-    echo "No command selected."
-    return 1
-  fi
-
-  # Run the selected command using devbox run
-  devbox run "$selected_command"
 }
 
 function run_make() {

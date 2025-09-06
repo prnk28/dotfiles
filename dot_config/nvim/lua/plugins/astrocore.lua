@@ -32,7 +32,7 @@ return {
       -- automatically update working directory (update manually with `:AstroRoot`)
       autochdir = false,
       -- scope of working directory to change ("global"|"tab"|"win")
-      scope = "tab", -- Changed from "win" to "global" to make directory changes apply globally
+      scope = "win", -- Changed from "win" to "global" to make directory changes apply globally
       -- show notification on every working directory change
       notify = false,
     },
@@ -40,7 +40,7 @@ return {
     -- Configure core features of AstroNvim
     features = {
       autopairs = true, -- enable autopairs at start
-      diagnostics_mode = 3, -- diagnostic mode on start (0 = off, 1 = no signs/virtual text, 2 = no virtual text, 3 = on)
+      diagnostics_mode = 1, -- diagnostic mode on start (0 = off, 1 = no signs/virtual text, 2 = no virtual text, 3 = on)
       highlighturl = true, -- highlight URLs at start
       notifications = false, -- enable notifications at start
     },

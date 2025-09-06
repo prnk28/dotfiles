@@ -6,24 +6,6 @@
 return {
   -- Lazy.nvim
   {
-    "xvzc/chezmoi.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      require("chezmoi").setup {
-        -- your configurations
-      }
-    end,
-  },
-  {
-    "nvim-neotest/neotest",
-    dependencies = {
-      "nvim-neotest/nvim-nio",
-      "nvim-lua/plenary.nvim",
-      "antoinemadec/FixCursorHold.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
-  },
-  {
     "folke/snacks.nvim",
     opts = {
       dashboard = {
@@ -60,14 +42,12 @@ return {
     },
     build = function()
       require("pkl-neovim").init()
-
       -- Set up syntax highlighting.
       vim.cmd "TSInstall pkl"
     end,
     config = function()
       -- Set up snippets.
       require("luasnip.loaders.from_snipmate").lazy_load()
-
       -- Configure pkl-lsp
       vim.g.pkl_neovim = {
         start_command = { "pkl-lsp" },
