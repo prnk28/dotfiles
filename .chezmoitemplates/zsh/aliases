@@ -180,7 +180,6 @@ alias task-tmux="task -t ~/.local/taskfiles/Taskfile.tmux.yml"
 # ============================================
 alias dx="devbox"
 alias dxa="devbox add"
-alias dxr="devbox run $(fd "devbox.json" -x jq -r '.shell.scripts | keys[]' {} | fzf --header Select Devbox Script:)"
 alias dxrm="devbox rm"
 alias dxg="devbox global"
 alias dxga="devbox global add"
