@@ -4,3 +4,4 @@ old-dots
 .aider.chat.history.md
 logs
 dot_config/yazi/flavors
+dot_config/nvim/.browser-echo-mcp.json

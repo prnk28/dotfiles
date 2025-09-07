@@ -159,6 +159,7 @@ return {
             ".trunk",
             ".config",
             ".cz.toml",
+            "*_integration.go",
             "*_test.go",
             "*_mock.go",
             "biome*",

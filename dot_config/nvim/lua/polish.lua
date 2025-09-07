@@ -9,6 +9,7 @@ require("overseer").setup {
     use_shell = false,
     auto_scroll = true,
     close_on_exit = false,
+    direction = "tab",
     quit_on_exit = "success",
     open_on_start = true,
     hidden = true,

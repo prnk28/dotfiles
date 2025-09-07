@@ -52,6 +52,8 @@ return {
     "rebelot/heirline.nvim",
     opts = function(_, opts)
       local status = require "astroui.status"
+      -- Disable heirline's tabline since we're using bufferline
+      opts.tabline = nil
       opts.statusline = {
         -- default highlight for the entire statusline
         hl = { fg = "fg", bg = "bg" },

@@ -30,9 +30,9 @@ return {
         dirs = {}, -- list of directory patterns (Ex. { "~/.cargo/*" })
       },
       -- automatically update working directory (update manually with `:AstroRoot`)
-      autochdir = false,
+      autochdir = true,
       -- scope of working directory to change ("global"|"tab"|"win")
-      scope = "global", -- Changed from "win" to "global" to make directory changes apply globally
+      scope = "win", -- Changed from "win" to "global" to make directory changes apply globally
       -- show notification on every working directory change
       notify = false,
     },
@@ -71,8 +71,37 @@ return {
       n = {
         -- navigate buffer tabs
         ["F"] = { "za", desc = "Toggle fold under cursor" },
-        ["L"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
-        ["H"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
+        ["L"] = { "<Cmd>BufferLineCycleNext<CR>", desc = "Next buffer" },
+        ["H"] = { "<Cmd>BufferLineCyclePrev<CR>", desc = "Previous buffer" },
+        ["<leader>bg"] = { "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
+        ["<leader>bc"] = { "<Cmd>BufferLinePickClose<CR>", desc = "Pick buffer to close" },
+        ["<leader>bG"] = {
+          function()
+            -- Cycle through groups to toggle their visibility
+            local groups = { "Proto", "Tests", "Actions", "Scripts", "Config", "Docs", "Shells" }
+            for _, group in ipairs(groups) do
+              vim.cmd("BufferLineGroupToggle " .. group)
+            end
+          end,
+          desc = "Toggle all buffer groups",
+        },
+        -- Individual group toggles
+        ["<leader>bgp"] = { "<Cmd>BufferLineGroupToggle Proto<CR>", desc = "Toggle Proto group" },
+        ["<leader>bgt"] = { "<Cmd>BufferLineGroupToggle Tests<CR>", desc = "Toggle Tests group" },
+        ["<leader>bga"] = { "<Cmd>BufferLineGroupToggle Actions<CR>", desc = "Toggle Actions group" },
+        ["<leader>bgs"] = { "<Cmd>BufferLineGroupToggle Scripts<CR>", desc = "Toggle Scripts group" },
+        ["<leader>bgc"] = { "<Cmd>BufferLineGroupToggle Config<CR>", desc = "Toggle Config group" },
+        ["<leader>bgd"] = { "<Cmd>BufferLineGroupToggle Docs<CR>", desc = "Toggle Docs group" },
+        ["<leader>bgh"] = { "<Cmd>BufferLineGroupToggle Shells<CR>", desc = "Toggle Shells group" },
+        -- Group close commands
+        ["<leader>bxp"] = { "<Cmd>BufferLineGroupClose Proto<CR>", desc = "Close Proto group buffers" },
+        ["<leader>bxt"] = { "<Cmd>BufferLineGroupClose Tests<CR>", desc = "Close Tests group buffers" },
+        ["<leader>bxa"] = { "<Cmd>BufferLineGroupClose Actions<CR>", desc = "Close Actions group buffers" },
+        ["<leader>bxs"] = { "<Cmd>BufferLineGroupClose Scripts<CR>", desc = "Close Scripts group buffers" },
+        ["<leader>bxc"] = { "<Cmd>BufferLineGroupClose Config<CR>", desc = "Close Config group buffers" },
+        ["<leader>bxd"] = { "<Cmd>BufferLineGroupClose Docs<CR>", desc = "Close Docs group buffers" },
+        ["<leader>bxh"] = { "<Cmd>BufferLineGroupClose Shells<CR>", desc = "Close Shells group buffers" },
+        ["<leader>bxu"] = { "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Close ungrouped buffers" },
         ["K"] = { function() vim.diagnostic.goto_prev() end, desc = "Previous Diagnostic" },
         ["J"] = { function() vim.diagnostic.goto_next() end, desc = "Next Diagnostic" },
         ["T"] = { "gg", desc = "Go to top of file" },
