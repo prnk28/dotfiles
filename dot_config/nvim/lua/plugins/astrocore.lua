@@ -4,7 +4,7 @@ local Terminal = require("toggleterm.terminal").Terminal
 local claude = Terminal:new {
   cmd = "claude --continue",
   hidden = true,
-  direction = "tab",
+  direction = "vertical",
   close_on_exit = false, -- function to run on opening the terminal
   on_open = function(term)
     vim.cmd "startinsert!"
@@ -16,7 +16,7 @@ local claude = Terminal:new {
 local opencode = Terminal:new {
   cmd = "opencode",
   hidden = true,
-  direction = "vertical",
+  direction = "tab",
   close_on_exit = false, -- function to run on opening the terminal
   on_open = function(term)
     vim.cmd "startinsert!"
@@ -57,7 +57,7 @@ local lazyjournal = Terminal:new {
 local pc = Terminal:new {
   cmd = "devbox services attach",
   hidden = true,
-  direction = "float", -- function to run on opening the terminal
+  direction = "tab", -- function to run on opening the terminal
   on_open = function(term)
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
