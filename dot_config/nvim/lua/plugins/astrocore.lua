@@ -22,7 +22,6 @@ local opencode = Terminal:new {
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
   end,
-  on_close = function(term) vim.cmd "startinsert!" end,
 }
 
 local ghdash = Terminal:new {
@@ -33,8 +32,6 @@ local ghdash = Terminal:new {
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
   end,
-  -- function to run on closing the terminal
-  on_close = function(term) vim.cmd "startinsert!" end,
 }
 
 local lazydocker = Terminal:new {
@@ -45,8 +42,6 @@ local lazydocker = Terminal:new {
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
   end,
-  -- function to run on closing the terminal
-  on_close = function(term) vim.cmd "startinsert!" end,
 }
 
 local lazyjournal = Terminal:new {
@@ -57,20 +52,6 @@ local lazyjournal = Terminal:new {
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
   end,
-  -- function to run on closing the terminal
-  on_close = function(term) vim.cmd "startinsert!" end,
-}
-
-local k9s = Terminal:new {
-  cmd = "k9s",
-  hidden = true,
-  direction = "float", -- function to run on opening the terminal
-  on_open = function(term)
-    vim.cmd "startinsert!"
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-  end,
-  -- function to run on closing the terminal
-  on_close = function(term) vim.cmd "startinsert!" end,
 }
 
 local pc = Terminal:new {
@@ -81,8 +62,6 @@ local pc = Terminal:new {
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
   end,
-  -- function to run on closing the terminal
-  on_close = function(term) vim.cmd "startinsert!" end,
 }
 
 local scratch = Terminal:new {
@@ -93,8 +72,6 @@ local scratch = Terminal:new {
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
   end,
-  -- function to run on closing the terminal
-  on_close = function(term) vim.cmd "startinsert!" end,
 }
 
 -- Toggle Functions
@@ -104,7 +81,6 @@ function Ghdash_toggle() ghdash:toggle() end
 
 function Lazydocker_toggle() lazydocker:toggle() end
 function Lazyjournal_toggle() lazyjournal:toggle() end
-function K9s_toggle() k9s:toggle() end
 function PC_toggle() pc:toggle() end
 function Scratch_toggle() scratch:toggle() end
 
@@ -226,12 +202,14 @@ return {
           desc = "Pick buffer group to close",
         },
         ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Show Explorer" },
-        ["<leader>kc"] = { Claude_toggle, desc = "Claude Toggle" },
-        ["<leader>ko"] = { Opencode_toggle, desc = "OpenCode Toggle" },
-        ["<leader>kh"] = { Ghdash_toggle, desc = "Ghdash Toggle" },
-        ["<leader>kd"] = { Lazydocker_toggle, desc = "Lazydocker Toggle" },
-        ["<leader>kp"] = { PC_toggle, desc = "Process Compose Toggle", noremap = true },
-        ["<leader>kj"] = { Lazyjournal_toggle, desc = "Lazyjournal Toggle" },
+        ["<leader>k"] = { Claude_toggle, desc = "Claude Toggle" },
+        ["<C-o>k"] = { Claude_toggle, desc = "Claude Toggle" },
+        ["<C-o>o"] = { Opencode_toggle, desc = "OpenCode Toggle" },
+        ["<C-o>h"] = { Ghdash_toggle, desc = "Ghdash Toggle" },
+        ["<C-o>d"] = { Lazydocker_toggle, desc = "Lazydocker Toggle" },
+        ["<C-o>p"] = { PC_toggle, desc = "Process Compose Toggle", noremap = true },
+        ["<C-o>j"] = { Lazyjournal_toggle, desc = "Lazyjournal Toggle" },
+        ["<leader>gh"] = { Ghdash_toggle, desc = "Ghdash Toggle" },
         ["<leader>go"] = { "<cmd>!gh repo view --web<CR>", desc = "Open repo in browser" },
         ["K"] = { function() vim.diagnostic.goto_prev() end, desc = "Previous Diagnostic" },
         ["J"] = { function() vim.diagnostic.goto_next() end, desc = "Next Diagnostic" },
@@ -246,8 +224,7 @@ return {
           function() require("snacks").picker.diagnostics() end,
           desc = "Find diagnostics",
         },
-
-        ["<C-o>"] = {
+        ["<leader>fo"] = {
           function() require("snacks").picker.lsp_symbols() end,
           desc = "Find diagnostics",
         },
