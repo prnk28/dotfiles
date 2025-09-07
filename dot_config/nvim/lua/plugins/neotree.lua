@@ -162,7 +162,6 @@ return {
             "*_test.go",
             "*_mock.go",
             "biome*",
-            "devbox*",
           },
           hide_by_name = {
             "CONSTITUTION.md",
