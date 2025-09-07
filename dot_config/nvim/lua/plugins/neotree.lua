@@ -177,6 +177,8 @@ return {
             ".prettierrc.cjs",
             ".eslintrc.cjs",
             "tsconfig.json",
+            "process-compose.yaml",
+            "process-compose.yml",
             "tsconfig.prod.json",
             ".prettierignore",
             "CONVENTIONS.md",

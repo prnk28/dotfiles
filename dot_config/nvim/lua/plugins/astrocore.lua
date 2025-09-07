@@ -4,7 +4,7 @@ local Terminal = require("toggleterm.terminal").Terminal
 local claude = Terminal:new {
   cmd = "claude --continue",
   hidden = true,
-  direction = "vertical",
+  direction = "tab",
   close_on_exit = false, -- function to run on opening the terminal
   on_open = function(term)
     vim.cmd "startinsert!"
@@ -27,7 +27,7 @@ local opencode = Terminal:new {
 local ghdash = Terminal:new {
   cmd = "gh dash",
   hidden = true,
-  direction = "float", -- function to run on opening the terminal
+  direction = "tab", -- function to run on opening the terminal
   on_open = function(term)
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
@@ -37,7 +37,7 @@ local ghdash = Terminal:new {
 local lazydocker = Terminal:new {
   cmd = "lazydocker",
   hidden = true,
-  direction = "float", -- function to run on opening the terminal
+  direction = "tab", -- function to run on opening the terminal
   on_open = function(term)
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
@@ -47,7 +47,7 @@ local lazydocker = Terminal:new {
 local lazyjournal = Terminal:new {
   cmd = "lazyjournal",
   hidden = true,
-  direction = "float", -- function to run on opening the terminal
+  direction = "tab", -- function to run on opening the terminal
   on_open = function(term)
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
@@ -64,14 +64,22 @@ local pc = Terminal:new {
   end,
 }
 
-local scratch = Terminal:new {
+local scratchFloat = Terminal:new {
   cmd = "zsh",
   hidden = true,
   direction = "float", -- function to run on opening the terminal
-  on_open = function(term)
-    vim.cmd "startinsert!"
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-  end,
+}
+
+local scratchBottom = Terminal:new {
+  cmd = "horizontal",
+  hidden = true,
+  direction = "float", -- function to run on opening the terminal
+}
+
+local scratchRight = Terminal:new {
+  cmd = "vertical",
+  hidden = true,
+  direction = "float", -- function to run on opening the terminal
 }
 
 -- Toggle Functions
@@ -82,7 +90,9 @@ function Ghdash_toggle() ghdash:toggle() end
 function Lazydocker_toggle() lazydocker:toggle() end
 function Lazyjournal_toggle() lazyjournal:toggle() end
 function PC_toggle() pc:toggle() end
-function Scratch_toggle() scratch:toggle() end
+function ScratchFloat_toggle() scratchFloat:toggle() end
+function ScratchBottom_toggle() scratchBottom:toggle() end
+function ScratchRight_toggle() scratchRight:toggle() end
 
 return {
   "AstroNvim/astrocore",
@@ -209,8 +219,8 @@ return {
         ["<C-o>d"] = { Lazydocker_toggle, desc = "Lazydocker Toggle" },
         ["<C-o>p"] = { PC_toggle, desc = "Process Compose Toggle", noremap = true },
         ["<C-o>j"] = { Lazyjournal_toggle, desc = "Lazyjournal Toggle" },
-        ["<leader>gh"] = { Ghdash_toggle, desc = "Ghdash Toggle" },
-        ["<leader>go"] = { "<cmd>!gh repo view --web<CR>", desc = "Open repo in browser" },
+        ["<C-g>d"] = { Ghdash_toggle, desc = "Ghdash Toggle" },
+        ["<C-g>o"] = { "<cmd>!gh repo view --web<CR>", desc = "Open repo in browser" },
         ["K"] = { function() vim.diagnostic.goto_prev() end, desc = "Previous Diagnostic" },
         ["J"] = { function() vim.diagnostic.goto_next() end, desc = "Next Diagnostic" },
         ["T"] = { "gg", desc = "Go to top of file" },
@@ -222,10 +232,6 @@ return {
         },
         ["<leader>fd"] = {
           function() require("snacks").picker.diagnostics() end,
-          desc = "Find diagnostics",
-        },
-        ["<leader>fo"] = {
-          function() require("snacks").picker.lsp_symbols() end,
           desc = "Find diagnostics",
         },
         ["'"] = { "<Cmd>Grapple toggle<CR>", desc = "Grapple toggle tag" },
@@ -249,7 +255,7 @@ return {
         -- Terminal launcher
         ["<C-t>j"] = { "<cmd>ToggleTerm direction=horizontal<CR>", desc = "Terminal horizontal" },
         ["<C-t>k"] = { "<cmd>ToggleTerm direction=vertical<CR>", desc = "Terminal vertical" },
-        ["<C-t>s"] = { Scratch_toggle, desc = "Scratch Terminal" },
+        ["<C-t>s"] = { ScratchFloat_toggle, desc = "Scratch Terminal" },
       },
       i = {
         ["<C-s>"] = { "<Cmd>wa<CR><Esc>", desc = "Save and return to normal mode" },
