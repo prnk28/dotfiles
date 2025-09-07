@@ -161,6 +161,8 @@ return {
             ".cz.toml",
             "*_integration.go",
             "*_test.go",
+            "*_query_docs.md",
+            "*_tx_docs.md",
             "*_mock.go",
             "biome*",
           },

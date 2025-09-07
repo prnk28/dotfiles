@@ -50,10 +50,10 @@ return {
             -- 1. UNGROUPED - First visible
             groups.builtin.ungrouped,
 
-            -- 2. DEX (White)
+            -- 2. DEX (Cyan)
             {
               name = "DEX",
-              highlight = { fg = "#ffffff" },
+              highlight = { fg = "#5ef1ff" },
               auto_close = false,
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
@@ -65,7 +65,7 @@ return {
 
             {
               name = "DID",
-              highlight = { fg = "#ffffff" },
+              highlight = { fg = "#5ef1ff" },
               auto_close = false,
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
@@ -77,7 +77,7 @@ return {
 
             {
               name = "DWN",
-              highlight = { fg = "#ffffff" },
+              highlight = { fg = "#5ef1ff" },
               auto_close = false,
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
@@ -86,10 +86,9 @@ return {
                 return is_in_dex_module or is_in_dex_proto
               end,
             },
-
             {
               name = "SVC",
-              highlight = { fg = "#ffffff" },
+              highlight = { fg = "#5ef1ff" },
               auto_close = false,
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
@@ -99,10 +98,10 @@ return {
               end,
             },
 
-            -- 3. Tests (Green)
+            -- 3. Tests (Pink)
             {
               name = "Tests",
-              highlight = { fg = "#a6e3a1" },
+              highlight = { fg = "#ff5ea0" },
               auto_close = false,
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
@@ -110,30 +109,30 @@ return {
               end,
             },
 
-            -- 4. Actions (Blue)
+            -- 4. Actions (Magenta)
             {
               name = "Actions",
-              highlight = { fg = "#89b4fa" },
+              highlight = { fg = "#ff5ef1" },
               auto_close = true,
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
                 return bufname:match "%.ya?ml$" and bufname:match "%.github/"
               end,
             },
-            -- 5. Claude (Orange)
+            -- 5. Claude (Yellow)
             {
               name = "Claude",
-              highlight = { fg = "#fab387" },
+              highlight = { fg = "#ffbd5e" },
               auto_close = true,
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
                 return bufname:match "%.claude/"
               end,
             },
-            -- 6. Config (Red) - Auto close
+            -- 6. Config (Grey Blue) - Auto close
             {
               name = "Config",
-              highlight = { fg = "#f38ba8" },
+              highlight = { fg = "#7b8496" },
               auto_close = true,
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
@@ -142,10 +141,10 @@ return {
               end,
             },
 
-            -- 7. Docs (Purple) - Auto close
+            -- 7. Docs (White) - Auto close
             {
               name = "Docs",
-              highlight = { fg = "#cba6f7" },
+              highlight = { fg = "#ffffff" },
               auto_close = true,
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
@@ -153,10 +152,10 @@ return {
               end,
             },
 
-            -- 5. Scripts (Yellow) - Auto close
+            -- 5. Scripts (Dark Grey) - Auto close
             {
               name = "Scripts",
-              highlight = { fg = "#f9e2af" },
+              highlight = { fg = "#3c4048" },
               auto_close = true,
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
@@ -167,7 +166,7 @@ return {
             -- 8. Shells (Dark Grey) - Toggle term buffers - Auto close
             {
               name = "Terminals",
-              highlight = { fg = "#585b70" },
+              highlight = { fg = "#3c4048" },
               auto_close = true,
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
