@@ -166,9 +166,6 @@ return {
           hide_by_name = {
             "CONSTITUTION.md",
             "api",
-            "contracts",
-            "crypto",
-            "proto",
             "etc",
             "turbo.json",
             "OpenCode.md",
@@ -198,7 +195,6 @@ return {
             ".envrc",
             "CLAUDE.md",
             "chains",
-            "scripts",
             "test",
             "go.mod",
             "pnpm-workspace.yaml",
