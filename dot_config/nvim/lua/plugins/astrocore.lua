@@ -77,14 +77,13 @@ return {
         ["<leader>bc"] = { "<Cmd>BufferLinePickClose<CR>", desc = "Pick buffer to close" },
         ["<leader>bg"] = {
           function()
-            -- Toggle all groups at once
-            local groups =
-              { "DEX", "DID", "DWN", "SVC", "Tests", "Actions", "Claude", "Config", "Docs", "Scripts", "Terminals" }
-            for _, group in ipairs(groups) do
+            -- Toggle only groups that auto-close (not currently highlighted by default)
+            local auto_close_groups = { "Actions", "Claude", "Config", "Docs", "Scripts", "Terminals" }
+            for _, group in ipairs(auto_close_groups) do
               vim.cmd("BufferLineGroupToggle " .. group)
             end
           end,
-          desc = "Toggle all buffer groups",
+          desc = "Toggle auto-close buffer groups",
         },
         -- Group close picker
         ["<leader>bx"] = {
