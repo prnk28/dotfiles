@@ -5,3 +5,4 @@ old-dots
 logs
 dot_config/yazi/flavors
 dot_config/nvim/.browser-echo-mcp.json
+.browser-echo-mcp.json

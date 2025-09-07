@@ -169,7 +169,6 @@ return {
           hide_by_name = {
             "CONSTITUTION.md",
             "api",
-            "etc",
             "turbo.json",
             "OpenCode.md",
             "AGENT.md",

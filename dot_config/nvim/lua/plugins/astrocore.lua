@@ -1,3 +1,113 @@
+local Terminal = require("toggleterm.terminal").Terminal
+
+-- Terminals
+local claude = Terminal:new {
+  cmd = "claude --continue",
+  hidden = true,
+  direction = "tab",
+  close_on_exit = false, -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+  on_close = function(term) vim.cmd "startinsert!" end,
+}
+
+local opencode = Terminal:new {
+  cmd = "opencode",
+  hidden = true,
+  direction = "vertical",
+  close_on_exit = false, -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+  on_close = function(term) vim.cmd "startinsert!" end,
+}
+
+local ghdash = Terminal:new {
+  cmd = "gh dash",
+  hidden = true,
+  direction = "float", -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+  -- function to run on closing the terminal
+  on_close = function(term) vim.cmd "startinsert!" end,
+}
+
+local lazydocker = Terminal:new {
+  cmd = "lazydocker",
+  hidden = true,
+  direction = "float", -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+  -- function to run on closing the terminal
+  on_close = function(term) vim.cmd "startinsert!" end,
+}
+
+local lazyjournal = Terminal:new {
+  cmd = "lazyjournal",
+  hidden = true,
+  direction = "float", -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+  -- function to run on closing the terminal
+  on_close = function(term) vim.cmd "startinsert!" end,
+}
+
+local k9s = Terminal:new {
+  cmd = "k9s",
+  hidden = true,
+  direction = "float", -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+  -- function to run on closing the terminal
+  on_close = function(term) vim.cmd "startinsert!" end,
+}
+
+local pc = Terminal:new {
+  cmd = "devbox services attach",
+  hidden = true,
+  direction = "float", -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+  -- function to run on closing the terminal
+  on_close = function(term) vim.cmd "startinsert!" end,
+}
+
+local scratch = Terminal:new {
+  cmd = "zsh",
+  hidden = true,
+  direction = "float", -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+  -- function to run on closing the terminal
+  on_close = function(term) vim.cmd "startinsert!" end,
+}
+
+-- Toggle Functions
+function Claude_toggle() claude:toggle() end
+function Opencode_toggle() opencode:toggle() end
+function Ghdash_toggle() ghdash:toggle() end
+
+function Lazydocker_toggle() lazydocker:toggle() end
+function Lazyjournal_toggle() lazyjournal:toggle() end
+function K9s_toggle() k9s:toggle() end
+function PC_toggle() pc:toggle() end
+function Scratch_toggle() scratch:toggle() end
+
 return {
   "AstroNvim/astrocore",
   ---@type AstroCoreOpts
@@ -20,7 +130,6 @@ return {
           "package.json",
           "Pipfile",
           "buf.yaml",
-          "requirements.txt",
           "docs.json",
         }, -- lastly check for a file named `main`
       },
@@ -88,25 +197,50 @@ return {
         -- Group close picker
         ["<leader>bx"] = {
           function()
-            local groups = { "DEX", "DID", "DWN", "SVC", "Tests", "Actions", "Claude", "Config", "Docs", "Scripts", "Terminals", "ungrouped" }
+            local groups = {
+              "DEX",
+              "DID",
+              "DWN",
+              "SVC",
+              "Tests",
+              "Actions",
+              "Claude",
+              "Config",
+              "Docs",
+              "Scripts",
+              "Terminals",
+              "ungrouped",
+            }
             local items = {}
             for _, group in ipairs(groups) do
               table.insert(items, {
                 text = group,
-                action = function()
-                  vim.cmd("BufferLineGroupClose " .. group)
-                end
+                action = function() vim.cmd("BufferLineGroupClose " .. group) end,
               })
             end
             require("snacks").picker.pick(items, {
               prompt = "Close buffer group",
-              format = function(item)
-                return item.text
-              end,
+              format = function(item) return item.text end,
             })
           end,
           desc = "Pick buffer group to close",
         },
+        ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Show Explorer" },
+        ["<leader>k"] = { Claude_toggle, desc = "Claude Toggle" },
+        ["<leader>gh"] = { Ghdash_toggle, desc = "Ghdash Toggle" },
+        ["<leader>go"] = { "<cmd>!gh repo view --web<CR>", desc = "Open repo in browser" },
+        ["<leader>t"] = { name = "Terminal" },
+        ["<leader>tj"] = { "<cmd>ToggleTerm direction=horizontal<CR>", desc = "Terminal horizontal" },
+        ["<leader>tl"] = { "<cmd>ToggleTerm direction=vertical<CR>", desc = "Terminal vertical" },
+        ["<leader>ts"] = {
+          function() require("telescope.builtin").live_grep() end,
+          desc = "Search in files",
+        },
+        ["<leader>td"] = { Lazydocker_toggle, desc = "Lazydocker Toggle" },
+        ["<leader>tc"] = { PC_toggle, desc = "Process Compose Toggle", noremap = true },
+        ["<leader>tJ"] = { Lazyjournal_toggle, desc = "Lazyjournal Toggle" },
+        ["<leader>tk"] = { K9s_toggle, desc = "K9s Toggle" },
+        ["<leader>to"] = { Opencode_toggle, desc = "OpenCode Toggle" },
         ["K"] = { function() vim.diagnostic.goto_prev() end, desc = "Previous Diagnostic" },
         ["J"] = { function() vim.diagnostic.goto_next() end, desc = "Next Diagnostic" },
         ["T"] = { "gg", desc = "Go to top of file" },
@@ -131,8 +265,6 @@ return {
           function() require("telescope.builtin").live_grep() end,
           desc = "Find word in all files",
         },
-
-        ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Show Explorer" },
         ["<C-m>"] = { "<Cmd>OverseerRun<CR>", desc = "Run Overseer" },
         ["<C-s>"] = { "<Cmd>wa<CR>", desc = "Save and close buffer" }, -- Modified to save and close buffer
         ["<C-c>"] = { "<Cmd>wa<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Modified to save and close buffer
@@ -142,12 +274,13 @@ return {
           function() require("snacks").picker.lsp_symbols() end,
           desc = "Find diagnostics",
         },
-        ["<C-t>"] = { "<cmd>ToggleTerm direction=vertical size=50<cr>", desc = "Toggle terminal" },
         -- LSP Source Action <C-.>
         ["<C-a>"] = { function() vim.lsp.buf.code_action() end, desc = "LSP Code Action" },
         ["<C-,>"] = { function() vim.lsp.buf.hover() end, desc = "LSP Hover" },
-
-        ["<C-p>"] = { "<cmd>ClaudeCode<CR>", desc = "Toggle Claude Code" },
+        -- Terminal launcher
+        ["<C-t>j"] = { "<cmd>ToggleTerm direction=horizontal<CR>", desc = "Terminal horizontal" },
+        ["<C-t>k"] = { "<cmd>ToggleTerm direction=vertical<CR>", desc = "Terminal vertical" },
+        ["<C-t>s"] = { Scratch_toggle, desc = "Scratch Terminal" },
       },
       i = {
         ["<C-s>"] = { "<Cmd>wa<CR><Esc>", desc = "Save and return to normal mode" },
@@ -166,7 +299,13 @@ return {
           end,
           desc = "Exit terminal mode",
         },
-        ["<C-q>"] = { "<C-\\><C-n><C-w>l", desc = "Hide terminal" },
+        -- Exit terminal mode and close window
+        ["<C-c>"] = {
+          function()
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes([[<C-\><C-n>]], true, false, true), "n", false)
+          end,
+          desc = "Exit terminal and close window",
+        },
         -- Add tmux-style window navigation
         ["<C-h>"] = {
           function()

@@ -11,6 +11,7 @@ return {
       options = {
         mode = "buffers",
         numbers = "none",
+        show_tab_indicators = false,
         separator_style = "thick",
         indicator = {
           style = "icon",
@@ -129,18 +130,6 @@ return {
                 return bufname:match "%.claude/"
               end,
             },
-            -- 6. Config (Grey Blue) - Auto close
-            {
-              name = "Config",
-              highlight = { fg = "#7b8496" },
-              auto_close = true,
-              matcher = function(buf)
-                local bufname = vim.api.nvim_buf_get_name(buf.id)
-                -- Exclude .github/ yml files (they go to Actions)
-                return (bufname:match "%.ya?ml$" and not bufname:match "%.github/") or bufname:match "%.json$"
-              end,
-            },
-
             -- 7. Docs (White) - Auto close
             {
               name = "Docs",
@@ -151,26 +140,16 @@ return {
                 return bufname:match "%.mdx$" or bufname:match "/docs/"
               end,
             },
-
-            -- 5. Scripts (Dark Grey) - Auto close
             {
-              name = "Scripts",
+              name = "Config",
               highlight = { fg = "#3c4048" },
               auto_close = true,
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
-                return bufname:match "%.sh$"
-              end,
-            },
-
-            -- 8. Shells (Dark Grey) - Toggle term buffers - Auto close
-            {
-              name = "Terminals",
-              highlight = { fg = "#3c4048" },
-              auto_close = true,
-              matcher = function(buf)
-                local bufname = vim.api.nvim_buf_get_name(buf.id)
-                return bufname:match "^term://" or vim.bo[buf.id].buftype == "terminal"
+                -- Exclude .github/ yml files (they go to Actions)
+                return (bufname:match "%.ya?ml$" and not bufname:match "%.github/")
+                  or bufname:match "%.json$"
+                  or bufname:match "%.sh$"
               end,
             },
           },
