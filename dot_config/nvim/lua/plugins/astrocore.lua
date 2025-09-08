@@ -1,15 +1,186 @@
 local Terminal = require("toggleterm.terminal").Terminal
 
--- Terminals
-local claude = Terminal:new {
-  cmd = "claude --continue",
-  hidden = true,
-  direction = "tab",
-  close_on_exit = false, -- function to run on opening the terminal
-  on_open = function(term)
-    vim.cmd "startinsert!"
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-  end,
+local explorerOptions = {
+  auto_close = true,
+  include = {
+    ".chezmoi*",
+  },
+  hidden = {
+    "chain_*.json",
+    ".typecopy",
+    ".python-version",
+    "*.pb.go",
+    "*config.*.js",
+    "*config.js",
+    "deps.mjs",
+    ".parcelrc",
+    "worker-configuration.d.ts",
+    "wrangler.jsonc",
+    "*.pkl.go",
+    ".trunk",
+    ".config",
+    ".cz.toml",
+    "*_integration.go",
+    "*_test.go",
+    "*_query_docs.md",
+    "*_tx_docs.md",
+    "*_mock.go",
+    "biome*",
+    "client",
+    "contracts",
+    "crypto",
+    "proto",
+    "CONSTITUTION.md",
+    "CONTRIBUTING.md",
+    "api",
+    "turbo.json",
+    "scripts",
+    "OpenCode.md",
+    "AGENT.md",
+    "AGENTS.md",
+    "svgo.config.mjs",
+    ".prettierrc.cjs",
+    ".eslintrc.cjs",
+    "tsconfig.json",
+    "process-compose.yaml",
+    "process-compose.yml",
+    "tsconfig.prod.json",
+    ".prettierignore",
+    "CONVENTIONS.md",
+    ".gitkeep",
+    ".source",
+    "settings.json",
+    ".gitignore",
+    "analysis_options.yaml",
+    "slumber.yml",
+    ".eslintignore",
+    "CONTRIBUTING.md",
+    "CHANGELOG.md",
+    "devbox.d",
+    "env",
+    ".husky",
+    "translations",
+    "LICENSE.md",
+    ".envrc",
+    "CLAUDE.md",
+    "chains",
+    "test",
+    ".golangci.yml",
+    "go.mod",
+    "pnpm-workspace.yaml",
+  },
+  exclude = {
+    ".git",
+    "pnpm-lock.yaml",
+    ".next",
+    ".task",
+    ".devbox",
+    ".dart_tool",
+    ".idea",
+    ".metadata",
+    ".venv",
+    ".gradle",
+    "gradle.bat",
+    ".aider.chat.history.md",
+    ".aider.input.history",
+    ".aider.tags.cache.v3",
+    ".devcontainer",
+    "heighliner",
+    ".tmp",
+    "go.work.sum",
+    ".DS_Store",
+    ".git",
+    "LICENSE",
+    "tmp",
+    "sonr.log",
+    "DISCUSSION_TEMPLATE",
+    "ISSUE_TEMPLATE",
+    ".devbox",
+    ".timemachine",
+    "junit.xml",
+    ".jj",
+    ".spawn",
+    ".turbo",
+    "CLAUDE*",
+    ".pkl-lsp",
+    ".tsbuildinfo",
+    "contrib",
+    "interchaintest",
+    "package-lock.json",
+    ".prettierrc",
+    "node_modules",
+    "PULL_REQUEST_TEMPLATE.md",
+    ".DocumentRevisions-V100",
+    ".Spotlight-V100",
+    ".TemporaryItems",
+    ".Trashes",
+    ".fseventsd",
+    ".editorconfig",
+    "*.min.js",
+    ".gitpod.*",
+    "cspell.*",
+    "*.lock",
+    "*.lockb",
+    "*.pulsar.go",
+    "*.pb.gorm.go",
+    "*.pb.gw.go",
+    "*_templ.go",
+    "*.tmp",
+    "*.work.*",
+    "*.sum",
+    ".wrangler",
+    "*.wasm",
+    "*.png",
+    "*.min.js",
+    "*.jpg",
+    ".parcel-cache",
+    "*.icns",
+    "*.ico",
+    ".aider.tags.cache.v4",
+    "*.iml",
+    "Icon?",
+    "iCloud~",
+    "com~",
+    "readme.md",
+    "*.icns",
+    ".conform*",
+    ".null-ls_*",
+  },
+  win = {
+    list = {
+      keys = {
+        ["<c-l>"] = "close",
+        ["H"] = "explorer_up",
+        ["L"] = "explorer_focus",
+        ["l"] = "confirm",
+        ["s"] = "confirm", -- close directory
+        ["a"] = "explorer_add",
+        ["d"] = "explorer_del",
+        ["r"] = "explorer_rename",
+        ["c"] = "explorer_copy",
+        ["m"] = "explorer_move",
+        ["o"] = "explorer_open", -- open with system application
+        ["P"] = "toggle_preview",
+        ["y"] = { "explorer_yank", mode = { "n", "x" } },
+        ["p"] = "explorer_paste",
+        ["u"] = "explorer_update",
+        ["<c-c>"] = "tcd",
+        ["<leader>/"] = "picker_grep",
+        ["<c-t>"] = "terminal",
+        ["I"] = "toggle_ignored",
+        ["."] = "toggle_hidden",
+        ["<bs>"] = "explorer_close_all",
+        ["]g"] = "explorer_git_next",
+        ["[g"] = "explorer_git_prev",
+        ["]d"] = "explorer_diagnostic_next",
+        ["[d"] = "explorer_diagnostic_prev",
+        ["]w"] = "explorer_warn_next",
+        ["[w"] = "explorer_warn_prev",
+        ["]e"] = "explorer_error_next",
+        ["[e"] = "explorer_error_prev",
+      },
+    },
+  },
 }
 
 local yazi = Terminal:new {
@@ -33,30 +204,11 @@ local scooter = Terminal:new {
   end,
 }
 
-local ghdash = Terminal:new {
-  cmd = "gh dash",
+local claude = Terminal:new {
+  cmd = "claude --continue",
   hidden = true,
-  direction = "float", -- function to run on opening the terminal
-  on_open = function(term)
-    vim.cmd "startinsert!"
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-  end,
-}
-
-local lazydocker = Terminal:new {
-  cmd = "lazydocker",
-  hidden = true,
-  direction = "float", -- function to run on opening the terminal
-  on_open = function(term)
-    vim.cmd "startinsert!"
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-  end,
-}
-
-local lazygit = Terminal:new {
-  cmd = "lazygit",
-  hidden = true,
-  direction = "float", -- function to run on opening the terminal
+  direction = "tab", -- function to run on opening the terminal
+  auto_scroll = true,
   on_open = function(term)
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
@@ -93,27 +245,12 @@ local pc = Terminal:new {
   end,
 }
 
-local scratchFloat = Terminal:new {
-  cmd = "zsh",
-  hidden = true,
-  direction = "float", -- function to run on opening the terminal
-  on_open = function(term)
-    vim.cmd "startinsert!"
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-  end,
-}
-
 -- Toggle Functions
 function Claude_toggle() claude:toggle() end
-function Ghdash_toggle() ghdash:toggle() end
-
-function Lazydocker_toggle() lazydocker:toggle() end
-function Lazygit_toggle() lazygit:toggle() end
 function Lazyjournal_toggle() lazyjournal:toggle() end
 function Mk_toggle() mk:toggle() end
 function PC_toggle() pc:toggle() end
 function Scooter_toggle() scooter:toggle() end
-function ScratchFloat_toggle() scratchFloat:toggle() end
 function Yazi_toggle() yazi:toggle() end
 
 return {
@@ -186,13 +323,19 @@ return {
       -- first key is the mode
       n = {
         -- navigate buffer tabs
-        ["C"] = { "<Cmd>wa<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Added C-x to save and close buffer
+        ["<C-c>"] = { "<Cmd>wa<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Added C-x to save and close buffer
         ["F"] = { "za", desc = "Toggle fold under cursor" },
         ["L"] = { "<Cmd>BufferLineCycleNext<CR>", desc = "Next buffer" },
         ["H"] = { "<Cmd>BufferLineCyclePrev<CR>", desc = "Previous buffer" },
-        ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Explorer" },
+        ["<C-e>"] = {
+          function() require("snacks").explorer.open(explorerOptions) end,
+          desc = "Open Explorer",
+        },
         ["<C-m>"] = { "<Cmd>OverseerRun<CR>", desc = "Run Overseer" },
-        ["<leader><leader>"] = { Claude_toggle, desc = "Claude" },
+        ["<leader><leader>"] = {
+          Claude_toggle,
+          desc = "Claude",
+        },
         ["<C-b>b"] = { "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
         ["<C-b>f"] = {
           function() require("snacks").picker.buffers() end,
@@ -209,17 +352,42 @@ return {
         },
         ["<C-b>g"] = {
           function()
-            local auto_close_groups = { "Actions", "Claude", "Config", "Docs", "Scripts", "Terminals" }
-            for _, group in ipairs(auto_close_groups) do
+            local groups = { "DEX", "DID", "DWN", "SVC", "Tests", "Actions", "Claude", "Docs", "Config" }
+            for _, group in ipairs(groups) do
               vim.cmd("BufferLineGroupToggle " .. group)
             end
           end,
-          desc = "Toggle auto-close buffer groups",
+          desc = "Toggle all buffer groups",
         },
+        -- Quick group toggles
+        ["<C-b>1"] = { "<Cmd>BufferLineGroupToggle DEX<CR>", desc = "Toggle DEX group" },
+        ["<C-b>2"] = { "<Cmd>BufferLineGroupToggle DID<CR>", desc = "Toggle DID group" },
+        ["<C-b>3"] = { "<Cmd>BufferLineGroupToggle DWN<CR>", desc = "Toggle DWN group" },
+        ["<C-b>4"] = { "<Cmd>BufferLineGroupToggle SVC<CR>", desc = "Toggle SVC group" },
+        ["<C-b>t"] = { "<Cmd>BufferLineGroupToggle Tests<CR>", desc = "Toggle Tests group" },
+        ["<C-b>c"] = { "<Cmd>BufferLineGroupToggle Config<CR>", desc = "Toggle Config group" },
         ["<C-b>k"] = { "<Cmd>BufferLinePickClose<CR>", desc = "Pick buffer to close" },
         ["<C-g>o"] = { "<cmd>!gh repo view --web<CR>", desc = "Open Repo on Web" },
-        ["<C-g>h"] = { Ghdash_toggle, desc = "Dashboard" },
-        ["<C-g>g"] = { Lazygit_toggle, desc = "Lazygit" },
+        ["<C-g>h"] = {
+          function()
+            require("snacks").terminal("gh dash", {
+              hidden = true,
+              auto_close = false,
+              interactive = true,
+            })
+          end,
+          desc = "Dashboard",
+        },
+        ["<C-g>g"] = {
+          function()
+            require("snacks").terminal("lazygit", {
+              hidden = true,
+              auto_close = false,
+              interactive = true,
+            })
+          end,
+          desc = "Lazygit",
+        },
         ["<C-g>d"] = {
           function() require("snacks").picker.git_diff() end,
           desc = "Search git diffs",
@@ -231,24 +399,47 @@ return {
         ["<C-i>i"] = { PC_toggle, desc = "Devbox Services Toggle", noremap = true },
         ["<C-i>m"] = { Mk_toggle, desc = "Run mk", noremap = true },
         ["<C-i>j"] = { Lazyjournal_toggle, desc = "Lazyjournal Toggle" },
-        ["<C-t>d"] = { Lazydocker_toggle, desc = "Lazydocker Toggle" },
-        ["<C-t>p"] = { PC_toggle, desc = "Devbox Services Toggle", noremap = true },
-        ["<C-t>k"] = { "<cmd>ToggleTerm direction=vertical<CR>", desc = "Terminal vertical" },
-        ["<C-t>s"] = { ScratchFloat_toggle, desc = "Scratch Terminal" },
+        ["<C-t>d"] = {
+          function()
+            require("snacks").terminal("lazydocker", {
+              hidden = true,
+              auto_close = false,
+              start_in_insert = true,
+              interactive = true,
+            })
+          end,
+          desc = "Lazydocker Toggle",
+        },
+        ["<C-t>p"] = {
+          function()
+            require("snacks").terminal("lazydocker", {
+              hidden = true,
+              auto_close = false,
+              start_in_insert = true,
+              interactive = true,
+            })
+          end,
+          desc = "Devbox Services Up",
+          noremap = true,
+        },
         ["<C-t>."] = { Yazi_toggle, desc = "Yazi Toggle" },
+        ["<C-t>"] = {
+          function() require("snacks").terminal() end,
+          desc = "Toggle Terminal",
+        },
         ["K"] = { function() vim.diagnostic.goto_prev() end, desc = "Previous Diagnostic" },
         ["J"] = { function() vim.diagnostic.goto_next() end, desc = "Next Diagnostic" },
         ["vv"] = { "gg0VG$", desc = "Select all contents in buffer" },
         ["<C-f>r"] = {
           Scooter_toggle,
-          desc = "Find diagnostics",
+          desc = "Find and replace",
         },
         ["<C-f>d"] = {
           function() require("snacks").picker.diagnostics() end,
           desc = "Find diagnostics",
         },
         ["<C-f>f"] = {
-          function() require("snacks").picker.files() end,
+          function() require("snacks").picker.smart() end,
           desc = "Find files",
         },
         ["<C-f>o"] = {
@@ -267,16 +458,24 @@ return {
           function() require("snacks").picker.grep_buffers() end,
           desc = "Find word in open buffers",
         },
-        ["<C-f>s"] = {
-          function() require("snacks").picker.lsp_symbols() end,
-          desc = "Find LSP symbols",
-        },
         ["<C-f>p"] = {
           function() require("snacks").picker.zoxide() end,
           desc = "Find Projects with Zoxide",
         },
         ["<C-a>a"] = { function() vim.lsp.buf.code_action() end, desc = "LSP Code Action" },
         ["<C-a>h"] = { function() vim.lsp.buf.hover() end, desc = "LSP Hover" },
+        ["<C-a>d"] = {
+          function() require("snacks").picker.lsp_definitions() end,
+          desc = "Find LSP definitions",
+        },
+        ["<C-a>r"] = {
+          function() require("snacks").picker.lsp_references() end,
+          desc = "Find LSP references",
+        },
+        ["<C-a>s"] = {
+          function() require("snacks").picker.lsp_symbols() end,
+          desc = "Find LSP symbols",
+        },
         -- Terminal launcher
       },
       i = {
@@ -285,11 +484,22 @@ return {
         ["<C-x>"] = { "<Cmd>wa<CR><Cmd>bd<CR><Esc>", desc = "Save, close buffer, and return to normal mode" }, -- Added C-x for insert mode
       },
       v = {
-        ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Show Explorer" },
+        ["<C-e>"] = {
+          function() require("snacks").explorer.open(explorerOptions) end,
+          desc = "Open Explorer",
+        },
         ["<C-c>"] = { "<Cmd>w<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Modified to save and close buffer
         ["<C-x>"] = { "<Cmd>w<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Added C-x for visual mode
       },
       t = {
+        ["<C-e>"] = {
+          function() require("snacks").explorer.open(explorerOptions) end,
+          desc = "Open Explorer",
+        },
+        ["<leader>e"] = {
+          function() require("snacks").explorer.open() end,
+          desc = "Open Explorer",
+        },
         ["<C-b>f"] = {
           function() require("snacks").picker.buffers() end,
           desc = "Find buffers",
@@ -298,6 +508,7 @@ return {
         ["<C-c>"] = {
           function()
             vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes([[<C-\><C-n>]], true, false, true), "n", false)
+            vim.cmd "close"
           end,
           desc = "Exit terminal and close window",
         },
