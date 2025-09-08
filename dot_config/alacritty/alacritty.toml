@@ -24,23 +24,23 @@ columns = 0
 lines = 0
 
 [font]
-size = 19
+size = 20
 
 [font.bold]
 family = "VictorMono Nerd Font Mono"
-style = "ExtraLight"
+style = "Light"
 
 [font.bold_italic]
 family = "VictorMono Nerd Font Mono"
-style = "ExtraLight Italic"
+style = "Light Italic"
 
 [font.italic]
 family = "VictorMono Nerd Font Mono"
-style = "Thin Italic"
+style = "ExtraLight Italic"
 
 [font.normal]
 family = "VictorMono Nerd Font Mono"
-style = "Thin"
+style = "ExtraLight"
 
 [mouse]
 hide_when_typing = true
