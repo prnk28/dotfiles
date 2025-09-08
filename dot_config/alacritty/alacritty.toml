@@ -13,9 +13,9 @@ program = "/bin/zsh"
 args = ["-l"]
 
 [window]
-dynamic_padding = true
+dynamic_padding = false
 decorations = "Buttonless"
-opacity = 0.95
+opacity = 0.85
 blur = false
 option_as_alt = "Both"
 
@@ -24,23 +24,23 @@ columns = 0
 lines = 0
 
 [font]
-size = 18
+size = 19
 
 [font.bold]
 family = "VictorMono Nerd Font Mono"
-style = "Light"
+style = "ExtraLight"
 
 [font.bold_italic]
 family = "VictorMono Nerd Font Mono"
-style = "Light Italic"
+style = "ExtraLight Italic"
 
 [font.italic]
 family = "VictorMono Nerd Font Mono"
-style = "ExtraLight Italic"
+style = "Thin Italic"
 
 [font.normal]
 family = "VictorMono Nerd Font Mono"
-style = "ExtraLight"
+style = "Thin"
 
 [mouse]
 hide_when_typing = true
@@ -235,7 +235,7 @@ action = "CreateNewWindow" # This represents Ctrl+S
 [[keyboard.bindings]]
 key = "C"
 mods = "Command"
-action = "Copy" # System clipboard copy
+action = "Copy"  # System clipboard copy
 
 [[keyboard.bindings]]
 key = "V"
@@ -244,7 +244,7 @@ action = "Paste" # System clipboard paste
 
 [selection]
 semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
-save_to_clipboard = true # Automatically copy selection to system clipboard
+save_to_clipboard = true                      # Automatically copy selection to system clipboard
 
 [[keyboard.bindings]]
 key = "G"
@@ -275,7 +275,7 @@ chars = "\u0002\u001bs" # This represents tmux prefix (<C-b>) followed by Alt+g
 [[keyboard.bindings]]
 key = "W"
 mods = "Command"
-chars = "\u0003"  # Control-C character
+chars = "\u0003" # Control-C character
 
 [[keyboard.bindings]]
 key = "W"
@@ -285,7 +285,7 @@ chars = "\u0018" # This sends Ctrl+X
 [[keyboard.bindings]]
 key = "E"
 mods = "Command"
-chars = "\u0005"  # Control-E character
+chars = "\u0005" # Control-E character
 
 [[keyboard.bindings]]
 key = "Space"
@@ -305,7 +305,7 @@ chars = "\u0002R" # Maps to tmux copy mode
 [[keyboard.bindings]]
 key = "J"
 mods = "Control|Shift"
-chars = "\u0002z" # Maps to tmux copy mode
+chars = "\u0002z"      # Maps to tmux copy mode
 
 [[keyboard.bindings]]
 key = ","
@@ -316,5 +316,3 @@ chars = "\u0002," # Maps to tmux copy mode
 key = "Enter"
 mods = "Shift"
 chars = "\u001b\r"
-
-
