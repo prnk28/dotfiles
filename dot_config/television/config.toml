@@ -73,7 +73,6 @@ theme = "TwoDark"
 # Channel mode
 # ------------------------
 [keybindings]
-# Quit the application
 quit = ["esc", "ctrl-c"]
 # Scrolling through entries
 select_next_entry = ["down", "ctrl-n", "ctrl-j"]

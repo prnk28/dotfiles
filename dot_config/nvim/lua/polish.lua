@@ -6,10 +6,10 @@
 require("overseer").setup {
   strategy = {
     "toggleterm",
-    use_shell = false,
+    use_shell = true,
     auto_scroll = true,
     close_on_exit = false,
-    direction = "tab",
+    direction = "horizontal",
     quit_on_exit = "success",
     open_on_start = true,
     hidden = true,

@@ -74,6 +74,16 @@ local lazyjournal = Terminal:new {
   end,
 }
 
+local mk = Terminal:new {
+  cmd = "mk",
+  hidden = true,
+  direction = "vertical", -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+}
+
 local pc = Terminal:new {
   cmd = "devbox services up",
   hidden = true,
@@ -102,6 +112,7 @@ function Ghdash_toggle() ghdash:toggle() end
 function Lazydocker_toggle() lazydocker:toggle() end
 function Lazygit_toggle() lazygit:toggle() end
 function Lazyjournal_toggle() lazyjournal:toggle() end
+function Mk_toggle() mk:toggle() end
 function PC_toggle() pc:toggle() end
 function ScratchFloat_toggle() scratchFloat:toggle() end
 function Yazi_toggle() yazi:toggle() end
@@ -193,52 +204,61 @@ return {
           end,
           desc = "Toggle auto-close buffer groups",
         },
+        ["<C-m>"] = { "<Cmd>OverseerRun<CR>", desc = "Run Overseer" },
         ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Show Explorer" },
-        ["<leader>k"] = { Claude_toggle, desc = "Claude Toggle" },
-        ["<C-i>p"] = { PC_toggle, desc = "Devbox Services Toggle", noremap = true },
+        ["<leader><leader>"] = { Claude_toggle, desc = "Claude Toggle" },
+        ["<C-g>d"] = { Ghdash_toggle, desc = "GitHub Dashboard Toggle" },
+        ["<C-g>g"] = { Lazygit_toggle, desc = "Lazygit Toggle" },
+        ["<C-g>o"] = { "<cmd>!gh repo view --web<CR>", desc = "Open repo in browser" },
+        ["<C-i>i"] = { PC_toggle, desc = "Devbox Services Toggle", noremap = true },
+        ["<C-i>m"] = { Mk_toggle, desc = "Run mk", noremap = true },
         ["<C-i>o"] = { Opencode_toggle, desc = "OpenCode Toggle" },
-        ["<C-i>d"] = { Lazydocker_toggle, desc = "Lazydocker Toggle" },
+        ["<C-t>d"] = { Lazydocker_toggle, desc = "Lazydocker Toggle" },
         ["<C-i>j"] = { Lazyjournal_toggle, desc = "Lazyjournal Toggle" },
         ["<C-i>k"] = { Claude_toggle, desc = "Claude Toggle" },
-        ["<C-g>g"] = { Lazygit_toggle, desc = "Lazygit Toggle" },
-        ["<C-g>d"] = { Ghdash_toggle, desc = "GitHub Dashboard Toggle" },
-        ["<C-g>o"] = { "<cmd>!gh repo view --web<CR>", desc = "Open repo in browser" },
+        ["<C-t>p"] = { PC_toggle, desc = "Devbox Services Toggle", noremap = true },
+        ["<C-t>k"] = { "<cmd>ToggleTerm direction=vertical<CR>", desc = "Terminal vertical" },
+        ["<C-t>s"] = { ScratchFloat_toggle, desc = "Scratch Terminal" },
         ["<C-t>."] = { Yazi_toggle, desc = "Yazi Toggle" },
         ["K"] = { function() vim.diagnostic.goto_prev() end, desc = "Previous Diagnostic" },
         ["J"] = { function() vim.diagnostic.goto_next() end, desc = "Next Diagnostic" },
         ["T"] = { "gg", desc = "Go to top of file" },
         ["X"] = { "<Cmd>wa<CR><Cmd>bd<CR><Esc>", desc = "Save, close buffer, and return to normal mode" },
         ["vv"] = { "gg0VG$", desc = "Select all contents in buffer" },
-        ["<leader><leader>"] = {
-          function() require("snacks").picker.grep_buffers() end,
-          desc = "Find in buffers",
-        },
-        ["<leader>fd"] = {
+        ["<C-f>d"] = {
           function() require("snacks").picker.diagnostics() end,
           desc = "Find diagnostics",
         },
-        ["'"] = { "<Cmd>Grapple toggle<CR>", desc = "Grapple toggle tag" },
-        ["M"] = { "<Cmd>Grapple toggle_tags<CR>", desc = "Grapple toggle tag" },
-        ["<C-f>"] = {
-          function() require("telescope.builtin").live_grep() end,
-          desc = "Find word in all files",
+        ["<C-f>f"] = {
+          function() require("snacks").picker.files() end,
+          desc = "Find files",
         },
-        ["<C-m>"] = { "<Cmd>OverseerRun<CR>", desc = "Run Overseer" },
-        ["<C-s>"] = { "<Cmd>wa<CR>", desc = "Save and close buffer" }, -- Modified to save and close buffer
-        ["<C-c>"] = { "<Cmd>wa<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Modified to save and close buffer
-        ["<C-x>"] = { "<Cmd>wa<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Added C-x to save and close buffer
-        ["<C-r>"] = { ":IncRename", desc = "Rename" }, -- Modified to save and close buffer
-        ["<C-u>"] = {
+        ["<C-f>o"] = {
+          function() require("snacks").picker.recent() end,
+          desc = "Find recent files",
+        },
+        ["<C-f>g"] = {
+          function() require("snacks").picker.git_files() end,
+          desc = "Find git files",
+        },
+        ["<C-f>l"] = {
+          function() require("snacks").picker.lines() end,
+          desc = "Find in line",
+        },
+        ["<C-f>w"] = {
+          function() require("snacks").picker.grep_buffers() end,
+          desc = "Find word in open buffers",
+        },
+        ["<C-f>s"] = {
           function() require("snacks").picker.lsp_symbols() end,
-          desc = "Find diagnostics",
+          desc = "Find LSP symbols",
         },
+        ["<C-f>t"] = { "<cmd>Telescope toggleterm_manager<cr>", desc = "Search Toggleterms" },
+        ["<C-x>"] = { "<Cmd>wa<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Added C-x to save and close buffer
         -- LSP Source Action <C-.>
-        ["<C-a>"] = { function() vim.lsp.buf.code_action() end, desc = "LSP Code Action" },
-        ["<C-,>"] = { function() vim.lsp.buf.hover() end, desc = "LSP Hover" },
+        ["<C-a>a"] = { function() vim.lsp.buf.code_action() end, desc = "LSP Code Action" },
+        ["<C-a>h"] = { function() vim.lsp.buf.hover() end, desc = "LSP Hover" },
         -- Terminal launcher
-        ["<C-t>j"] = { "<cmd>ToggleTerm direction=horizontal<CR>", desc = "Terminal horizontal" },
-        ["<C-t>k"] = { "<cmd>ToggleTerm direction=vertical<CR>", desc = "Terminal vertical" },
-        ["<C-t>s"] = { ScratchFloat_toggle, desc = "Scratch Terminal" },
       },
       i = {
         ["<C-s>"] = { "<Cmd>wa<CR><Esc>", desc = "Save and return to normal mode" },

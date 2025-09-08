@@ -1,5 +1,5 @@
 theme: Cobalt
 sort:
-  by: NAME
+  by: NAMESPACE
   isReversed: false
 disable_exit_confirmation: true
