@@ -1,8 +1,9 @@
--- Streamlined Bufferline configuration
+-- Bufferline configuration with AstroNvim integration
 return {
   "akinsho/bufferline.nvim",
   version = "*",
-  dependencies = "nvim-tree/nvim-web-devicons",
+  dependencies = { "nvim-tree/nvim-web-devicons", "AstroNvim/astrocore" },
+  event = "VeryLazy",
   config = function()
     local bufferline = require "bufferline"
     local groups = require "bufferline.groups"
@@ -11,8 +12,10 @@ return {
       options = {
         mode = "buffers",
         numbers = "none",
+        close_command = function(n) require("astrocore.buffer").close(n) end,
+        right_mouse_command = function(n) require("astrocore.buffer").close(n) end,
         separator_style = "thick",
-        indicator = { style = "icon", icon = "" },
+        indicator = { style = "icon", icon = "▎" },
         diagnostics = "nvim_lsp",
         diagnostics_indicator = function(_, _, diagnostics_dict)
           local s = " "

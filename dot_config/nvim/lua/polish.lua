@@ -1,8 +1,7 @@
--- This will run last in the setup process and is a good place to configure
--- things like custom filetypes. This just pure lua so anything that doesn't
--- fit in the normal config locations above can go here
--- Map <C-/> to toggle Aider terminal in all modes
+-- Polish configuration: Final setup and overrides
+-- This runs last in the setup process
 
+-- Overseer setup for task running
 require("overseer").setup {
   strategy = {
     "toggleterm",
@@ -14,28 +13,10 @@ require("overseer").setup {
     open_on_start = true,
     hidden = true,
   },
-  form = {
-    win_opts = {
-      winblend = 0,
-      winhighlight = "NormalFloat:MyCustomHighlight",
-    },
-  },
-  confirm = {
-    win_opts = {
-      winblend = 0,
-      winhighlight = "NormalFloat:MyCustomHighlight",
-    },
-  },
-  task_win = {
-    win_opts = {
-      winblend = 0,
-      winhighlight = "NormalFloat:MyCustomHighlight",
-    },
-  },
 }
 
+-- ToggleTerm setup with dynamic sizing
 require("toggleterm").setup {
-  -- size can be a number or function which is passed the current terminal
   size = function(term)
     if term.direction == "horizontal" then
       return 15
@@ -45,4 +26,6 @@ require("toggleterm").setup {
       return 20
     end
   end,
+  shade_terminals = false,
+  start_in_insert = true,
 }

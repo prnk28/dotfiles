@@ -7,9 +7,9 @@ font-family = "VictorMono Nerd Font Mono"
 shell-integration = zsh
 shell-integration-features = sudo
 confirm-close-surface = false
-font-size = 16
+font-size = 20
 
-window-decoration = false
+window-decoration = true
 
 window-theme = auto
 window-inherit-working-directory = true

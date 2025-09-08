@@ -1,11 +1,13 @@
 local Terminal = require("toggleterm.terminal").Terminal
 
 local explorerOptions = {
-  auto_close = true,
+  auto_close = false,
   include = {
-    ".chezmoi*",
+    ".chezmoidata",
+    ".chezmoiscripts",
+    ".chezmoitemplates",
   },
-  hidden = {
+  ignore = {
     "chain_*.json",
     ".typecopy",
     ".python-version",
@@ -68,8 +70,6 @@ local explorerOptions = {
     ".golangci.yml",
     "go.mod",
     "pnpm-workspace.yaml",
-  },
-  exclude = {
     ".git",
     "pnpm-lock.yaml",
     ".next",
@@ -235,21 +235,10 @@ local mk = Terminal:new {
   end,
 }
 
-local pc = Terminal:new {
-  cmd = "devbox services up",
-  hidden = true,
-  direction = "float", -- function to run on opening the terminal
-  on_open = function(term)
-    vim.cmd "startinsert!"
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-  end,
-}
-
 -- Toggle Functions
 function Claude_toggle() claude:toggle() end
 function Lazyjournal_toggle() lazyjournal:toggle() end
 function Mk_toggle() mk:toggle() end
-function PC_toggle() pc:toggle() end
 function Scooter_toggle() scooter:toggle() end
 function Yazi_toggle() yazi:toggle() end
 
@@ -396,10 +385,9 @@ return {
           function() require("snacks").picker.git_branches() end,
           desc = "Search git branches",
         },
-        ["<C-i>i"] = { PC_toggle, desc = "Devbox Services Toggle", noremap = true },
-        ["<C-i>m"] = { Mk_toggle, desc = "Run mk", noremap = true },
-        ["<C-i>j"] = { Lazyjournal_toggle, desc = "Lazyjournal Toggle" },
-        ["<C-t>d"] = {
+        ["<C-t>m"] = { Mk_toggle, desc = "Run mk", noremap = true },
+        ["<C-t>j"] = { Lazyjournal_toggle, desc = "Lazyjournal Toggle" },
+        ["<C-t>l"] = {
           function()
             require("snacks").terminal("lazydocker", {
               hidden = true,
@@ -410,9 +398,9 @@ return {
           end,
           desc = "Lazydocker Toggle",
         },
-        ["<C-t>p"] = {
+        ["<C-t>du"] = {
           function()
-            require("snacks").terminal("lazydocker", {
+            require("snacks").terminal("devbox services up", {
               hidden = true,
               auto_close = false,
               start_in_insert = true,
@@ -422,8 +410,32 @@ return {
           desc = "Devbox Services Up",
           noremap = true,
         },
+        ["<C-t>dd"] = {
+          function()
+            require("snacks").terminal("devbox services down", {
+              hidden = true,
+              auto_close = false,
+              start_in_insert = true,
+              interactive = true,
+            })
+          end,
+          desc = "Devbox Services Down",
+          noremap = true,
+        },
+        ["<C-t>da"] = {
+          function()
+            require("snacks").terminal("devbox services attach", {
+              hidden = true,
+              auto_close = false,
+              start_in_insert = true,
+              interactive = true,
+            })
+          end,
+          desc = "Devbox Services Attach",
+          noremap = true,
+        },
         ["<C-t>."] = { Yazi_toggle, desc = "Yazi Toggle" },
-        ["<C-t>"] = {
+        ["<C-t>t"] = {
           function() require("snacks").terminal() end,
           desc = "Toggle Terminal",
         },
