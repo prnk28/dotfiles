@@ -12,17 +12,6 @@ local claude = Terminal:new {
   end,
 }
 
-local opencode = Terminal:new {
-  cmd = "opencode",
-  hidden = true,
-  direction = "tab",
-  close_on_exit = false, -- function to run on opening the terminal
-  on_open = function(term)
-    vim.cmd "startinsert!"
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-  end,
-}
-
 local yazi = Terminal:new {
   cmd = "yazi",
   hidden = true,
@@ -116,7 +105,6 @@ local scratchFloat = Terminal:new {
 
 -- Toggle Functions
 function Claude_toggle() claude:toggle() end
-function Opencode_toggle() opencode:toggle() end
 function Ghdash_toggle() ghdash:toggle() end
 
 function Lazydocker_toggle() lazydocker:toggle() end
@@ -198,15 +186,29 @@ return {
       -- first key is the mode
       n = {
         -- navigate buffer tabs
+        ["C"] = { "<Cmd>wa<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Added C-x to save and close buffer
         ["F"] = { "za", desc = "Toggle fold under cursor" },
         ["L"] = { "<Cmd>BufferLineCycleNext<CR>", desc = "Next buffer" },
         ["H"] = { "<Cmd>BufferLineCyclePrev<CR>", desc = "Previous buffer" },
-        ["B"] = { "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
-        ["<leader>bb"] = { "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
-        ["<leader>bc"] = { "<Cmd>BufferLinePickClose<CR>", desc = "Pick buffer to close" },
-        ["<leader>bg"] = {
+        ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Explorer" },
+        ["<C-m>"] = { "<Cmd>OverseerRun<CR>", desc = "Run Overseer" },
+        ["<leader><leader>"] = { Claude_toggle, desc = "Claude" },
+        ["<C-b>b"] = { "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
+        ["<C-b>f"] = {
+          function() require("snacks").picker.buffers() end,
+          desc = "Find buffers",
+        },
+        ["<C-b>x"] = {
           function()
-            -- Toggle only groups that auto-close (not currently highlighted by default)
+            local current_buffer = vim.api.nvim_get_current_buf()
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+              if buf ~= current_buffer then vim.api.nvim_buf_delete(buf, { force = true }) end
+            end
+          end,
+          desc = "Close all buffers except the current one",
+        },
+        ["<C-b>g"] = {
+          function()
             local auto_close_groups = { "Actions", "Claude", "Config", "Docs", "Scripts", "Terminals" }
             for _, group in ipairs(auto_close_groups) do
               vim.cmd("BufferLineGroupToggle " .. group)
@@ -214,29 +216,28 @@ return {
           end,
           desc = "Toggle auto-close buffer groups",
         },
-        ["<C-m>"] = { "<Cmd>OverseerRun<CR>", desc = "Run Overseer" },
-        ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Show Explorer" },
-        ["<leader><leader>"] = { Claude_toggle, desc = "Claude Toggle" },
-        ["<C-g>d"] = { Ghdash_toggle, desc = "GitHub Dashboard Toggle" },
-        ["<C-g>g"] = { Lazygit_toggle, desc = "Lazygit Toggle" },
-        ["<C-g>o"] = { "<cmd>!gh repo view --web<CR>", desc = "Open repo in browser" },
-        ["<A-g>d"] = { Ghdash_toggle, desc = "GitHub Dashboard Toggle" },
-        ["<A-g>g"] = { Lazygit_toggle, desc = "Lazygit Toggle" },
-        ["<A-g>o"] = { "<cmd>!gh repo view --web<CR>", desc = "Open repo in browser" },
+        ["<C-b>k"] = { "<Cmd>BufferLinePickClose<CR>", desc = "Pick buffer to close" },
+        ["<C-g>o"] = { "<cmd>!gh repo view --web<CR>", desc = "Open Repo on Web" },
+        ["<C-g>h"] = { Ghdash_toggle, desc = "Dashboard" },
+        ["<C-g>g"] = { Lazygit_toggle, desc = "Lazygit" },
+        ["<C-g>d"] = {
+          function() require("snacks").picker.git_diff() end,
+          desc = "Search git diffs",
+        },
+        ["<C-g>b"] = {
+          function() require("snacks").picker.git_branches() end,
+          desc = "Search git branches",
+        },
         ["<C-i>i"] = { PC_toggle, desc = "Devbox Services Toggle", noremap = true },
         ["<C-i>m"] = { Mk_toggle, desc = "Run mk", noremap = true },
-        ["<C-i>o"] = { Opencode_toggle, desc = "OpenCode Toggle" },
-        ["<C-t>d"] = { Lazydocker_toggle, desc = "Lazydocker Toggle" },
         ["<C-i>j"] = { Lazyjournal_toggle, desc = "Lazyjournal Toggle" },
-        ["<C-i>k"] = { Claude_toggle, desc = "Claude Toggle" },
+        ["<C-t>d"] = { Lazydocker_toggle, desc = "Lazydocker Toggle" },
         ["<C-t>p"] = { PC_toggle, desc = "Devbox Services Toggle", noremap = true },
         ["<C-t>k"] = { "<cmd>ToggleTerm direction=vertical<CR>", desc = "Terminal vertical" },
         ["<C-t>s"] = { ScratchFloat_toggle, desc = "Scratch Terminal" },
         ["<C-t>."] = { Yazi_toggle, desc = "Yazi Toggle" },
         ["K"] = { function() vim.diagnostic.goto_prev() end, desc = "Previous Diagnostic" },
         ["J"] = { function() vim.diagnostic.goto_next() end, desc = "Next Diagnostic" },
-        ["T"] = { "gg", desc = "Go to top of file" },
-        ["X"] = { "<Cmd>wa<CR><Cmd>bd<CR><Esc>", desc = "Save, close buffer, and return to normal mode" },
         ["vv"] = { "gg0VG$", desc = "Select all contents in buffer" },
         ["<C-f>r"] = {
           Scooter_toggle,
@@ -270,9 +271,10 @@ return {
           function() require("snacks").picker.lsp_symbols() end,
           desc = "Find LSP symbols",
         },
-        ["<C-f>t"] = { "<cmd>Telescope toggleterm_manager<cr>", desc = "Search Toggleterms" },
-        ["<C-x>"] = { "<Cmd>wa<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Added C-x to save and close buffer
-        -- LSP Source Action <C-.>
+        ["<C-f>z"] = {
+          function() require("snacks").picker.zoxide() end,
+          desc = "Find LSP symbols",
+        },
         ["<C-a>a"] = { function() vim.lsp.buf.code_action() end, desc = "LSP Code Action" },
         ["<C-a>h"] = { function() vim.lsp.buf.hover() end, desc = "LSP Hover" },
         -- Terminal launcher
@@ -288,11 +290,9 @@ return {
         ["<C-x>"] = { "<Cmd>w<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Added C-x for visual mode
       },
       t = {
-        ["<Esc>"] = {
-          function()
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes([[<C-\><C-n>]], true, false, true), "n", false)
-          end,
-          desc = "Exit terminal mode",
+        ["<C-b>f"] = {
+          function() require("snacks").picker.buffers() end,
+          desc = "Find buffers",
         },
         -- Exit terminal mode and close window
         ["<C-c>"] = {
@@ -301,7 +301,6 @@ return {
           end,
           desc = "Exit terminal and close window",
         },
-        -- Add tmux-style window navigation
         ["<C-h>"] = {
           function()
             vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes([[<C-\><C-n><C-w>h]], true, false, true), "n", false)
