@@ -24,7 +24,7 @@ columns = 0
 lines = 0
 
 [font]
-size = 20
+size = 17
 
 [font.bold]
 family = "VictorMono Nerd Font Mono"
