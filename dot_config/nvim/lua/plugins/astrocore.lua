@@ -10,7 +10,6 @@ local claude = Terminal:new {
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
   end,
-  on_close = function(term) vim.cmd "startinsert!" end,
 }
 
 local opencode = Terminal:new {
@@ -24,10 +23,21 @@ local opencode = Terminal:new {
   end,
 }
 
+local yazi = Terminal:new {
+  cmd = "yazi",
+  hidden = true,
+  direction = "tab",
+  close_on_exit = true, -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+}
+
 local ghdash = Terminal:new {
   cmd = "gh dash",
   hidden = true,
-  direction = "tab", -- function to run on opening the terminal
+  direction = "float", -- function to run on opening the terminal
   on_open = function(term)
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
@@ -37,7 +47,17 @@ local ghdash = Terminal:new {
 local lazydocker = Terminal:new {
   cmd = "lazydocker",
   hidden = true,
-  direction = "tab", -- function to run on opening the terminal
+  direction = "float", -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+}
+
+local lazygit = Terminal:new {
+  cmd = "lazygit",
+  hidden = true,
+  direction = "float", -- function to run on opening the terminal
   on_open = function(term)
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
@@ -47,7 +67,7 @@ local lazydocker = Terminal:new {
 local lazyjournal = Terminal:new {
   cmd = "lazyjournal",
   hidden = true,
-  direction = "tab", -- function to run on opening the terminal
+  direction = "float", -- function to run on opening the terminal
   on_open = function(term)
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
@@ -55,9 +75,9 @@ local lazyjournal = Terminal:new {
 }
 
 local pc = Terminal:new {
-  cmd = "devbox services attach",
+  cmd = "devbox services up",
   hidden = true,
-  direction = "tab", -- function to run on opening the terminal
+  direction = "float", -- function to run on opening the terminal
   on_open = function(term)
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
@@ -68,18 +88,10 @@ local scratchFloat = Terminal:new {
   cmd = "zsh",
   hidden = true,
   direction = "float", -- function to run on opening the terminal
-}
-
-local scratchBottom = Terminal:new {
-  cmd = "horizontal",
-  hidden = true,
-  direction = "float", -- function to run on opening the terminal
-}
-
-local scratchRight = Terminal:new {
-  cmd = "vertical",
-  hidden = true,
-  direction = "float", -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
 }
 
 -- Toggle Functions
@@ -88,11 +100,11 @@ function Opencode_toggle() opencode:toggle() end
 function Ghdash_toggle() ghdash:toggle() end
 
 function Lazydocker_toggle() lazydocker:toggle() end
+function Lazygit_toggle() lazygit:toggle() end
 function Lazyjournal_toggle() lazyjournal:toggle() end
 function PC_toggle() pc:toggle() end
 function ScratchFloat_toggle() scratchFloat:toggle() end
-function ScratchBottom_toggle() scratchBottom:toggle() end
-function ScratchRight_toggle() scratchRight:toggle() end
+function Yazi_toggle() yazi:toggle() end
 
 return {
   "AstroNvim/astrocore",
@@ -168,6 +180,7 @@ return {
         ["F"] = { "za", desc = "Toggle fold under cursor" },
         ["L"] = { "<Cmd>BufferLineCycleNext<CR>", desc = "Next buffer" },
         ["H"] = { "<Cmd>BufferLineCyclePrev<CR>", desc = "Previous buffer" },
+        ["B"] = { "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
         ["<leader>bb"] = { "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
         ["<leader>bc"] = { "<Cmd>BufferLinePickClose<CR>", desc = "Pick buffer to close" },
         ["<leader>bg"] = {
@@ -180,47 +193,17 @@ return {
           end,
           desc = "Toggle auto-close buffer groups",
         },
-        -- Group close picker
-        ["<leader>bx"] = {
-          function()
-            local groups = {
-              "DEX",
-              "DID",
-              "DWN",
-              "SVC",
-              "Tests",
-              "Actions",
-              "Claude",
-              "Config",
-              "Docs",
-              "Scripts",
-              "Terminals",
-              "ungrouped",
-            }
-            local items = {}
-            for _, group in ipairs(groups) do
-              table.insert(items, {
-                text = group,
-                action = function() vim.cmd("BufferLineGroupClose " .. group) end,
-              })
-            end
-            require("snacks").picker.pick(items, {
-              prompt = "Close buffer group",
-              format = function(item) return item.text end,
-            })
-          end,
-          desc = "Pick buffer group to close",
-        },
         ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Show Explorer" },
         ["<leader>k"] = { Claude_toggle, desc = "Claude Toggle" },
-        ["<C-o>k"] = { Claude_toggle, desc = "Claude Toggle" },
-        ["<C-o>o"] = { Opencode_toggle, desc = "OpenCode Toggle" },
-        ["<C-o>h"] = { Ghdash_toggle, desc = "Ghdash Toggle" },
-        ["<C-o>d"] = { Lazydocker_toggle, desc = "Lazydocker Toggle" },
-        ["<C-o>p"] = { PC_toggle, desc = "Process Compose Toggle", noremap = true },
-        ["<C-o>j"] = { Lazyjournal_toggle, desc = "Lazyjournal Toggle" },
-        ["<C-g>d"] = { Ghdash_toggle, desc = "Ghdash Toggle" },
+        ["<C-i>p"] = { PC_toggle, desc = "Devbox Services Toggle", noremap = true },
+        ["<C-i>o"] = { Opencode_toggle, desc = "OpenCode Toggle" },
+        ["<C-i>d"] = { Lazydocker_toggle, desc = "Lazydocker Toggle" },
+        ["<C-i>j"] = { Lazyjournal_toggle, desc = "Lazyjournal Toggle" },
+        ["<C-i>k"] = { Claude_toggle, desc = "Claude Toggle" },
+        ["<C-g>g"] = { Lazygit_toggle, desc = "Lazygit Toggle" },
+        ["<C-g>d"] = { Ghdash_toggle, desc = "GitHub Dashboard Toggle" },
         ["<C-g>o"] = { "<cmd>!gh repo view --web<CR>", desc = "Open repo in browser" },
+        ["<C-t>."] = { Yazi_toggle, desc = "Yazi Toggle" },
         ["K"] = { function() vim.diagnostic.goto_prev() end, desc = "Previous Diagnostic" },
         ["J"] = { function() vim.diagnostic.goto_next() end, desc = "Next Diagnostic" },
         ["T"] = { "gg", desc = "Go to top of file" },

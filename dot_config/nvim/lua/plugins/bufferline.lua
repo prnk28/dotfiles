@@ -15,7 +15,7 @@ return {
         separator_style = "thick",
         indicator = {
           style = "icon",
-          icon = "▎",
+          icon = "",
         },
         diagnostics = "nvim_lsp",
         diagnostics_indicator = function(count, level, diagnostics_dict, context)
