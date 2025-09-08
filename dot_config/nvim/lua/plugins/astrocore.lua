@@ -271,9 +271,9 @@ return {
           function() require("snacks").picker.lsp_symbols() end,
           desc = "Find LSP symbols",
         },
-        ["<C-f>z"] = {
+        ["<C-f>p"] = {
           function() require("snacks").picker.zoxide() end,
-          desc = "Find LSP symbols",
+          desc = "Find Projects with Zoxide",
         },
         ["<C-a>a"] = { function() vim.lsp.buf.code_action() end, desc = "LSP Code Action" },
         ["<C-a>h"] = { function() vim.lsp.buf.hover() end, desc = "LSP Hover" },
