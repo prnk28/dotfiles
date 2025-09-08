@@ -34,6 +34,16 @@ local yazi = Terminal:new {
   end,
 }
 
+local scooter = Terminal:new {
+  cmd = "scooter",
+  hidden = true,
+  direction = "vertical", -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+}
+
 local ghdash = Terminal:new {
   cmd = "gh dash",
   hidden = true,
@@ -114,6 +124,7 @@ function Lazygit_toggle() lazygit:toggle() end
 function Lazyjournal_toggle() lazyjournal:toggle() end
 function Mk_toggle() mk:toggle() end
 function PC_toggle() pc:toggle() end
+function Scooter_toggle() scooter:toggle() end
 function ScratchFloat_toggle() scratchFloat:toggle() end
 function Yazi_toggle() yazi:toggle() end
 
@@ -138,7 +149,6 @@ return {
           "go.mod",
           "package.json",
           "Pipfile",
-          "buf.yaml",
           "docs.json",
         }, -- lastly check for a file named `main`
       },
@@ -148,7 +158,7 @@ return {
         dirs = {}, -- list of directory patterns (Ex. { "~/.cargo/*" })
       },
       -- automatically update working directory (update manually with `:AstroRoot`)
-      autochdir = true,
+      autochdir = false,
       -- scope of working directory to change ("global"|"tab"|"win")
       scope = "global", -- Changed from "win" to "global" to make directory changes apply globally
       -- show notification on every working directory change
@@ -210,6 +220,9 @@ return {
         ["<C-g>d"] = { Ghdash_toggle, desc = "GitHub Dashboard Toggle" },
         ["<C-g>g"] = { Lazygit_toggle, desc = "Lazygit Toggle" },
         ["<C-g>o"] = { "<cmd>!gh repo view --web<CR>", desc = "Open repo in browser" },
+        ["<A-g>d"] = { Ghdash_toggle, desc = "GitHub Dashboard Toggle" },
+        ["<A-g>g"] = { Lazygit_toggle, desc = "Lazygit Toggle" },
+        ["<A-g>o"] = { "<cmd>!gh repo view --web<CR>", desc = "Open repo in browser" },
         ["<C-i>i"] = { PC_toggle, desc = "Devbox Services Toggle", noremap = true },
         ["<C-i>m"] = { Mk_toggle, desc = "Run mk", noremap = true },
         ["<C-i>o"] = { Opencode_toggle, desc = "OpenCode Toggle" },
@@ -225,6 +238,10 @@ return {
         ["T"] = { "gg", desc = "Go to top of file" },
         ["X"] = { "<Cmd>wa<CR><Cmd>bd<CR><Esc>", desc = "Save, close buffer, and return to normal mode" },
         ["vv"] = { "gg0VG$", desc = "Select all contents in buffer" },
+        ["<C-f>r"] = {
+          Scooter_toggle,
+          desc = "Find diagnostics",
+        },
         ["<C-f>d"] = {
           function() require("snacks").picker.diagnostics() end,
           desc = "Find diagnostics",

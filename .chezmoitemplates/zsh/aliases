@@ -35,6 +35,7 @@ function c() {
     z "$1"
   fi
 }
+alias j="c"
 
 # ============================================
 # Directory Navigation
