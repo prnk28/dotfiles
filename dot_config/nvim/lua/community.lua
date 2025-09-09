@@ -29,5 +29,4 @@ return {
   { import = "astrocommunity.lsp.inc-rename-nvim" },
   { import = "astrocommunity.lsp.nvim-lsp-file-operations" },
   { import = "astrocommunity.session.vim-workspace" },
-  { import = "astrocommunity.utility.mason-tool-installer-nvim" },
 }

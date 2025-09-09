@@ -13,18 +13,14 @@ program = "/bin/zsh"
 args = ["-l"]
 
 [window]
-blur = true
-dynamic_padding = true
+blur = false
+dynamic_padding = false
 decorations = "Buttonless"
-opacity = 0.87
+opacity = 0.9
 option_as_alt = "Both"
 
-[window.dimensions]
-columns = 0
-lines = 0
-
 [font]
-size = 11
+size = 10
 
 [font.bold]
 family = "VictorMono Nerd Font Mono"

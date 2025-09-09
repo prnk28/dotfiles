@@ -3,9 +3,16 @@
 setopt glob_dots
 
 # Initialize completions (optimized)
-{{ if eq .chezmoi.os "darwin" -}}
 autoload -Uz compinit
+{{ if eq .chezmoi.os "darwin" -}}
 if [[ -n ${ZDOTDIR}/.zcompdump(#qNmh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+{{ else -}}
+# For Linux, use standard completion initialization
+if [[ -n ~/.zcompdump(#qNmh+24) ]]; then
   compinit
 else
   compinit -C
@@ -18,6 +25,9 @@ export STARSHIP_CONFIG="$HOME/.config/starship.toml"
 # Set editor
 export EDITOR=nvim
 export VISUAL=nvim
+
+# Add hishtory to PATH early (before it's used by other configurations)
+export PATH="{{ .chezmoi.homeDir }}/.hishtory:$PATH"
 
 # Load language/tool specific configurations
 {{ template "zsh/golang" . }}

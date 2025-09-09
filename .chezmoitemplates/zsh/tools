@@ -4,5 +4,4 @@ command -v starship &> /dev/null && eval "$(starship init zsh)"
 
 # Hishtory
 [[ -f "{{ .chezmoi.homeDir }}/.hishtory/config.zsh" ]] && source "{{ .chezmoi.homeDir }}/.hishtory/config.zsh"
-export PATH="{{ .chezmoi.homeDir }}/.hishtory:$PATH"
 export LG_CONFIG_FILE="{{ .chezmoi.homeDir }}/.config/lazygit/config.yml"
