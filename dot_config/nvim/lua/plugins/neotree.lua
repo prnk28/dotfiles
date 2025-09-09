@@ -1,3 +1,52 @@
+local Terminal = require("toggleterm.terminal").Terminal
+
+local yazi = Terminal:new {
+  cmd = "yazi",
+  hidden = true,
+  direction = "tab",
+  close_on_exit = true,
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+}
+
+local lazyjournal = Terminal:new {
+  cmd = "lazyjournal",
+  hidden = true,
+  direction = "float",
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+}
+
+local mk = Terminal:new {
+  cmd = "mk",
+  hidden = true,
+  direction = "vertical",
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+}
+
+local scooter = Terminal:new {
+  cmd = "scooter",
+  hidden = true,
+  direction = "vertical",
+  on_open = function(term)
+    vim.cmd "startinsert!"
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+}
+
+-- Toggle Functions
+function Lazyjournal_toggle() lazyjournal:toggle() end
+function Mk_toggle() mk:toggle() end
+function Scooter_toggle() scooter:toggle() end
+function Yazi_toggle() yazi:toggle() end
+
 return {
   {
     "neo-tree.nvim",
@@ -27,6 +76,70 @@ return {
           ["<c-x>"] = "clear_filter",
           ["<CR>"] = "open_and_close_neotree",
           ["<S-CR>"] = "open",
+          -- Git keybindings from astrocore
+          ["<C-g>o"] = function() vim.cmd("!gh repo view --web") end,
+          ["<C-g>h"] = function()
+            require("snacks").terminal("gh dash", {
+              hidden = true,
+              auto_close = false,
+              interactive = true,
+            })
+          end,
+          ["<C-g>g"] = function()
+            require("snacks").terminal("lazygit", {
+              hidden = true,
+              auto_close = true,
+              interactive = true,
+            })
+          end,
+          ["<C-g>d"] = function() require("snacks").picker.git_diff() end,
+          ["<C-g>b"] = function() require("snacks").picker.git_branches() end,
+          -- Terminal keybindings from astrocore
+          ["<C-t>m"] = function() Mk_toggle() end,
+          ["<C-t>j"] = function() Lazyjournal_toggle() end,
+          ["<C-t>l"] = function()
+            require("snacks").terminal("lazydocker", {
+              hidden = true,
+              auto_close = true,
+              start_in_insert = true,
+              interactive = true,
+            })
+          end,
+          ["<C-t>du"] = function()
+            require("snacks").terminal("devbox services up", {
+              hidden = true,
+              auto_close = false,
+              start_in_insert = true,
+              interactive = true,
+            })
+          end,
+          ["<C-t>dd"] = function()
+            require("snacks").terminal("devbox services down", {
+              hidden = true,
+              auto_close = false,
+              start_in_insert = true,
+              interactive = true,
+            })
+          end,
+          ["<C-t>da"] = function()
+            require("snacks").terminal("devbox services attach", {
+              hidden = true,
+              auto_close = false,
+              start_in_insert = true,
+              interactive = true,
+            })
+          end,
+          ["<C-t>."] = function() Yazi_toggle() end,
+          ["<C-t>t"] = function() require("snacks").terminal() end,
+          -- Find keybindings from astrocore
+          ["<C-f>r"] = function() Scooter_toggle() end,
+          ["<C-f>d"] = function() require("snacks").picker.diagnostics() end,
+          ["<C-f>f"] = function() require("snacks").picker.smart() end,
+          ["<C-f>o"] = function() require("snacks").picker.recent() end,
+          ["<C-f>g"] = function() require("snacks").picker.git_files() end,
+          ["<C-f>l"] = function() require("snacks").picker.lines() end,
+          ["<C-f>w"] = function() require("snacks").picker.grep_buffers() end,
+          ["<C-f>p"] = function() require("snacks").picker.zoxide() end,
           -- Mappings for Mason and formatting
         },
         header = {
