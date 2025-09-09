@@ -20,7 +20,7 @@ opacity = 0.9
 option_as_alt = "Both"
 
 [font]
-size = 10
+size = 12
 
 [font.bold]
 family = "VictorMono Nerd Font Mono"
