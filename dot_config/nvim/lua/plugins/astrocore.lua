@@ -371,7 +371,7 @@ return {
           function()
             require("snacks").terminal("lazygit", {
               hidden = true,
-              auto_close = false,
+              auto_close = true,
               interactive = true,
             })
           end,
@@ -391,7 +391,7 @@ return {
           function()
             require("snacks").terminal("lazydocker", {
               hidden = true,
-              auto_close = false,
+              auto_close = true,
               start_in_insert = true,
               interactive = true,
             })
