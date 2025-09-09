@@ -3,12 +3,14 @@
 setopt glob_dots
 
 # Initialize completions (optimized)
+{{ if eq .chezmoi.os "darwin" -}}
 autoload -Uz compinit
 if [[ -n ${ZDOTDIR}/.zcompdump(#qNmh+24) ]]; then
   compinit
 else
   compinit -C
 fi
+{{ end -}}
 
 # Starship configuration
 export STARSHIP_CONFIG="$HOME/.config/starship.toml"
