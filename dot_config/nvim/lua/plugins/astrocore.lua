@@ -7,7 +7,7 @@ local explorerOptions = {
     ".chezmoiscripts",
     ".chezmoitemplates",
   },
-  ignore = {
+  exclude = {
     "chain_*.json",
     ".typecopy",
     ".python-version",

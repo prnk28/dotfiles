@@ -131,6 +131,16 @@ mods = "Command"
 chars = "\u0002]"
 
 [[keyboard.bindings]]
+key = "H"
+mods = "Command"
+chars = "\u0002["
+
+[[keyboard.bindings]]
+key = "L"
+mods = "Command"
+chars = "\u0002]"
+
+[[keyboard.bindings]]
 key = "I"
 mods = "Command"
 chars = "\u0002N"
