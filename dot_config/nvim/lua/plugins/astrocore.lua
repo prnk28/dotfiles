@@ -316,10 +316,7 @@ return {
         ["F"] = { "za", desc = "Toggle fold under cursor" },
         ["L"] = { "<Cmd>BufferLineCycleNext<CR>", desc = "Next buffer" },
         ["H"] = { "<Cmd>BufferLineCyclePrev<CR>", desc = "Previous buffer" },
-        ["<C-e>"] = {
-          function() require("snacks").explorer.open(explorerOptions) end,
-          desc = "Open Explorer",
-        },
+        ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Open Explorer" },
         ["<C-m>"] = { "<Cmd>OverseerRun<CR>", desc = "Run Overseer" },
         ["<leader><leader>"] = {
           Claude_toggle,
@@ -496,18 +493,12 @@ return {
         ["<C-x>"] = { "<Cmd>wa<CR><Cmd>bd<CR><Esc>", desc = "Save, close buffer, and return to normal mode" }, -- Added C-x for insert mode
       },
       v = {
-        ["<C-e>"] = {
-          function() require("snacks").explorer.open(explorerOptions) end,
-          desc = "Open Explorer",
-        },
+        ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Open Explorer" },
         ["<C-c>"] = { "<Cmd>w<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Modified to save and close buffer
         ["<C-x>"] = { "<Cmd>w<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Added C-x for visual mode
       },
       t = {
-        ["<C-e>"] = {
-          function() require("snacks").explorer.open(explorerOptions) end,
-          desc = "Open Explorer",
-        },
+        ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Open Explorer" },
         ["<leader>e"] = {
           function() require("snacks").explorer.open() end,
           desc = "Open Explorer",
