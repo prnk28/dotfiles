@@ -13,10 +13,10 @@ program = "/bin/zsh"
 args = ["-l"]
 
 [window]
-dynamic_padding = false
+blur = true
+dynamic_padding = true
 decorations = "Buttonless"
-opacity = 0.8
-blur = false
+opacity = 0.87
 option_as_alt = "Both"
 
 [window.dimensions]
@@ -24,7 +24,7 @@ columns = 0
 lines = 0
 
 [font]
-size = 12
+size = 11
 
 [font.bold]
 family = "VictorMono Nerd Font Mono"
@@ -171,6 +171,16 @@ chars = "\u0005"
 key = "L"
 mods = "Command"
 chars = "\u0002t"
+
+[[keyboard.bindings]]
+key = "C"
+mods = "Option"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "V"
+mods = "Option"
+action = "Paste"
 
 [[keyboard.bindings]]
 key = "1"
