@@ -14,13 +14,13 @@ args = ["-l"]
 
 [window]
 blur = false
-dynamic_padding = false
+dynamic_padding = true
 decorations = "Buttonless"
-opacity = 0.9
+opacity = 0.85
 option_as_alt = "Both"
 
 [font]
-size = 12
+size = 11
 
 [font.bold]
 family = "VictorMono Nerd Font Mono"
