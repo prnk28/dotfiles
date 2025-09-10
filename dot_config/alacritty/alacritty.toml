@@ -170,6 +170,16 @@ chars = "\u0002t"
 
 [[keyboard.bindings]]
 key = "C"
+mods = "Super"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "V"
+mods = "Super"
+action = "Paste"
+
+[[keyboard.bindings]]
+key = "C"
 mods = "Option"
 action = "Copy"
 

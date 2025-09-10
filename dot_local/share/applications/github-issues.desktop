@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Issues
+Comment=Github Issues
+Exec=omarchy-launch-webapp https://github.com/sonr-io/sonr/issues
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Github Issues.png
+StartupNotify=true

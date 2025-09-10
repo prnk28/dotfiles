@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Cloudflare Zero-Trust
+Comment=Cloudflare Zero-Trust
+Exec=omarchy-launch-webapp https://one.dash.cloudflare.com/eb37925850388bca807b7fab964c12bb/home?tab=get_started
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Cloudflare Zero-Trust.png
+StartupNotify=true

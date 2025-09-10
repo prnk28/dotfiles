@@ -1,35 +1,55 @@
 {
 	"oneliners": [
 		{
-			"title": "Github: Actions",
+			"title": "Web: Cloudflare/R2",
+			"command": "uwsm app -- ~/.local/share/applications/cloudflare-r2.desktop",
+			"exit": true
+		},
+		{
+			"title": "Web: Cloudflare/Workers",
+			"command": "uwsm app -- ~/.local/share/applications/cloudflare-workers.desktop",
+			"exit": true
+		},
+		{
+			"title": "Web: Cloudflare/Zero-Trust",
+			"command": "uwsm app -- ~/.local/share/applications/cloudflare-zero-trust.desktop",
+			"exit": true
+		},
+		{
+			"title": "Web: Github/Actions",
 			"command": "uwsm app -- ~/.local/share/applications/github-actions.desktop",
 			"exit": true
 		},
 		{
-			"title": "Github: Issues",
+			"title": "Web: Github/Issues",
 			"command": "uwsm app -- ~/.local/share/applications/github-issues.desktop",
 			"exit": true
 		},
 		{
-			"title": "Github: Pull Requests",
+			"title": "Web: Github/PRs",
 			"command": "uwsm app -- ~/.local/share/applications/github-prs.desktop",
 			"exit": true
 		},
 		{
-			"title": "Github: Projects",
+			"title": "Web: Github/Projects",
 			"command": "uwsm app -- ~/.local/share/applications/github-projects.desktop",
+			"exit": true
+		},
+		{
+			"title": "Web: TLDraw",
+			"command": "uwsm app -- ~/.local/share/applications/TLDraw.desktop",
+			"exit": true
+		},
+		{
+			"title": "Web: YouTube",
+			"command": "uwsm app -- ~/.local/share/applications/YouTube.desktop",
+			"exit": true
+		},
+		{
+			"title": "Web: X",
+			"command": "uwsm app -- ~/.local/share/applications/X.desktop",
 			"exit": true
 		}
 	],
-	"extensions": {
-		"devdocs": {
-			"origin": "https://raw.githubusercontent.com/pomdtr/sunbeam/main/extensions/devdocs.sh"
-		},
-		"gists": {
-			"origin": "https://raw.githubusercontent.com/pomdtr/sunbeam/main/extensions/gists.ts"
-		},
-		"google": {
-			"origin": "https://raw.githubusercontent.com/pomdtr/sunbeam/main/extensions/google.sh"
-		}
-	}
+	"extensions": {}
 }

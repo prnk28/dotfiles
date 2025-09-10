@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Projects
+Comment=Github Projects
+Exec=omarchy-launch-webapp https://github.com/orgs/sonr-io/projects/55
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Github Projects.png
+StartupNotify=true

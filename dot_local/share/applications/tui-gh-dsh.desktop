@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Gh Dash
+Comment=Gh Dash
+Exec=alacritty --class TUI.tile -e gh dash
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Gh Dash.png
+StartupNotify=true
