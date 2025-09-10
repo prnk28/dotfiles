@@ -16,4 +16,9 @@ dot_prompt-templates
 Library
 {{- end }}
 
+{{- if eq .chezmoi.os "darwin" }}
+dot_local/share/hypr
+dot_local/share/omarchy
+{{- end }}
+
 
