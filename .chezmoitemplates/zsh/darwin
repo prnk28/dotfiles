@@ -12,17 +12,16 @@ source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 {{ end -}}
 
+{{ if eq .chezmoi.os "darwin" -}}
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+export DYLD_LIBRARY_PATH="{{ .chezmoi.homeDir }}/.local/lib:$DYLD_LIBRARY_PATH"
+export CPATH="$(brew --prefix)/include"
+export LIBRARY_PATH="$(brew --prefix)/lib"
+{{ end -}}
+
 # Nix daemon
 [[ -s "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]] && \
   source "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
-
-# macOS specific paths
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
-export DYLD_LIBRARY_PATH="{{ .chezmoi.homeDir }}/.local/lib:$DYLD_LIBRARY_PATH"
-
-export CPATH="$(brew --prefix)/include"
-export LIBRARY_PATH="$(brew --prefix)/lib"
-
 # Claude code vars
 export ENABLE_BACKGROUND_TASKS=1
 export FORCE_AUTO_BACKGROUND_TASKS=1

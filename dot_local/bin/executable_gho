@@ -3,20 +3,79 @@
 # gho - Interactive Git Repository Navigator with fzf
 # Usage: source gho (to change directory in current shell)
 #        or add as function to your shell config
+# Options: -e, --edit              Open selected repository in nvim
+#          -E, --edit-persistent   Open repository in nvim, show picker again after nvim exits
+#          -c, --claude            Open selected repository in Claude Code
+#          -C, --claude-persistent Open repository in Claude Code, show picker again after exit
 
 gho() {
+    local edit_mode=false
+    local claude_mode=false
+    local persistent_mode=false
     local selected_repo
 
-    # Use fzf to select repository with git log preview
-    selected_repo=$(ghq list | fzf \
-        --header "Select Repository" \
-        --preview "cd \$(ghq root)/{} && echo -e '\033[1;34mRecent commits:\033[0m' && git log --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(blue)%an%C(reset), %C(green)%ar%C(reset) : %s' --abbrev-commit -8 && echo -e '\n\n\033[1;32mBranch info:\033[0m' && git branch -v 2>/dev/null || echo 'No git repository'" \
-        --preview-window="right:60%" \
-        --border \
-        --height="80%")
+    # Parse command line arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+        -e | --edit)
+            edit_mode=true
+            shift
+            ;;
+        -E | --edit-persistent)
+            edit_mode=true
+            persistent_mode=true
+            shift
+            ;;
+        -c | --claude)
+            claude_mode=true
+            shift
+            ;;
+        -C | --claude-persistent)
+            claude_mode=true
+            persistent_mode=true
+            shift
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Usage: gho [-e|--edit] [-E|--edit-persistent] [-c|--claude] [-C|--claude-persistent]"
+            echo "  -e, --edit                Open selected repository in nvim"
+            echo "  -E, --edit-persistent     Open repository in nvim, show picker again after nvim exits"
+            echo "  -c, --claude              Open selected repository in Claude Code"
+            echo "  -C, --claude-persistent   Open repository in Claude Code, show picker again after exit"
+            return 1
+            ;;
+        esac
+    done
 
-    # If a repository was selected, cd into it
-    if [[ -n "$selected_repo" ]]; then
+    # Main loop for persistent mode
+    while true; do
+        # Use fzf to select repository with git log preview
+        local header_text="Select Repository"
+        if [ "$edit_mode" = true ]; then
+            header_text="$header_text (will open in nvim)"
+        elif [ "$claude_mode" = true ]; then
+            header_text="$header_text (will open in Claude Code)"
+        fi
+        if [ "$persistent_mode" = true ]; then
+            header_text="$header_text [Persistent Mode - Ctrl+C to exit]"
+        fi
+        
+        selected_repo=$(ghq list | fzf \
+            --header "$header_text" \
+            --preview "cd \$(ghq root)/{} && echo -e '\033[1;34mRecent commits:\033[0m' && git log --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(blue)%an%C(reset), %C(green)%ar%C(reset) : %s' --abbrev-commit -8 && echo -e '\n\n\033[1;32mBranch info:\033[0m' && git branch -v 2>/dev/null || echo 'No git repository'" \
+            --preview-window="right:60%" \
+            --border \
+            --height="80%")
+
+        # If no repository was selected (user cancelled), exit
+        if [[ -z "$selected_repo" ]]; then
+            if [ "$persistent_mode" = true ]; then
+                echo "👋 Exiting persistent mode..."
+            fi
+            break
+        fi
+
+        # If a repository was selected, cd into it
         local repo_path="$(ghq root)/$selected_repo"
         if [[ -d "$repo_path" ]]; then
             cd "$repo_path" || return 1
@@ -26,11 +85,45 @@ gho() {
                 echo "🌟 Current branch: $(git branch --show-current)"
                 echo "📝 Latest commit: $(git log -1 --oneline)"
             fi
+
+            # Open in editor if edit or claude mode is enabled
+            if [ "$edit_mode" = true ]; then
+                echo "🚀 Opening in nvim..."
+                nvim .
+
+                # If not in persistent mode, exit after nvim
+                if [ "$persistent_mode" = false ]; then
+                    break
+                else
+                    echo ""
+                    echo "🔄 nvim closed, showing repository picker again..."
+                    echo "   Press Ctrl+C or ESC in fzf to exit persistent mode"
+                    echo ""
+                fi
+            elif [ "$claude_mode" = true ]; then
+                echo "🤖 Opening in Claude Code..."
+                claude .
+
+                # If not in persistent mode, exit after claude
+                if [ "$persistent_mode" = false ]; then
+                    break
+                else
+                    echo ""
+                    echo "🔄 Claude Code closed, showing repository picker again..."
+                    echo "   Press Ctrl+C or ESC in fzf to exit persistent mode"
+                    echo ""
+                fi
+            else
+                # If not in edit or claude mode, just exit after cd
+                break
+            fi
         else
             echo "❌ Directory not found: $repo_path"
-            return 1
+            if [ "$persistent_mode" = false ]; then
+                return 1
+            fi
         fi
-    fi
+    done
 }
 
 # If script is sourced, just define the function

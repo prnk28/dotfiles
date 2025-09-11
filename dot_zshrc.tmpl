@@ -29,6 +29,9 @@ export VISUAL=nvim
 # Add hishtory to PATH early (before it's used by other configurations)
 export PATH="{{ .chezmoi.homeDir }}/.hishtory:$PATH"
 
+# Add local bin to PATH
+export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
+
 # Load language/tool specific configurations
 {{ template "zsh/golang" . }}
 {{ template "zsh/rust" . }}

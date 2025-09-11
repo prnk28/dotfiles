@@ -280,7 +280,6 @@ return {
             "biome*",
           },
           hide_by_name = {
-            "client",
             "contracts",
             "crypto",
             "CONSTITUTION.md",
@@ -318,6 +317,10 @@ return {
             ".golangci.yml",
             "go.mod",
             "pnpm-workspace.yaml",
+            "examples",
+            "scripts",
+            "bridge",
+            "client",
           },
           never_show_by_pattern = {
             "CLAUDE*",

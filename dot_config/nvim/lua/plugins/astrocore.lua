@@ -21,17 +21,6 @@ local scooter = Terminal:new {
   end,
 }
 
-local claude = Terminal:new {
-  cmd = "claude --continue",
-  hidden = true,
-  direction = "tab", -- function to run on opening the terminal
-  auto_scroll = true,
-  on_open = function(term)
-    vim.cmd "startinsert!"
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-  end,
-}
-
 local lazyjournal = Terminal:new {
   cmd = "lazyjournal",
   hidden = true,
@@ -53,7 +42,6 @@ local mk = Terminal:new {
 }
 
 -- Toggle Functions
-function Claude_toggle() claude:toggle() end
 function Lazyjournal_toggle() lazyjournal:toggle() end
 function Mk_toggle() mk:toggle() end
 function Scooter_toggle() scooter:toggle() end
@@ -136,15 +124,15 @@ return {
         ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Open Explorer" },
         ["<C-m>"] = { "<Cmd>OverseerRun<CR>", desc = "Run Overseer" },
         ["<leader><leader>"] = {
-          Claude_toggle,
-          desc = "Claude",
+          function() require("snacks").picker.smart() end,
+          desc = "Find files",
         },
         ["<C-b>b"] = { "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
         ["<C-b>f"] = {
           function() require("snacks").picker.buffers() end,
           desc = "Find buffers",
         },
-        ["<C-b>x"] = {
+        ["<C-b>c"] = {
           function()
             local current_buffer = vim.api.nvim_get_current_buf()
             for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -168,7 +156,6 @@ return {
         ["<C-b>3"] = { "<Cmd>BufferLineGroupToggle DWN<CR>", desc = "Toggle DWN group" },
         ["<C-b>4"] = { "<Cmd>BufferLineGroupToggle SVC<CR>", desc = "Toggle SVC group" },
         ["<C-b>t"] = { "<Cmd>BufferLineGroupToggle Tests<CR>", desc = "Toggle Tests group" },
-        ["<C-b>c"] = { "<Cmd>BufferLineGroupToggle Config<CR>", desc = "Toggle Config group" },
         ["<C-b>k"] = { "<Cmd>BufferLinePickClose<CR>", desc = "Pick buffer to close" },
         ["<C-g>o"] = { "<cmd>!gh repo view --web<CR>", desc = "Open Repo on Web" },
         ["<C-g>h"] = {
@@ -265,7 +252,7 @@ return {
           desc = "Find diagnostics",
         },
         ["<C-f>f"] = {
-          function() require("snacks").picker.smart() end,
+          function() require("snacks").picker.files() end,
           desc = "Find files",
         },
         ["<C-f>o"] = {
@@ -285,7 +272,7 @@ return {
           desc = "Find word in open buffers",
         },
         ["<C-f>p"] = {
-          function() require("snacks").picker.zoxide() end,
+          function() require("snacks").picker.projects() end,
           desc = "Find Projects with Zoxide",
         },
         ["<C-a>a"] = { function() vim.lsp.buf.code_action() end, desc = "LSP Code Action" },
