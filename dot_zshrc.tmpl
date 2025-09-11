@@ -57,4 +57,5 @@ if [ -f {{ .chezmoi.homeDir }}/.config/doppler/env.sh ]; then
     source {{ .chezmoi.homeDir }}/.config/doppler/env.sh
 fi
 
+source /home/prad/.local/bin/gho
 eval "$(devbox global shellenv)"

@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# gho - Interactive Git Repository Navigator with fzf
+# Usage: source gho (to change directory in current shell)
+#        or add as function to your shell config
+
+gho() {
+    local selected_repo
+
+    # Use fzf to select repository with git log preview
+    selected_repo=$(ghq list | fzf \
+        --header "Select Repository" \
+        --preview "cd \$(ghq root)/{} && echo -e '\033[1;34mRecent commits:\033[0m' && git log --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(blue)%an%C(reset), %C(green)%ar%C(reset) : %s' --abbrev-commit -8 && echo -e '\n\n\033[1;32mBranch info:\033[0m' && git branch -v 2>/dev/null || echo 'No git repository'" \
+        --preview-window="right:60%" \
+        --border \
+        --height="80%")
+
+    # If a repository was selected, cd into it
+    if [[ -n "$selected_repo" ]]; then
+        local repo_path="$(ghq root)/$selected_repo"
+        if [[ -d "$repo_path" ]]; then
+            cd "$repo_path" || return 1
+            echo "📁 Changed to: $repo_path"
+            # Show current branch and recent commit
+            if git rev-parse --git-dir >/dev/null 2>&1; then
+                echo "🌟 Current branch: $(git branch --show-current)"
+                echo "📝 Latest commit: $(git log -1 --oneline)"
+            fi
+        else
+            echo "❌ Directory not found: $repo_path"
+            return 1
+        fi
+    fi
+}
+
+# If script is sourced, just define the function
+# If script is executed directly, run the function
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    # Script is being executed directly
+    echo "⚠️  Note: To change directory in your current shell, you need to source this script:"
+    echo "   source $0"
+    echo "   or add the gho function to your shell config"
+    echo ""
+    echo "Running in subshell (directory change won't persist)..."
+    gho
+else
+    # Script is being sourced, function is now available
+    echo "✅ gho function loaded! Use 'gho' to navigate repositories."
+fi
