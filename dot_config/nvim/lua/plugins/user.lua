@@ -4,6 +4,16 @@
 
 ---@type LazySpec
 return {
+  {
+    "dustinblackman/oatmeal.nvim",
+    cmd = { "Oatmeal" },
+    keys = {
+      { "<C-a>o", mode = "n", desc = "Start Oatmeal session" },
+    },
+    opts = {
+      backend = "claude",
+    },
+  },
   -- Lazy.nvim
   {
     "folke/snacks.nvim",
