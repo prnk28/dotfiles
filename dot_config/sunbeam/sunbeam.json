@@ -1,6 +1,77 @@
 {
 	"oneliners": [
 		{
+			"title": "Launch: Apps",
+			"command": "walker -p 'Start…'",
+			"description": "Start apps",
+			"exit": true
+		},
+		{
+			"title": "Launch: Emojis",
+			"command": "walker -m Emojis",
+			"exit": true
+		},
+		{
+			"title": "Omarchy: Learn",
+			"command": "omarchy-menu learn",
+			"exit": true
+		},
+		{
+			"title": "Omarchy: Toggle",
+			"command": "omarchy-menu toggle",
+			"exit": true
+		},
+		{
+			"title": "Omarchy: Install",
+			"command": "omarchy-menu install",
+			"exit": true
+		},
+		{
+			"title": "Omarchy: Remove",
+			"command": "omarchy-menu remove",
+			"exit": true
+		},
+		{
+			"title": "Omarchy: Setup",
+			"command": "omarchy-menu setup",
+			"exit": true
+		},
+		{
+			"title": "Omarchy: System",
+			"command": "omarchy-menu system",
+			"exit": true
+		},
+		{
+			"title": "Omarchy: Style",
+			"command": "omarchy-menu style",
+			"exit": true
+		},
+		{
+			"title": "Omarchy: Update",
+			"command": "omarchy-menu update",
+			"exit": true
+		},
+		{
+			"title": "Omarchy: About",
+			"command": "omarchy-menu about",
+			"exit": true
+		},
+		{
+			"title": "TUI: Gh Dash",
+			"command": "uwsm app -- ~/.local/share/applications/tui-gh-dsh.desktop",
+			"exit": true
+		},
+		{
+			"title": "TUI: LazyGit",
+			"command": "uwsm app -- ~/.local/share/applications/tui-lazygit.desktop",
+			"exit": true
+		},
+		{
+			"title": "TUI: Yazi",
+			"command": "uwsm app -- ~/.local/share/applications/tui-yazi.desktop",
+			"exit": true
+		},
+		{
 			"title": "Web: Cloudflare/R2",
 			"command": "uwsm app -- ~/.local/share/applications/cloudflare-r2.desktop",
 			"exit": true

@@ -1,5 +1,5 @@
 [user]
-	name = Prad N
+	name = Prad Nukala
 	email = prad@sonr.io
 
 [credential "https://github.com"]
@@ -11,10 +11,10 @@
 	helper = !/home/prad/.local/share/devbox/global/default/.devbox/nix/profile/default/bin/gh auth git-credential[core]
 
 	editor = nvim
-	pager = delta
+	pager = diffnav
 
 [interactive]
-	diffFilter = delta --color-only
+	diffFilter = diffnav
 
 [delta]
 	navigate = true  # use n and N to move between diff sections
@@ -25,21 +25,17 @@
 
 [hub]
 	protocol = https
-	host = onsonr
+	host = sonr-io
 
 [merge]
 	conflictstyle = zdiff3
 
-# Updated ghq configuration to use the new storage location
 [ghq]
-	root = /Users/prad/Developer
+	root = /home/prad/code
 
 [ghq "https://github.com/sonr-io"]
 	vcs = git
-	root = /Users/prad/Developer/github.com/sonr-io
-
-[url "https://prad:a9bdb924b9cc176656700f7c1ca52857a81c4963@git.sonr.io"]
-	insteadOf = https://git.sonr.io
+	root = /home/prad/code/sonr-io
 
 [filter "lfs"]
 	process = git-lfs filter-process

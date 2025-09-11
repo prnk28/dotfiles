@@ -12,9 +12,6 @@ repo:
   branchesRefetchIntervalSeconds: 30
   prsRefetchIntervalSeconds: 60
 defaults:
-  preview:
-    open: true
-    width: 80
   prsLimit: 20
   issuesLimit: 20
   view: issues
@@ -42,7 +39,7 @@ defaults:
       updatedAt:
         width: 5
       title:
-        width: 50
+        width: 30
       repo:
         width: 15
       creator:
@@ -73,18 +70,18 @@ keybindings:
       command: "task -t ~/.local/taskfiles/Taskfile.gh-dash.yml start-issue NUMBER={{.IssueNumber}} PATH={{.RepoPath}}"
   branches: []
 repoPaths:
-  sonr-io/sonr: /Users/prad/Developer/github.com/sonr-io/sonr
-  sonr-io/highway: /Users/prad/Developer/github.com/sonr-io/highway
-  sonr-io/npx-tools: /Users/prad/Developer/github.com/sonr-io/npx-tools
-  sonr-io/docs: /Users/prad/Developer/github.com/sonr-io/docs
-  sonr-io/beam: /Users/prad/Developer/github.com/sonr-io/beam
-  sonr-io/contracts: /Users/prad/Developer/github.com/sonr-io/contracts
+  sonr-io/sonr: /home/prad/code/github.com/sonr-io/sonr
+  sonr-io/beam: /Users/prad/code/github.com/sonr-io/beam
+  sonr-io/docs: /Users/prad/code/github.com/sonr-io/docs
+  sonr-io/npx-tools: /Users/prad/code/github.com/sonr-io/npx-tools
+  sonr-io/pkljar: /Users/prad/code/github.com/sonr-io/pkljar
+  sonr-io/dotfiles: /Users/prad/code/github.com/sonr-io/dotfiles
 theme:
   ui:
-    sectionsShowCount: true
+    sectionsShowCount: false
     table:
       showSeparator: true
-      compact: true
+      compact: false
 colors:
   text:
     primary: "#ffffff"
@@ -101,5 +98,7 @@ colors:
     secondary: "#3c4048"
     faint: "#1e2124"
 pager:
-  diff: "delta --dark --paging=never"
+  diff: "diffnav"
 confirmQuit: false
+showAuthorIcons: true
+smartFilteringAtLaunch: true

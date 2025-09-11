@@ -77,7 +77,7 @@ return {
           ["<CR>"] = "open_and_close_neotree",
           ["<S-CR>"] = "open",
           -- Git keybindings from astrocore
-          ["<C-g>o"] = function() vim.cmd("!gh repo view --web") end,
+          ["<C-g>o"] = function() vim.cmd "!gh repo view --web" end,
           ["<C-g>h"] = function()
             require("snacks").terminal("gh dash", {
               hidden = true,
@@ -295,6 +295,7 @@ return {
             "svgo.config.mjs",
             ".prettierrc.cjs",
             ".eslintrc.cjs",
+            "templates",
             "tsconfig.json",
             "process-compose.yaml",
             "process-compose.yml",
