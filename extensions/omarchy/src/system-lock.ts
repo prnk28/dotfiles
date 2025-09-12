@@ -1,2 +1,6 @@
 import { runCommand } from "./utils";
-export default async function() { await runCommand("omarchy-lock-screen", "Locking screen"); }
+
+import { Detail, ActionPanel, Action } from "@vicinae/api";
+export default async function () {
+	await runCommand("omarchy-lock-screen", "Locking screen");
+}

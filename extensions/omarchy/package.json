@@ -56,34 +56,6 @@
 			"mode": "no-view"
 		},
 		{
-			"name": "toggle-screensaver",
-			"title": "Toggle Screensaver",
-			"subtitle": "Enable/disable screensaver",
-			"description": "Toggle the screensaver on or off",
-			"mode": "no-view"
-		},
-		{
-			"name": "toggle-nightlight",
-			"title": "Toggle Nightlight",
-			"subtitle": "Enable/disable blue light filter",
-			"description": "Toggle nightlight mode",
-			"mode": "no-view"
-		},
-		{
-			"name": "toggle-idle-lock",
-			"title": "Toggle Idle Lock",
-			"subtitle": "Enable/disable automatic locking",
-			"description": "Toggle idle lock feature",
-			"mode": "no-view"
-		},
-		{
-			"name": "toggle-waybar",
-			"title": "Toggle Top Bar",
-			"subtitle": "Show/hide the top bar",
-			"description": "Toggle Waybar visibility",
-			"mode": "no-view"
-		},
-		{
 			"name": "screenshot-region",
 			"title": "Screenshot Region",
 			"subtitle": "Capture a region",
@@ -103,6 +75,20 @@
 			"subtitle": "Capture entire screen",
 			"description": "Take a screenshot of the entire display",
 			"mode": "no-view"
+		},
+		{
+			"name": "menu-toggle",
+			"title": "Toggle Menu",
+			"subtitle": "System toggles menu",
+			"description": "View and control system toggles",
+			"mode": "view"
+		},
+		{
+			"name": "menu-restart",
+			"title": "Restart Services",
+			"subtitle": "Restart system services",
+			"description": "View and restart system services with confirmation",
+			"mode": "view"
 		},
 		{
 			"name": "screenrecord-region",
@@ -389,55 +375,6 @@
 			"title": "Change Password",
 			"subtitle": "Change user password",
 			"description": "Change your user password",
-			"mode": "no-view"
-		},
-		{
-			"name": "restart-hypridle",
-			"title": "Restart Hypridle",
-			"subtitle": "Restart idle daemon",
-			"description": "Restart the Hypridle service",
-			"mode": "no-view"
-		},
-		{
-			"name": "restart-hyprsunset",
-			"title": "Restart Hyprsunset",
-			"subtitle": "Restart sunset service",
-			"description": "Restart the Hyprsunset service",
-			"mode": "no-view"
-		},
-		{
-			"name": "restart-swayosd",
-			"title": "Restart SwayOSD",
-			"subtitle": "Restart OSD service",
-			"description": "Restart the SwayOSD service",
-			"mode": "no-view"
-		},
-		{
-			"name": "restart-walker",
-			"title": "Restart Walker",
-			"subtitle": "Restart launcher",
-			"description": "Restart the Walker launcher",
-			"mode": "no-view"
-		},
-		{
-			"name": "restart-waybar",
-			"title": "Restart Waybar",
-			"subtitle": "Restart status bar",
-			"description": "Restart the Waybar status bar",
-			"mode": "no-view"
-		},
-		{
-			"name": "restart-wifi",
-			"title": "Restart WiFi",
-			"subtitle": "Restart WiFi service",
-			"description": "Restart the WiFi service",
-			"mode": "no-view"
-		},
-		{
-			"name": "restart-bluetooth",
-			"title": "Restart Bluetooth",
-			"subtitle": "Restart Bluetooth service",
-			"description": "Restart the Bluetooth service",
 			"mode": "no-view"
 		},
 		{
