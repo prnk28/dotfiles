@@ -204,6 +204,7 @@ return {
           hide_gitignored = true,
           hide_by_pattern = {
             "chain_*.json",
+            "Library",
             ".typecopy",
             ".python-version",
             "*.pb.go",

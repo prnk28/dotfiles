@@ -171,12 +171,12 @@ chars = "\u0002t"
 [[keyboard.bindings]]
 key = "C"
 mods = "Super"
-action = "Copy"
+chars = "\u0018c"
 
 [[keyboard.bindings]]
 key = "V"
 mods = "Super"
-action = "Paste"
+chars = "\u0018v"
 
 [[keyboard.bindings]]
 key = "1"

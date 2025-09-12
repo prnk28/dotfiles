@@ -1,9 +1,12 @@
 {
 	"$schema": "https://raw.githubusercontent.com/vicinaehq/vicinae/refs/heads/main/extra/schemas/extension.json",
 	"name": "omarchy",
-	"title": "omarchy",
-	"description": "An extension to manage Omarchy OS",
-	"categories": [],
+	"title": "Omarchy",
+	"description": "System management commands for Omarchy OS",
+	"categories": [
+		"System",
+		"Productivity"
+	],
 	"license": "MIT",
 	"author": "prad",
 	"contributors": [],
@@ -11,10 +14,542 @@
 	"icon": "extension_icon.png",
 	"commands": [
 		{
-			"name": "power-menu",
-			"title": "Power Menu",
-			"subtitle": "Manage the Omarchy power menu",
-			"description": "Manage the Omarchy power menu",
+			"name": "system-lock",
+			"title": "Lock Screen",
+			"subtitle": "Lock the system",
+			"description": "Lock the current session",
+			"mode": "no-view"
+		},
+		{
+			"name": "system-screensaver",
+			"title": "Launch Screensaver",
+			"subtitle": "Start the screensaver",
+			"description": "Launch the system screensaver",
+			"mode": "no-view"
+		},
+		{
+			"name": "system-suspend",
+			"title": "Suspend",
+			"subtitle": "Suspend the system",
+			"description": "Put the system to sleep",
+			"mode": "no-view"
+		},
+		{
+			"name": "system-relaunch",
+			"title": "Relaunch Session",
+			"subtitle": "Restart the desktop session",
+			"description": "Relaunch the current desktop session",
+			"mode": "no-view"
+		},
+		{
+			"name": "system-restart",
+			"title": "Restart System",
+			"subtitle": "Reboot the computer",
+			"description": "Restart the system",
+			"mode": "no-view"
+		},
+		{
+			"name": "system-shutdown",
+			"title": "Shutdown",
+			"subtitle": "Power off the system",
+			"description": "Shut down the computer",
+			"mode": "no-view"
+		},
+		{
+			"name": "toggle-screensaver",
+			"title": "Toggle Screensaver",
+			"subtitle": "Enable/disable screensaver",
+			"description": "Toggle the screensaver on or off",
+			"mode": "no-view"
+		},
+		{
+			"name": "toggle-nightlight",
+			"title": "Toggle Nightlight",
+			"subtitle": "Enable/disable blue light filter",
+			"description": "Toggle nightlight mode",
+			"mode": "no-view"
+		},
+		{
+			"name": "toggle-idle-lock",
+			"title": "Toggle Idle Lock",
+			"subtitle": "Enable/disable automatic locking",
+			"description": "Toggle idle lock feature",
+			"mode": "no-view"
+		},
+		{
+			"name": "toggle-waybar",
+			"title": "Toggle Top Bar",
+			"subtitle": "Show/hide the top bar",
+			"description": "Toggle Waybar visibility",
+			"mode": "no-view"
+		},
+		{
+			"name": "screenshot-region",
+			"title": "Screenshot Region",
+			"subtitle": "Capture a region",
+			"description": "Take a screenshot of a selected region",
+			"mode": "no-view"
+		},
+		{
+			"name": "screenshot-window",
+			"title": "Screenshot Window",
+			"subtitle": "Capture current window",
+			"description": "Take a screenshot of the active window",
+			"mode": "no-view"
+		},
+		{
+			"name": "screenshot-display",
+			"title": "Screenshot Display",
+			"subtitle": "Capture entire screen",
+			"description": "Take a screenshot of the entire display",
+			"mode": "no-view"
+		},
+		{
+			"name": "screenrecord-region",
+			"title": "Record Region",
+			"subtitle": "Record selected area",
+			"description": "Start recording a selected region",
+			"mode": "no-view"
+		},
+		{
+			"name": "screenrecord-region-audio",
+			"title": "Record Region + Audio",
+			"subtitle": "Record region with audio",
+			"description": "Start recording a selected region with audio",
+			"mode": "no-view"
+		},
+		{
+			"name": "screenrecord-display",
+			"title": "Record Display",
+			"subtitle": "Record entire screen",
+			"description": "Start recording the entire display",
+			"mode": "no-view"
+		},
+		{
+			"name": "screenrecord-display-audio",
+			"title": "Record Display + Audio",
+			"subtitle": "Record screen with audio",
+			"description": "Start recording the entire display with audio",
+			"mode": "no-view"
+		},
+		{
+			"name": "color-picker",
+			"title": "Color Picker",
+			"subtitle": "Pick a color from screen",
+			"description": "Launch the color picker tool",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-package",
+			"title": "Install Package",
+			"subtitle": "Install system package",
+			"description": "Install a package from the official repository",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-aur-package",
+			"title": "Install AUR Package",
+			"subtitle": "Install from AUR",
+			"description": "Install a package from the Arch User Repository",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-webapp",
+			"title": "Install Web App",
+			"subtitle": "Install web application",
+			"description": "Install a progressive web application",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-tui-app",
+			"title": "Install TUI App",
+			"subtitle": "Install terminal app",
+			"description": "Install a terminal user interface application",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-ruby",
+			"title": "Install Ruby on Rails",
+			"subtitle": "Setup Ruby development",
+			"description": "Install Ruby on Rails development environment",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-docker-dbs",
+			"title": "Install Docker DBs",
+			"subtitle": "Setup Docker databases",
+			"description": "Install Docker database containers",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-nodejs",
+			"title": "Install Node.js",
+			"subtitle": "Setup Node.js",
+			"description": "Install Node.js development environment",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-bun",
+			"title": "Install Bun",
+			"subtitle": "Setup Bun runtime",
+			"description": "Install Bun JavaScript runtime",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-deno",
+			"title": "Install Deno",
+			"subtitle": "Setup Deno runtime",
+			"description": "Install Deno JavaScript runtime",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-go",
+			"title": "Install Go",
+			"subtitle": "Setup Go language",
+			"description": "Install Go programming language",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-php",
+			"title": "Install PHP",
+			"subtitle": "Setup PHP",
+			"description": "Install PHP development environment",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-python",
+			"title": "Install Python",
+			"subtitle": "Setup Python",
+			"description": "Install Python development environment",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-elixir",
+			"title": "Install Elixir",
+			"subtitle": "Setup Elixir",
+			"description": "Install Elixir programming language",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-rust",
+			"title": "Install Rust",
+			"subtitle": "Setup Rust",
+			"description": "Install Rust programming language",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-java",
+			"title": "Install Java",
+			"subtitle": "Setup Java",
+			"description": "Install Java development environment",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-dotnet",
+			"title": "Install .NET",
+			"subtitle": "Setup .NET",
+			"description": "Install .NET development environment",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-vscode",
+			"title": "Install VSCode",
+			"subtitle": "Install Visual Studio Code",
+			"description": "Install Visual Studio Code editor",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-cursor",
+			"title": "Install Cursor",
+			"subtitle": "Install Cursor editor",
+			"description": "Install Cursor AI-powered editor",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-zed",
+			"title": "Install Zed",
+			"subtitle": "Install Zed editor",
+			"description": "Install Zed code editor",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-lmstudio",
+			"title": "Install LM Studio",
+			"subtitle": "Install LM Studio",
+			"description": "Install LM Studio for local LLMs",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-ollama",
+			"title": "Install Ollama",
+			"subtitle": "Install Ollama",
+			"description": "Install Ollama for local LLMs",
+			"mode": "no-view"
+		},
+		{
+			"name": "remove-package",
+			"title": "Remove Package",
+			"subtitle": "Uninstall system package",
+			"description": "Remove a system package",
+			"mode": "no-view"
+		},
+		{
+			"name": "remove-webapp",
+			"title": "Remove Web App",
+			"subtitle": "Uninstall web application",
+			"description": "Remove a web application",
+			"mode": "no-view"
+		},
+		{
+			"name": "remove-tui-app",
+			"title": "Remove TUI App",
+			"subtitle": "Uninstall terminal app",
+			"description": "Remove a terminal application",
+			"mode": "no-view"
+		},
+		{
+			"name": "remove-theme",
+			"title": "Remove Theme",
+			"subtitle": "Uninstall theme",
+			"description": "Remove a system theme",
+			"mode": "no-view"
+		},
+		{
+			"name": "remove-fingerprint",
+			"title": "Remove Fingerprint",
+			"subtitle": "Remove fingerprint setup",
+			"description": "Remove fingerprint authentication",
+			"mode": "no-view"
+		},
+		{
+			"name": "remove-fido2",
+			"title": "Remove Fido2",
+			"subtitle": "Remove Fido2 setup",
+			"description": "Remove Fido2 authentication",
+			"mode": "no-view"
+		},
+		{
+			"name": "update-omarchy",
+			"title": "Update Omarchy",
+			"subtitle": "Update system",
+			"description": "Update Omarchy OS",
+			"mode": "no-view"
+		},
+		{
+			"name": "update-packages",
+			"title": "Update System Packages",
+			"subtitle": "Update all packages",
+			"description": "Update all system packages",
+			"mode": "no-view"
+		},
+		{
+			"name": "update-themes",
+			"title": "Update Themes",
+			"subtitle": "Update themes",
+			"description": "Update all installed themes",
+			"mode": "no-view"
+		},
+		{
+			"name": "update-timezone",
+			"title": "Update Timezone",
+			"subtitle": "Auto-detect timezone",
+			"description": "Update timezone based on location",
+			"mode": "no-view"
+		},
+		{
+			"name": "change-password",
+			"title": "Change Password",
+			"subtitle": "Change user password",
+			"description": "Change your user password",
+			"mode": "no-view"
+		},
+		{
+			"name": "restart-hypridle",
+			"title": "Restart Hypridle",
+			"subtitle": "Restart idle daemon",
+			"description": "Restart the Hypridle service",
+			"mode": "no-view"
+		},
+		{
+			"name": "restart-hyprsunset",
+			"title": "Restart Hyprsunset",
+			"subtitle": "Restart sunset service",
+			"description": "Restart the Hyprsunset service",
+			"mode": "no-view"
+		},
+		{
+			"name": "restart-swayosd",
+			"title": "Restart SwayOSD",
+			"subtitle": "Restart OSD service",
+			"description": "Restart the SwayOSD service",
+			"mode": "no-view"
+		},
+		{
+			"name": "restart-walker",
+			"title": "Restart Walker",
+			"subtitle": "Restart launcher",
+			"description": "Restart the Walker launcher",
+			"mode": "no-view"
+		},
+		{
+			"name": "restart-waybar",
+			"title": "Restart Waybar",
+			"subtitle": "Restart status bar",
+			"description": "Restart the Waybar status bar",
+			"mode": "no-view"
+		},
+		{
+			"name": "restart-wifi",
+			"title": "Restart WiFi",
+			"subtitle": "Restart WiFi service",
+			"description": "Restart the WiFi service",
+			"mode": "no-view"
+		},
+		{
+			"name": "restart-bluetooth",
+			"title": "Restart Bluetooth",
+			"subtitle": "Restart Bluetooth service",
+			"description": "Restart the Bluetooth service",
+			"mode": "no-view"
+		},
+		{
+			"name": "setup-audio",
+			"title": "Setup Audio",
+			"subtitle": "Configure audio settings",
+			"description": "Open audio configuration",
+			"mode": "no-view"
+		},
+		{
+			"name": "setup-wifi",
+			"title": "Setup WiFi",
+			"subtitle": "Configure WiFi",
+			"description": "Open WiFi configuration",
+			"mode": "no-view"
+		},
+		{
+			"name": "setup-bluetooth",
+			"title": "Setup Bluetooth",
+			"subtitle": "Configure Bluetooth",
+			"description": "Open Bluetooth settings",
+			"mode": "no-view"
+		},
+		{
+			"name": "setup-power-profile",
+			"title": "Setup Power Profile",
+			"subtitle": "Configure power settings",
+			"description": "Change power profile settings",
+			"mode": "no-view"
+		},
+		{
+			"name": "setup-monitors",
+			"title": "Setup Monitors",
+			"subtitle": "Configure displays",
+			"description": "Edit monitor configuration",
+			"mode": "no-view"
+		},
+		{
+			"name": "setup-dns",
+			"title": "Setup DNS",
+			"subtitle": "Configure DNS",
+			"description": "Setup DNS servers",
+			"mode": "no-view"
+		},
+		{
+			"name": "setup-fingerprint",
+			"title": "Setup Fingerprint",
+			"subtitle": "Configure fingerprint",
+			"description": "Setup fingerprint authentication",
+			"mode": "no-view"
+		},
+		{
+			"name": "setup-fido2",
+			"title": "Setup Fido2",
+			"subtitle": "Configure Fido2",
+			"description": "Setup Fido2 authentication",
+			"mode": "no-view"
+		},
+		{
+			"name": "style-theme",
+			"title": "Change Theme",
+			"subtitle": "Select system theme",
+			"description": "Change the system theme",
+			"mode": "no-view"
+		},
+		{
+			"name": "style-font",
+			"title": "Change Font",
+			"subtitle": "Select system font",
+			"description": "Change the system font",
+			"mode": "no-view"
+		},
+		{
+			"name": "style-background",
+			"title": "Next Background",
+			"subtitle": "Cycle wallpaper",
+			"description": "Switch to the next background",
+			"mode": "no-view"
+		},
+		{
+			"name": "edit-screensaver-text",
+			"title": "Edit Screensaver Text",
+			"subtitle": "Customize screensaver",
+			"description": "Edit screensaver branding text",
+			"mode": "no-view"
+		},
+		{
+			"name": "edit-about-text",
+			"title": "Edit About Text",
+			"subtitle": "Customize about info",
+			"description": "Edit about branding text",
+			"mode": "no-view"
+		},
+		{
+			"name": "open-keybindings",
+			"title": "View Keybindings",
+			"subtitle": "Show keyboard shortcuts",
+			"description": "Display system keybindings",
+			"mode": "no-view"
+		},
+		{
+			"name": "open-omarchy-manual",
+			"title": "Omarchy Manual",
+			"subtitle": "Open documentation",
+			"description": "Open the Omarchy manual",
+			"mode": "no-view"
+		},
+		{
+			"name": "open-hyprland-wiki",
+			"title": "Hyprland Wiki",
+			"subtitle": "Open Hyprland docs",
+			"description": "Open Hyprland documentation",
+			"mode": "no-view"
+		},
+		{
+			"name": "open-arch-wiki",
+			"title": "Arch Wiki",
+			"subtitle": "Open Arch Linux wiki",
+			"description": "Open Arch Linux documentation",
+			"mode": "no-view"
+		},
+		{
+			"name": "open-bash-guide",
+			"title": "Bash Guide",
+			"subtitle": "Open Bash reference",
+			"description": "Open Bash scripting guide",
+			"mode": "no-view"
+		},
+		{
+			"name": "open-neovim-keymaps",
+			"title": "Neovim Keymaps",
+			"subtitle": "View Neovim shortcuts",
+			"description": "Open Neovim keymap reference",
+			"mode": "no-view"
+		},
+		{
+			"name": "system-info",
+			"title": "System Info",
+			"subtitle": "View system details",
+			"description": "Display system information",
 			"mode": "view"
 		}
 	],
