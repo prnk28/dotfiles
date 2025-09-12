@@ -85,12 +85,63 @@ return {
           -- Find keybindings from astrocore
           ["<C-f>r"] = function() _G.Scooter_toggle() end,
           ["<C-f>d"] = function() require("snacks").picker.diagnostics() end,
-          ["<C-f>f"] = function() require("snacks").picker.files() end,
+          ["<C-f>f"] = function() require("snacks").picker.git_files() end,
           ["<C-f>o"] = function() require("snacks").picker.recent() end,
-          ["<C-f>g"] = function() require("snacks").picker.git_files() end,
+          ["<C-f>g"] = function() 
+            require("snacks").picker.files {
+              ft = "go",
+            }
+          end,
           ["<C-f>l"] = function() require("snacks").picker.lines() end,
-          ["<C-f>w"] = function() require("snacks").picker.grep_buffers() end,
-          ["<C-f>p"] = function() require("snacks").picker.projects() end,
+          ["<C-f>w"] = function()
+            local workflows_dir = vim.fn.getcwd() .. "/.github/workflows"
+            -- Check if directory exists
+            if vim.fn.isdirectory(workflows_dir) == 0 then
+              vim.notify("No .github/workflows directory found in current project", vim.log.levels.WARN)
+              return
+            end
+            -- Use files picker to find workflow files
+            require("snacks").picker.files {
+              cwd = workflows_dir,
+            }
+          end,
+          ["<C-f>c"] = function()
+            local claude_dir = vim.fn.getcwd() .. "/.claude"
+            -- Check if directory exists
+            if vim.fn.isdirectory(claude_dir) == 0 then
+              vim.notify("No .claude directory found in current project", vim.log.levels.WARN)
+              return
+            end
+            -- Use files picker to find Claude files
+            require("snacks").picker.files {
+              cwd = claude_dir,
+            }
+          end,
+          ["<C-f>p"] = function() 
+            require("snacks").picker.files {
+              ft = "proto",
+            }
+          end,
+          ["<C-f>t"] = function() 
+            require("snacks").picker.files {
+              ft = {"ts", "tsx"},
+            }
+          end,
+          ["<C-f>j"] = function() 
+            require("snacks").picker.files {
+              ft = "json",
+            }
+          end,
+          ["<C-f>y"] = function() 
+            require("snacks").picker.files {
+              ft = {"yaml", "yml"},
+            }
+          end,
+          ["<C-f>m"] = function() 
+            require("snacks").picker.files {
+              ft = {"make", "mk"},
+            }
+          end,
           ["<C-f>."] = function()
             require("snacks").picker.pick {
               source = "chezmoi_files",

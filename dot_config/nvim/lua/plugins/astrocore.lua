@@ -1,5 +1,149 @@
 local Terminal = require("toggleterm.terminal").Terminal
 
+-- Shared ignore patterns from neotree configuration
+local ignore_patterns = {
+  -- Hidden patterns
+  "chain_*.json",
+  ".typecopy",
+  ".python-version",
+  "*.pb.go",
+  "*config.*.js",
+  "*config.js",
+  "deps.mjs",
+  ".parcelrc",
+  "worker-configuration.d.ts",
+  "wrangler.jsonc",
+  "*.pkl.go",
+  ".trunk",
+  ".config",
+  ".cz.toml",
+  "*_integration.go",
+  "*_test.go",
+  "*_query_docs.md",
+  "*_tx_docs.md",
+  "*_mock.go",
+  "biome*",
+  -- Never show patterns
+  "CLAUDE*",
+  ".pkl-lsp",
+  ".tsbuildinfo",
+  "contrib",
+  "interchaintest",
+  "package-lock.json",
+  ".prettierrc",
+  "node_modules",
+  "PULL_REQUEST_TEMPLATE.md",
+  ".DocumentRevisions-V100",
+  ".Spotlight-V100",
+  ".TemporaryItems",
+  ".Trashes",
+  ".fseventsd",
+  ".editorconfig",
+  "*.min.js",
+  ".gitpod.*",
+  "cspell.*",
+  "*.lock",
+  "*.lockb",
+  "*.pulsar.go",
+  "*.pb.gorm.go",
+  "*.pb.gw.go",
+  "*_templ.go",
+  "*.tmp",
+  "*.work.*",
+  "*.sum",
+  ".wrangler",
+  "*.wasm",
+  "*.png",
+  "*.jpg",
+  ".parcel-cache",
+  "*.icns",
+  "*.ico",
+  ".aider.tags.cache.v4",
+  "*.iml",
+  "Icon?",
+  "iCloud~",
+  "com~",
+  "readme.md",
+  ".conform*",
+  ".null-ls_*",
+  -- Additional never show items
+  ".git",
+  "pnpm-lock.yaml",
+  ".next",
+  ".task",
+  ".devbox",
+  ".dart_tool",
+  ".idea",
+  ".metadata",
+  ".venv",
+  ".gradle",
+  "gradle.bat",
+  ".aider.chat.history.md",
+  ".aider.input.history",
+  ".aider.tags.cache.v3",
+  ".devcontainer",
+  "heighliner",
+  ".tmp",
+  "go.work.sum",
+  ".DS_Store",
+  "LICENSE",
+  "tmp",
+  "sonr.log",
+  "DISCUSSION_TEMPLATE",
+  "ISSUE_TEMPLATE",
+  ".timemachine",
+  "junit.xml",
+  ".jj",
+  ".spawn",
+  ".turbo",
+}
+
+-- Create a custom transform function to filter out ignored files
+local function create_file_filter()
+  return function(item)
+    if not item or not item.file then return item end
+
+    local file = item.file
+    local basename = vim.fn.fnamemodify(file, ":t")
+    local dir = vim.fn.fnamemodify(file, ":h:t")
+
+    -- Check each ignore pattern
+    for _, pattern in ipairs(ignore_patterns) do
+      -- Convert glob pattern to Lua pattern
+      local lua_pattern = pattern:gsub("%.", "%%."):gsub("%*", ".*"):gsub("%?", ".")
+
+      -- Check if the pattern matches the basename or path
+      if basename:match("^" .. lua_pattern .. "$") or file:match(lua_pattern) then
+        return nil -- Filter out this item
+      end
+    end
+
+    -- Also filter out specific directory names
+    local ignored_dirs = {
+      "contracts",
+      "crypto",
+      "api",
+      "chains",
+      "test",
+      "examples",
+      "scripts",
+      "bridge",
+      "client",
+      "translations",
+      "env",
+      ".husky",
+    }
+
+    for _, ignored in ipairs(ignored_dirs) do
+      if dir == ignored or file:match("/" .. ignored .. "/") then return nil end
+    end
+
+    return item
+  end
+end
+
+local file_filter = create_file_filter()
+
 local yazi = Terminal:new {
   cmd = "yazi",
   hidden = true,
@@ -51,23 +195,6 @@ return {
   "AstroNvim/astrocore",
   ---@type AstroCoreOpts
   opts = {
-    commands = {
-      ChezmoiFzf = {
-        function()
-          require("fzf-lua").fzf_exec(require("chezmoi.commands").list(), {
-            actions = {
-              ["default"] = function(selected, _)
-                require("chezmoi.commands").edit {
-                  targets = { "~/" .. selected[1] },
-                  args = { "--watch" },
-                }
-              end,
-            },
-          })
-        end,
-        desc = "Search Chezmoi configuration with FZF",
-      },
-    },
     rooter = {
       -- list of detectors in order of prevalence, elements can be:
       --   "lsp" : lsp detection
@@ -217,11 +344,14 @@ return {
           end,
           desc = "Lazydocker Toggle",
         },
+        ["<C-t>d"] = {
+          desc = "Devbox Services",
+        },
         ["<C-t>du"] = {
           function()
             require("snacks").terminal("devbox services up", {
               hidden = true,
-              auto_close = false,
+              auto_close = true,
               start_in_insert = true,
               interactive = true,
             })
@@ -233,7 +363,7 @@ return {
           function()
             require("snacks").terminal("devbox services down", {
               hidden = true,
-              auto_close = false,
+              auto_close = true,
               start_in_insert = true,
               interactive = true,
             })
@@ -245,7 +375,7 @@ return {
           function()
             require("snacks").terminal("devbox services attach", {
               hidden = true,
-              auto_close = false,
+              auto_close = true,
               start_in_insert = true,
               interactive = true,
             })
@@ -270,28 +400,176 @@ return {
           desc = "Find diagnostics",
         },
         ["<C-f>f"] = {
-          function() require("snacks").picker.files() end,
+          function() require("snacks").picker.git_files { transform = file_filter } end,
           desc = "Find files",
         },
         ["<C-f>o"] = {
           function() require("snacks").picker.recent() end,
           desc = "Find recent files",
         },
-        ["<C-f>g"] = {
-          function() require("snacks").picker.git_files() end,
-          desc = "Find git files",
+        ["<C-o>"] = {
+          function() require("snacks").picker.projects() end,
+          desc = "Find projects",
         },
         ["<C-f>l"] = {
           function() require("snacks").picker.lines() end,
           desc = "Find in line",
         },
-        ["<C-f>w"] = {
-          function() require("snacks").picker.grep_buffers() end,
-          desc = "Find word in open buffers",
+        ["<C-f>c"] = {
+          function()
+            local claude_dir = vim.fn.getcwd() .. "/.claude"
+            -- Check if directory exists
+            if vim.fn.isdirectory(claude_dir) == 0 then
+              vim.notify("No .claude directory found in current project", vim.log.levels.WARN)
+              return
+            end
+            -- Use files picker to find Claude files
+            require("snacks").picker.files {
+              cwd = claude_dir,
+              transform = file_filter,
+            }
+          end,
+          desc = "Find Claude files",
         },
-        ["<C-f>p"] = {
-          function() require("snacks").picker.projects() end,
-          desc = "Find Projects with Zoxide",
+        ["<C-f>p"] = { desc = "Find Package files" },
+        ["<C-f>pc"] = {
+          function()
+            require("snacks").picker.files {
+              dirs = { "packages/cli" },
+              exclude = { "packages/cli/dist" },
+              ft = { "ts", "tsx", "js" },
+            }
+          end,
+          desc = "Find @sonr.io/cli files",
+        },
+        ["<C-f>pe"] = {
+          function()
+            require("snacks").picker.files {
+              dirs = { "packages/es" },
+              exclude = { "packages/es/dist" },
+              ft = { "ts", "tsx", "js" },
+            }
+          end,
+          desc = "Find @sonr.io/es files",
+        },
+        ["<C-f>pp"] = {
+          function()
+            require("snacks").picker.files {
+              dirs = { "packages/pkl" },
+              exclude = { "packages/pkl/dist" },
+              ft = { "ts", "tsx", "js" },
+            }
+          end,
+          desc = "Find @sonr.io/es files",
+        },
+        ["<C-f>ps"] = {
+          function()
+            require("snacks").picker.files {
+              dirs = { "packages/sdk" },
+              exclude = { "packages/sdk/dist" },
+              ft = { "ts", "tsx", "js" },
+            }
+          end,
+          desc = "Find @sonr.io/sdk files",
+        },
+        ["<C-f>pu"] = {
+          function()
+            require("snacks").picker.files {
+              dirs = { "packages/ui" },
+              exclude = { "packages/ui/dist" },
+              ft = { "ts", "tsx", "js" },
+            }
+          end,
+          desc = "Find @sonr.io/ui files",
+        },
+        ["<C-f>m"] = { desc = "Find x Module files" },
+        ["<C-f>me"] = {
+          function()
+            require("snacks").picker.files {
+              dirs = { "proto/dex", "x/dex" },
+              ft = { "go", "md", "proto" },
+            }
+          end,
+          desc = "Find x/dex files",
+        },
+        ["<C-f>mi"] = {
+          function()
+            require("snacks").picker.files {
+              dirs = { "proto/dex", "x/dex" },
+              ft = { "go", "md", "proto" },
+            }
+          end,
+          desc = "Find x/did files",
+        },
+        ["<C-f>md"] = {
+          function()
+            require("snacks").picker.files {
+              dirs = { "proto/dex", "x/dex" },
+              ft = { "go", "md", "proto" },
+            }
+          end,
+          desc = "Find x/dwn files",
+        },
+        ["<C-f>ms"] = {
+          function()
+            require("snacks").picker.files {
+              dirs = { "proto/svc", "x/svc" },
+              ft = { "go", "md", "proto" },
+            }
+          end,
+          desc = "Find x/dwn files",
+        },
+        ["<C-f>b"] = {
+          desc = "Find Build files",
+        },
+        ["<C-f>bw"] = {
+          function()
+            local workflows_dir = vim.fn.getcwd() .. "/.github/workflows"
+            -- Check if directory exists
+            if vim.fn.isdirectory(workflows_dir) == 0 then
+              vim.notify("No .github/workflows directory found in current project", vim.log.levels.WARN)
+              return
+            end
+            -- Use files picker to find workflow files
+            require("snacks").picker.files {
+              cwd = workflows_dir,
+              transform = file_filter,
+            }
+          end,
+          desc = "Find GitHub Workflow files",
+        },
+        ["<C-f>bd"] = {
+          function()
+            require("snacks").picker.files {
+              cmd = "fd",
+              args = {
+                "devbox.json|process-compose.yaml|Dockerfile|docker-compose.yaml|compose.yaml",
+              },
+            }
+          end,
+          desc = "Find Devbox/Docker files",
+        },
+        ["<C-f>bm"] = {
+          function()
+            require("snacks").picker.files {
+              cmd = "fd",
+              args = {
+                "Makefile",
+              },
+            }
+          end,
+          desc = "Find Makefile files",
+        },
+        ["<C-f>bp"] = {
+          function()
+            require("snacks").picker.files {
+              cmd = "fd",
+              args = {
+                "package.json",
+              },
+            }
+          end,
+          desc = "Find Package.json files",
         },
         ["<C-f>."] = {
           function()
