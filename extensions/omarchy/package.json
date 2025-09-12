@@ -273,6 +273,34 @@
 			"mode": "no-view"
 		},
 		{
+			"name": "install-sublime",
+			"title": "Install Sublime Text",
+			"subtitle": "Install Sublime Text",
+			"description": "Install Sublime Text editor",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-helix",
+			"title": "Install Helix",
+			"subtitle": "Install Helix editor",
+			"description": "Install Helix terminal editor",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-emacs",
+			"title": "Install Emacs",
+			"subtitle": "Install Emacs",
+			"description": "Install Emacs editor",
+			"mode": "no-view"
+		},
+		{
+			"name": "install-claude-code",
+			"title": "Install Claude Code",
+			"subtitle": "Install Claude Code",
+			"description": "Install Claude Code AI assistant",
+			"mode": "no-view"
+		},
+		{
 			"name": "install-lmstudio",
 			"title": "Install LM Studio",
 			"subtitle": "Install LM Studio",
@@ -487,6 +515,62 @@
 			"title": "Next Background",
 			"subtitle": "Cycle wallpaper",
 			"description": "Switch to the next background",
+			"mode": "no-view"
+		},
+		{
+			"name": "style-theme-next",
+			"title": "Next Theme",
+			"subtitle": "Cycle to next theme",
+			"description": "Switch to the next available theme",
+			"mode": "no-view"
+		},
+		{
+			"name": "style-theme-current",
+			"title": "Current Theme",
+			"subtitle": "Show current theme",
+			"description": "Display the currently active theme",
+			"mode": "no-view"
+		},
+		{
+			"name": "style-theme-list",
+			"title": "List Themes",
+			"subtitle": "Show all themes",
+			"description": "Display all available themes",
+			"mode": "no-view"
+		},
+		{
+			"name": "style-theme-install",
+			"title": "Install Theme",
+			"subtitle": "Install new theme",
+			"description": "Install a new theme from repository",
+			"mode": "no-view"
+		},
+		{
+			"name": "style-theme-set",
+			"title": "Set Theme",
+			"subtitle": "Set specific theme",
+			"description": "Set a specific theme by name",
+			"mode": "no-view"
+		},
+		{
+			"name": "style-font-current",
+			"title": "Current Font",
+			"subtitle": "Show current font",
+			"description": "Display the currently active font",
+			"mode": "no-view"
+		},
+		{
+			"name": "style-font-list",
+			"title": "List Fonts",
+			"subtitle": "Show all fonts",
+			"description": "Display all available fonts",
+			"mode": "no-view"
+		},
+		{
+			"name": "style-font-set",
+			"title": "Set Font",
+			"subtitle": "Set specific font",
+			"description": "Set a specific font by name",
 			"mode": "no-view"
 		},
 		{
