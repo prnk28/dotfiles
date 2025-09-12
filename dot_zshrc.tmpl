@@ -63,5 +63,8 @@ if [ -f {{ .chezmoi.homeDir }}/.config/doppler/env.sh ]; then
     source {{ .chezmoi.homeDir }}/.config/doppler/env.sh
 fi
 
-source /home/prad/.local/bin/gho
+# Source custom functions
+[[ -f {{ .chezmoi.homeDir }}/.local/bin/gho ]] && source {{ .chezmoi.homeDir }}/.local/bin/gho
+
+# Initialize devbox global environment
 eval "$(devbox global shellenv)"

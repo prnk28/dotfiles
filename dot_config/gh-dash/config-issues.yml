@@ -1,0 +1,104 @@
+issuesSections:
+  - title: My Issues
+    filters: state:open author:prnk28 org:sonr-io
+  - title: Recent Issues
+    filters: is:issue state:open org:sonr-io sort:created-dsc updated>={{ nowModify \"-1w\" }}"
+prSections:
+  - title: Open PRs
+    filters: is:open org:sonr-io repo:sonr sort:created-dsc
+  - title: Changelog
+    filter: 'is:closed org:sonr-io sort:created-asc updated>={{ nowModify "-4w" }}'
+repo:
+  branchesRefetchIntervalSeconds: 30
+  prsRefetchIntervalSeconds: 60
+defaults:
+  prsLimit: 20
+  issuesLimit: 20
+  view: issues  # Default to issues view
+  layout:
+    prs:
+      updatedAt:
+        width: 5
+      repo:
+        width: 20
+      author:
+        width: 15
+      assignees:
+        width: 20
+        hidden: true
+      base:
+        width: 15
+        hidden: true
+      lines:
+        width: 15
+    issues:
+      comments:
+        hidden: true
+      reactions:
+        hidden: true
+      updatedAt:
+        width: 5
+      title:
+        width: 30
+      repo:
+        width: 15
+      creator:
+        width: 15
+        hidden: true
+      type:
+        width: 10
+        hidden: true
+      assignees:
+        width: 20
+        hidden: true
+  refetchIntervalMinutes: 2
+keybindings:
+  issues:
+    - key: N
+      command: >
+        task -t ~/.config/gh-dash/Taskfile.yml new-issue REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
+
+    - key: E
+      command: >
+        task -t ~/.config/gh-dash/Taskfile.yml edit-issue ISSUE_NUMBER={{.IssueNumber}} REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
+
+    - key: O
+      command: >
+        task -t ~/.config/gh-dash/Taskfile.yml open-issue ISSUE_NUMBER={{.IssueNumber}} REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
+
+    - key: S
+      command: "task -t ~/.local/taskfiles/Taskfile.gh-dash.yml start-issue NUMBER={{.IssueNumber}} PATH={{.RepoPath}}"
+  branches: []
+repoPaths:
+  sonr-io/sonr: /home/prad/code/github.com/sonr-io/sonr
+  sonr-io/beam: /Users/prad/code/github.com/sonr-io/beam
+  sonr-io/docs: /Users/prad/code/github.com/sonr-io/docs
+  sonr-io/npx-tools: /Users/prad/code/github.com/sonr-io/npx-tools
+  sonr-io/pkljar: /Users/prad/code/github.com/sonr-io/pkljar
+  sonr-io/dotfiles: /Users/prad/code/github.com/sonr-io/dotfiles
+theme:
+  ui:
+    sectionsShowCount: false
+    table:
+      showSeparator: true
+      compact: false
+colors:
+  text:
+    primary: "#ffffff"
+    secondary: "#7b8496"
+    inverted: "#1e2124"
+    faint: "#3c4048"
+    warning: "#ffbd5e"
+    error: "#ff6e5e"
+    success: "#5eff6c"
+  background:
+    selected: "#3c4048"
+  border:
+    primary: "#3c4048"
+    secondary: "#3c4048"
+    faint: "#1e2124"
+pager:
+  diff: "diffnav"
+confirmQuit: false
+showAuthorIcons: true
+smartFilteringAtLaunch: true

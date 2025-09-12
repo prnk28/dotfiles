@@ -2,6 +2,8 @@
 README.md
 CLAUDE.md
 installer
+extensions
+Makefile
 .aider.chat.history.md
 .aider.input.history
 

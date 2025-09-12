@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# ghd - GitHub Dashboard launcher with different views
+# Usage: ghd [OPTIONS]
+# Options:
+#   -i, --issues    Launch gh-dash with issues view (default)
+#   -p, --prs       Launch gh-dash with PRs view
+#   -d, --default   Launch gh-dash with default config
+#   -h, --help      Show help message
+
+config_file=""
+view_type="issues"  # Default to issues view
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+    -i | --issues)
+        config_file="$HOME/.config/gh-dash/config-issues.yml"
+        view_type="issues"
+        shift
+        ;;
+    -p | --prs)
+        config_file="$HOME/.config/gh-dash/config-prs.yml"
+        view_type="prs"
+        shift
+        ;;
+    -d | --default)
+        config_file="$HOME/.config/gh-dash/config.yml"
+        view_type="default"
+        shift
+        ;;
+    -h | --help)
+        echo "ghd - GitHub Dashboard launcher with different views"
+        echo ""
+        echo "Usage: ghd [OPTIONS]"
+        echo ""
+        echo "Options:"
+        echo "  -i, --issues    Launch gh-dash with issues view (default)"
+        echo "  -p, --prs       Launch gh-dash with PRs view"
+        echo "  -d, --default   Launch gh-dash with default config"
+        echo "  -h, --help      Show this help message"
+        echo ""
+        echo "Examples:"
+        echo "  ghd           # Launch with issues view (default)"
+        echo "  ghd -p        # Launch with PRs view"
+        echo "  ghd -d        # Launch with default config"
+        exit 0
+        ;;
+    *)
+        echo "Unknown option: $1"
+        echo "Use 'ghd --help' for usage information"
+        exit 1
+        ;;
+    esac
+done
+
+# If no config file specified, default to issues
+if [[ -z "$config_file" ]]; then
+    config_file="$HOME/.config/gh-dash/config-issues.yml"
+fi
+
+# Check if config file exists
+if [[ ! -f "$config_file" ]]; then
+    echo "❌ Configuration file not found: $config_file"
+    echo ""
+    echo "Available configs:"
+    ls -la "$HOME/.config/gh-dash/"*.yml 2>/dev/null | awk '{print "  " $NF}'
+    exit 1
+fi
+
+# Launch gh-dash with the selected config
+echo "🚀 Launching GitHub Dashboard with $view_type view..."
+echo "📁 Using config: $config_file"
+echo ""
+
+# Use --config flag to specify config file
+gh dash --config "$config_file"

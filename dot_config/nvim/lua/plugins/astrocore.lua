@@ -375,7 +375,7 @@ return {
           function()
             require("snacks").terminal("devbox services attach", {
               hidden = true,
-              auto_close = true,
+              auto_close = false,
               start_in_insert = true,
               interactive = true,
             })

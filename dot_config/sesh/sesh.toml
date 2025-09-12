@@ -1,7 +1,0 @@
-blacklist = ["scratch", "popup"]
-
-sort_order = [
-    "tmux",
-    "tmuxinator", # show first
-    "zoxide", # show last
-]

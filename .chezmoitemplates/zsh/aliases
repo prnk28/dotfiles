@@ -79,7 +79,7 @@ alias gtb='cz bump && git push origin $(cz version -p)'
 alias ghl="ghq list"
 alias ghrm="ghq rm"
 alias gghh="ghq get -"
-alias ghd="gh dash"
+# ghd is now a function sourced from ~/.local/bin/ghd
 alias ghca='for id in $(gh run list --limit 5000 --jq ".[] | select(.status == \"queued\") | .databaseId" --json databaseId,status); do gh run cancel $id; done'
 
 # ============================================
