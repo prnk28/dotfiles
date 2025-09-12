@@ -518,6 +518,13 @@
 			"mode": "no-view"
 		},
 		{
+			"name": "style-wallpaper-next",
+			"title": "Next Wallpaper",
+			"subtitle": "Change to next wallpaper",
+			"description": "Cycle to the next wallpaper image",
+			"mode": "no-view"
+		},
+		{
 			"name": "style-theme-next",
 			"title": "Next Theme",
 			"subtitle": "Cycle to next theme",
