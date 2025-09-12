@@ -104,6 +104,7 @@ return {
         number = true, -- sets vim.opt.number
         spell = false, -- sets vim.opt.spell
         wrap = true, -- sets vim.opt.wrap
+        clipboard = "unnamedplus", -- use system clipboard for all operations
       },
       g = { -- vim.g.<key>
         -- configure global vim variables (vim.g)

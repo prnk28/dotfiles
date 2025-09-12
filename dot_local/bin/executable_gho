@@ -60,9 +60,9 @@ gho() {
             header_text="$header_text [Persistent Mode - Ctrl+C to exit]"
         fi
         
-        selected_repo=$(ghq list | fzf \
+        selected_repo=$( (echo ".local/share/chezmoi" && ghq list) | fzf \
             --header "$header_text" \
-            --preview "cd \$(ghq root)/{} && echo -e '\033[1;34mRecent commits:\033[0m' && git log --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(blue)%an%C(reset), %C(green)%ar%C(reset) : %s' --abbrev-commit -8 && echo -e '\n\n\033[1;32mBranch info:\033[0m' && git branch -v 2>/dev/null || echo 'No git repository'" \
+            --preview "if [[ '{}' == '.local/share/chezmoi' ]]; then cd \$HOME/.local/share/chezmoi; else cd \$(ghq root)/{}; fi && echo -e '\033[1;34mRecent commits:\033[0m' && git log --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(blue)%an%C(reset), %C(green)%ar%C(reset) : %s' --abbrev-commit -8 && echo -e '\n\n\033[1;32mBranch info:\033[0m' && git branch -v 2>/dev/null || echo 'No git repository'" \
             --preview-window="right:60%" \
             --border \
             --height="80%")
@@ -76,7 +76,11 @@ gho() {
         fi
 
         # If a repository was selected, cd into it
-        local repo_path="$(ghq root)/$selected_repo"
+        if [[ "$selected_repo" == ".local/share/chezmoi" ]]; then
+            local repo_path="$HOME/.local/share/chezmoi"
+        else
+            local repo_path="$(ghq root)/$selected_repo"
+        fi
         if [[ -d "$repo_path" ]]; then
             cd "$repo_path" || return 1
             echo "📁 Changed to: $repo_path"

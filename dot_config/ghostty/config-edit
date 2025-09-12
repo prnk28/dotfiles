@@ -20,25 +20,21 @@ window-decoration = false
 window-theme = auto
 window-inherit-working-directory = true
 window-colorspace = display-p3
-copy-on-select = clipboard
+copy-on-select = true
 clipboard-write = allow
-clipboard-read = allow
-clipboard-paste-protection = false
 
 macos-titlebar-style = transparent
 macos-titlebar-proxy-icon = hidden
 
 cursor-style-blink = true
 
-command = /home/prad/.local/bin/gho
+command = /home/prad/.local/bin/ghe
 
 keybind = all:super+shift+j=new_split:down
 keybind = all:super+shift+k=new_split:up
 keybind = all:super+shift+h=new_split:left
 keybind = all:super+shift+l=new_split:right
 
-keybind = all:super+c=copy_to_clipboard
-keybind = all:super+v=paste_from_clipboard
-keybind = all:shift+enter=text:\x1b\r
 keybind = all:super+w=close_surface
 keybind = all:super+q=close_window
+keybind = all:super+w=close_window

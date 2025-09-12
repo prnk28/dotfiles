@@ -179,16 +179,6 @@ mods = "Super"
 action = "Paste"
 
 [[keyboard.bindings]]
-key = "C"
-mods = "Option"
-action = "Copy"
-
-[[keyboard.bindings]]
-key = "V"
-mods = "Option"
-action = "Paste"
-
-[[keyboard.bindings]]
 key = "1"
 mods = "Command"
 chars = "\u00020"

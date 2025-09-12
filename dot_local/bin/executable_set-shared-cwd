@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Set shared working directory for other terminal sessions
+# This script should be called when changing directories in shells
+
+CWD_FILE="/tmp/hypr-shared-cwd-$(id -u)"
+
+# Get current directory (use provided argument or pwd)
+if [ -n "$1" ]; then
+    NEW_CWD="$1"
+else
+    NEW_CWD="$(pwd)"
+fi
+
+# Validate directory exists
+if [ -d "$NEW_CWD" ]; then
+    echo "$NEW_CWD" > "$CWD_FILE"
+fi

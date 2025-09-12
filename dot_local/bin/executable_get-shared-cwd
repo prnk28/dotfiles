@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Get shared working directory across terminal sessions
+# Priority order:
+# 1. If a terminal is focused, use its working directory
+# 2. If tmux is running, use the current pane's directory
+# 3. Otherwise use home directory
+
+# Try to get CWD from focused terminal using Hyprland
+if command -v hyprctl &> /dev/null; then
+    # Get the PID of the focused window
+    focused_pid=$(hyprctl activewindow -j | jq -r '.pid // empty')
+    
+    if [ -n "$focused_pid" ]; then
+        # Try to find a shell process under this window
+        shell_pid=$(pgrep -P "$focused_pid" -n '(zsh|bash|fish|sh)' 2>/dev/null | head -n1)
+        
+        if [ -n "$shell_pid" ]; then
+            # Get the working directory of the shell
+            if [ -e "/proc/$shell_pid/cwd" ]; then
+                cwd=$(readlink "/proc/$shell_pid/cwd" 2>/dev/null)
+                if [ -n "$cwd" ] && [ -d "$cwd" ]; then
+                    echo "$cwd"
+                    exit 0
+                fi
+            fi
+        fi
+    fi
+fi
+
+# Fallback to tmux if available and attached
+if command -v tmux &> /dev/null && tmux info &> /dev/null; then
+    tmux_cwd=$(tmux display-message -p '#{pane_current_path}' 2>/dev/null)
+    if [ -n "$tmux_cwd" ] && [ -d "$tmux_cwd" ]; then
+        echo "$tmux_cwd"
+        exit 0
+    fi
+fi
+
+# Store/retrieve last known working directory
+CWD_FILE="/tmp/hypr-shared-cwd-$(id -u)"
+if [ -f "$CWD_FILE" ]; then
+    stored_cwd=$(cat "$CWD_FILE")
+    if [ -d "$stored_cwd" ]; then
+        echo "$stored_cwd"
+        exit 0
+    fi
+fi
+
+# Default to home directory
+echo "$HOME"

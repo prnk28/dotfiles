@@ -44,6 +44,9 @@ export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
 # Shell enhancements
 {{ template "zsh/enhancements" . }}
 
+# Shared working directory tracking
+[[ -f "$HOME/.config/zsh/shared-cwd.zsh" ]] && source "$HOME/.config/zsh/shared-cwd.zsh"
+
 # Platform specific configurations
 {{ if eq .chezmoi.os "darwin" -}}
 {{ template "zsh/darwin" . }}
