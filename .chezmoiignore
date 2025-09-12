@@ -11,15 +11,18 @@ Makefile
 dot_raycast
 dot_config/borders
 dot_config/ghostty
+dot_config/tmux
 dot_config/karabiner
 dot_config/sketchybar
-dot_compose-apps
-dot_prompt-templates
+dot_compose
+dot_prompts
+dot_tmuxinator
 Library
 {{- end }}
 
 {{- if eq .chezmoi.os "darwin" }}
-dot_local/share/hypr
+dot_config/hypr
+dot_config/omarchy
 dot_local/share/omarchy
 {{- end }}
 
