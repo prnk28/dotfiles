@@ -41,16 +41,33 @@ local mk = Terminal:new {
   end,
 }
 
--- Toggle Functions
-function Lazyjournal_toggle() lazyjournal:toggle() end
-function Mk_toggle() mk:toggle() end
-function Scooter_toggle() scooter:toggle() end
-function Yazi_toggle() yazi:toggle() end
+-- Toggle Functions (global so they can be used in other files)
+function _G.Lazyjournal_toggle() lazyjournal:toggle() end
+function _G.Mk_toggle() mk:toggle() end
+function _G.Scooter_toggle() scooter:toggle() end
+function _G.Yazi_toggle() yazi:toggle() end
 
 return {
   "AstroNvim/astrocore",
   ---@type AstroCoreOpts
   opts = {
+    commands = {
+      ChezmoiFzf = {
+        function()
+          require("fzf-lua").fzf_exec(require("chezmoi.commands").list(), {
+            actions = {
+              ["default"] = function(selected, _)
+                require("chezmoi.commands").edit {
+                  targets = { "~/" .. selected[1] },
+                  args = { "--watch" },
+                }
+              end,
+            },
+          })
+        end,
+        desc = "Search Chezmoi configuration with FZF",
+      },
+    },
     rooter = {
       -- list of detectors in order of prevalence, elements can be:
       --   "lsp" : lsp detection
@@ -187,8 +204,8 @@ return {
           function() require("snacks").picker.git_branches() end,
           desc = "Search git branches",
         },
-        ["<C-t>m"] = { Mk_toggle, desc = "Run mk", noremap = true },
-        ["<C-t>j"] = { Lazyjournal_toggle, desc = "Lazyjournal Toggle" },
+        ["<C-t>m"] = { _G.Mk_toggle, desc = "Run mk", noremap = true },
+        ["<C-t>j"] = { _G.Lazyjournal_toggle, desc = "Lazyjournal Toggle" },
         ["<C-t>l"] = {
           function()
             require("snacks").terminal("lazydocker", {
@@ -236,7 +253,7 @@ return {
           desc = "Devbox Services Attach",
           noremap = true,
         },
-        ["<C-t>."] = { Yazi_toggle, desc = "Yazi Toggle" },
+        ["<C-t>."] = { _G.Yazi_toggle, desc = "Yazi Toggle" },
         ["<C-t>t"] = {
           function() require("snacks").terminal() end,
           desc = "Toggle Terminal",
@@ -245,7 +262,7 @@ return {
         ["J"] = { function() vim.diagnostic.goto_next() end, desc = "Next Diagnostic" },
         ["vv"] = { "gg0VG$", desc = "Select all contents in buffer" },
         ["<C-f>r"] = {
-          Scooter_toggle,
+          _G.Scooter_toggle,
           desc = "Find and replace",
         },
         ["<C-f>d"] = {
@@ -276,6 +293,31 @@ return {
           function() require("snacks").picker.projects() end,
           desc = "Find Projects with Zoxide",
         },
+        ["<C-f>."] = {
+          function()
+            require("snacks").picker.pick {
+              source = "chezmoi_files",
+              finder = function()
+                local handle = io.popen "chezmoi managed --path-style=absolute 2>/dev/null"
+                if not handle then return {} end
+                local result = handle:read "*a"
+                handle:close()
+
+                local items = {}
+                for line in result:gmatch "[^\r\n]+" do
+                  local home = vim.fn.expand "~"
+                  local display = line:gsub("^" .. home, "~")
+                  table.insert(items, { text = display, file = line })
+                end
+                return items
+              end,
+              format = "file",
+              prompt = "Chezmoi Files> ",
+              title = "Chezmoi Files",
+            }
+          end,
+          desc = "Find chezmoi config",
+        },
         ["<C-a>a"] = { function() vim.lsp.buf.code_action() end, desc = "LSP Code Action" },
         ["<C-a>h"] = { function() vim.lsp.buf.hover() end, desc = "LSP Hover" },
         ["<C-a>d"] = {
@@ -304,10 +346,6 @@ return {
       },
       t = {
         ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Open Explorer" },
-        ["<leader>e"] = {
-          function() require("snacks").explorer.open() end,
-          desc = "Open Explorer",
-        },
         ["<C-b>f"] = {
           function() require("snacks").picker.buffers() end,
           desc = "Find buffers",

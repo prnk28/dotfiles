@@ -1,52 +1,3 @@
-local Terminal = require("toggleterm.terminal").Terminal
-
-local yazi = Terminal:new {
-  cmd = "yazi",
-  hidden = true,
-  direction = "tab",
-  close_on_exit = true,
-  on_open = function(term)
-    vim.cmd "startinsert!"
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-  end,
-}
-
-local lazyjournal = Terminal:new {
-  cmd = "lazyjournal",
-  hidden = true,
-  direction = "float",
-  on_open = function(term)
-    vim.cmd "startinsert!"
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-  end,
-}
-
-local mk = Terminal:new {
-  cmd = "mk",
-  hidden = true,
-  direction = "vertical",
-  on_open = function(term)
-    vim.cmd "startinsert!"
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-  end,
-}
-
-local scooter = Terminal:new {
-  cmd = "scooter",
-  hidden = true,
-  direction = "vertical",
-  on_open = function(term)
-    vim.cmd "startinsert!"
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-  end,
-}
-
--- Toggle Functions
-function Lazyjournal_toggle() lazyjournal:toggle() end
-function Mk_toggle() mk:toggle() end
-function Scooter_toggle() scooter:toggle() end
-function Yazi_toggle() yazi:toggle() end
-
 return {
   {
     "neo-tree.nvim",
@@ -95,8 +46,8 @@ return {
           ["<C-g>d"] = function() require("snacks").picker.git_diff() end,
           ["<C-g>b"] = function() require("snacks").picker.git_branches() end,
           -- Terminal keybindings from astrocore
-          ["<C-t>m"] = function() Mk_toggle() end,
-          ["<C-t>j"] = function() Lazyjournal_toggle() end,
+          ["<C-t>m"] = function() _G.Mk_toggle() end,
+          ["<C-t>j"] = function() _G.Lazyjournal_toggle() end,
           ["<C-t>l"] = function()
             require("snacks").terminal("lazydocker", {
               hidden = true,
@@ -129,17 +80,39 @@ return {
               interactive = true,
             })
           end,
-          ["<C-t>."] = function() Yazi_toggle() end,
+          ["<C-t>."] = function() _G.Yazi_toggle() end,
           ["<C-t>t"] = function() require("snacks").terminal() end,
           -- Find keybindings from astrocore
-          ["<C-f>r"] = function() Scooter_toggle() end,
+          ["<C-f>r"] = function() _G.Scooter_toggle() end,
           ["<C-f>d"] = function() require("snacks").picker.diagnostics() end,
-          ["<C-f>f"] = function() require("snacks").picker.smart() end,
+          ["<C-f>f"] = function() require("snacks").picker.files() end,
           ["<C-f>o"] = function() require("snacks").picker.recent() end,
           ["<C-f>g"] = function() require("snacks").picker.git_files() end,
           ["<C-f>l"] = function() require("snacks").picker.lines() end,
           ["<C-f>w"] = function() require("snacks").picker.grep_buffers() end,
-          ["<C-f>p"] = function() require("snacks").picker.zoxide() end,
+          ["<C-f>p"] = function() require("snacks").picker.projects() end,
+          ["<C-f>."] = function()
+            require("snacks").picker.pick {
+              source = "chezmoi_files",
+              finder = function()
+                local handle = io.popen "chezmoi managed --path-style=absolute 2>/dev/null"
+                if not handle then return {} end
+                local result = handle:read "*a"
+                handle:close()
+
+                local items = {}
+                for line in result:gmatch "[^\r\n]+" do
+                  local home = vim.fn.expand "~"
+                  local display = line:gsub("^" .. home, "~")
+                  table.insert(items, { text = display, file = line })
+                end
+                return items
+              end,
+              format = "file",
+              prompt = "Chezmoi Files> ",
+              title = "Chezmoi Files",
+            }
+          end,
           -- Mappings for Mason and formatting
         },
         header = {
