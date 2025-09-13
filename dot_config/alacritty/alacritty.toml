@@ -103,6 +103,18 @@ action = "None"
 # Disable Command-N (new window) - macOS default
 [[keyboard.bindings]]
 key = "N"
+mods = "Command"
+action = "None"
+
+# Disable Command-T (new tab) - macOS default
+[[keyboard.bindings]]
+key = "T"
+mods = "Command"
+action = "None"
+
+# Disable Command-N (new window) - macOS default
+[[keyboard.bindings]]
+key = "N"
 mods = "Super"
 action = "None"
 
