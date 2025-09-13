@@ -104,7 +104,7 @@ action = "None"
 [[keyboard.bindings]]
 key = "N"
 mods = "Command"
-action = "None"
+action = "CreateNewWindow"
 
 # Disable Command-T (new tab) - macOS default
 [[keyboard.bindings]]
