@@ -22,6 +22,8 @@ dxr() {
     devbox run "$script"
   fi
 }
+zle -N dxr-widget dxr
+bindkey '^A' dxr-widget
 
 
 fdcd() {
