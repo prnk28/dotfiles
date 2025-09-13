@@ -226,7 +226,7 @@ function ghgu() {
 }
 
 function ghn() {
-  ORG_NAME=$(gum choose --header "Select parent org:" "sonr-io" "prnk28" "go-sonr")
+  ORG_NAME=$(gum choose --header "Select parent org:" "sonr-io" "prnk28" "go-sonr" "gpm-tools" "pkl-sh")
   REPO_NAME=$(gum input --header "Enter a name for your new repo")
   if [ -z "$REPO_NAME" ]; then
     gum log --level error "Please enter a valid name for the repo and organization."
