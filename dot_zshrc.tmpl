@@ -19,6 +19,9 @@ else
 fi
 {{ end -}}
 
+# Add direnv hook
+eval "$(direnv hook zsh)"
+
 # Starship configuration
 export STARSHIP_CONFIG="$HOME/.config/starship.toml"
 

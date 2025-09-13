@@ -296,6 +296,10 @@ return {
           desc = "Toggle all buffer groups",
         },
         -- Quick group toggles
+        ["<C-b>l"] = {
+          function() require("snacks").picker.lines() end,
+          desc = "Find in line",
+        },
         ["<C-b>1"] = { "<Cmd>BufferLineGroupToggle DEX<CR>", desc = "Toggle DEX group" },
         ["<C-b>2"] = { "<Cmd>BufferLineGroupToggle DID<CR>", desc = "Toggle DID group" },
         ["<C-b>3"] = { "<Cmd>BufferLineGroupToggle DWN<CR>", desc = "Toggle DWN group" },
@@ -330,19 +334,6 @@ return {
         ["<C-g>b"] = {
           function() require("snacks").picker.git_branches() end,
           desc = "Search git branches",
-        },
-        ["<C-t>m"] = { _G.Mk_toggle, desc = "Run mk", noremap = true },
-        ["<C-t>j"] = { _G.Lazyjournal_toggle, desc = "Lazyjournal Toggle" },
-        ["<C-t>l"] = {
-          function()
-            require("snacks").terminal("lazydocker", {
-              hidden = true,
-              auto_close = true,
-              start_in_insert = true,
-              interactive = true,
-            })
-          end,
-          desc = "Lazydocker Toggle",
         },
         ["<C-t>d"] = {
           desc = "Devbox Services",
@@ -411,11 +402,7 @@ return {
           function() require("snacks").picker.projects() end,
           desc = "Find projects",
         },
-        ["<C-f>l"] = {
-          function() require("snacks").picker.lines() end,
-          desc = "Find in line",
-        },
-        ["<C-f>c"] = {
+        ["<C-f>gc"] = {
           function()
             local claude_dir = vim.fn.getcwd() .. "/.claude"
             -- Check if directory exists
@@ -435,7 +422,7 @@ return {
         ["<C-f>pc"] = {
           function()
             require("snacks").picker.files {
-              dirs = { "packages/cli" },
+              dirs = { "/home/prad/code/github.com/sonr-io/sonr/packages/cli" },
               exclude = { "packages/cli/dist" },
               ft = { "ts", "tsx", "js" },
             }
@@ -445,7 +432,7 @@ return {
         ["<C-f>pe"] = {
           function()
             require("snacks").picker.files {
-              dirs = { "packages/es" },
+              dirs = { "/home/prad/code/github.com/sonr-io/sonr/packages/es" },
               exclude = { "packages/es/dist" },
               ft = { "ts", "tsx", "js" },
             }
@@ -455,7 +442,7 @@ return {
         ["<C-f>pp"] = {
           function()
             require("snacks").picker.files {
-              dirs = { "packages/pkl" },
+              dirs = { "/home/prad/code/github.com/sonr-io/sonr/packages/pkl" },
               exclude = { "packages/pkl/dist" },
               ft = { "ts", "tsx", "js" },
             }
@@ -465,7 +452,7 @@ return {
         ["<C-f>ps"] = {
           function()
             require("snacks").picker.files {
-              dirs = { "packages/sdk" },
+              dirs = { "/home/prad/code/github.com/sonr-io/sonr/packages/sdk" },
               exclude = { "packages/sdk/dist" },
               ft = { "ts", "tsx", "js" },
             }
@@ -475,18 +462,21 @@ return {
         ["<C-f>pu"] = {
           function()
             require("snacks").picker.files {
-              dirs = { "packages/ui" },
+              dirs = { "/home/prad/code/github.com/sonr-io/sonr/packages/ui" },
               exclude = { "packages/ui/dist" },
               ft = { "ts", "tsx", "js" },
             }
           end,
           desc = "Find @sonr.io/ui files",
         },
-        ["<C-f>m"] = { desc = "Find x Module files" },
+        ["<C-f>m"] = { desc = "Find Module files" },
         ["<C-f>me"] = {
           function()
             require("snacks").picker.files {
-              dirs = { "proto/dex", "x/dex" },
+              dirs = {
+                "/home/prad/code/github.com/sonr-io/sonr/proto/dex",
+                "/home/prad/code/github.com/sonr-io/sonr/x/dex",
+              },
               ft = { "go", "md", "proto" },
             }
           end,
@@ -495,7 +485,10 @@ return {
         ["<C-f>mi"] = {
           function()
             require("snacks").picker.files {
-              dirs = { "proto/dex", "x/dex" },
+              dirs = {
+                "/home/prad/code/github.com/sonr-io/sonr/proto/did",
+                "/home/prad/code/github.com/sonr-io/sonr/x/did",
+              },
               ft = { "go", "md", "proto" },
             }
           end,
@@ -504,7 +497,10 @@ return {
         ["<C-f>md"] = {
           function()
             require("snacks").picker.files {
-              dirs = { "proto/dex", "x/dex" },
+              dirs = {
+                "/home/prad/code/github.com/sonr-io/sonr/proto/dwn",
+                "/home/prad/code/github.com/sonr-io/sonr/x/dwn",
+              },
               ft = { "go", "md", "proto" },
             }
           end,
@@ -513,16 +509,19 @@ return {
         ["<C-f>ms"] = {
           function()
             require("snacks").picker.files {
-              dirs = { "proto/svc", "x/svc" },
+              dirs = {
+                "/home/prad/code/github.com/sonr-io/sonr/proto/svc",
+                "/home/prad/code/github.com/sonr-io/sonr/x/svc",
+              },
               ft = { "go", "md", "proto" },
             }
           end,
-          desc = "Find x/dwn files",
+          desc = "Find x/svc files",
         },
-        ["<C-f>b"] = {
-          desc = "Find Build files",
+        ["<C-f>g"] = {
+          desc = "Find by Group",
         },
-        ["<C-f>bw"] = {
+        ["<C-f>gw"] = {
           function()
             local workflows_dir = vim.fn.getcwd() .. "/.github/workflows"
             -- Check if directory exists
@@ -538,7 +537,7 @@ return {
           end,
           desc = "Find GitHub Workflow files",
         },
-        ["<C-f>bd"] = {
+        ["<C-f>gd"] = {
           function()
             require("snacks").picker.files {
               cmd = "fd",
@@ -549,7 +548,7 @@ return {
           end,
           desc = "Find Devbox/Docker files",
         },
-        ["<C-f>bm"] = {
+        ["<C-f>gm"] = {
           function()
             require("snacks").picker.files {
               cmd = "fd",
@@ -560,7 +559,7 @@ return {
           end,
           desc = "Find Makefile files",
         },
-        ["<C-f>bp"] = {
+        ["<C-f>gp"] = {
           function()
             require("snacks").picker.files {
               cmd = "fd",
@@ -573,28 +572,43 @@ return {
         },
         ["<C-f>."] = {
           function()
-            require("snacks").picker.pick {
-              source = "chezmoi_files",
-              finder = function()
-                local handle = io.popen "chezmoi managed --path-style=absolute 2>/dev/null"
-                if not handle then return {} end
-                local result = handle:read "*a"
-                handle:close()
-
-                local items = {}
-                for line in result:gmatch "[^\r\n]+" do
-                  local home = vim.fn.expand "~"
-                  local display = line:gsub("^" .. home, "~")
-                  table.insert(items, { text = display, file = line })
-                end
-                return items
-              end,
-              format = "file",
-              prompt = "Chezmoi Files> ",
-              title = "Chezmoi Files",
+            require("snacks").picker.files {
+              dirs = { "/home/prad/.local/share/chezmoi" },
             }
           end,
-          desc = "Find chezmoi config",
+          desc = "Find dotfiles",
+        },
+        ["<C-,>c"] = {
+          function()
+            require("snacks").picker.files {
+              dirs = { "/home/prad/.local/share/chezmoi/dot_config" },
+            }
+          end,
+          desc = "Find chezmoi config files",
+        },
+        ["<C-,>e"] = {
+          function()
+            require("snacks").picker.files {
+              dirs = { "/home/prad/.local/share/chezmoi/extensions" },
+            }
+          end,
+          desc = "Find chezmoi extension files",
+        },
+        ["<C-,>l"] = {
+          function()
+            require("snacks").picker.files {
+              dirs = { "/home/prad/.local/share/chezmoi/dot_local" },
+            }
+          end,
+          desc = "Find chezmoi local files",
+        },
+        ["<C-,>n"] = {
+          function()
+            require("snacks").picker.files {
+              dirs = { "/home/prad/.local/share/chezmoi/dot_config/nvim" },
+            }
+          end,
+          desc = "Find chezmoi neovim files",
         },
         ["<C-a>a"] = { function() vim.lsp.buf.code_action() end, desc = "LSP Code Action" },
         ["<C-a>h"] = { function() vim.lsp.buf.hover() end, desc = "LSP Hover" },
