@@ -110,6 +110,14 @@ function openweb-ui-stop() {
   compose-app-stop openweb-ui
 }
 
+function openweb-ui-restart() {
+  compose-app-restart openweb-ui
+}
+
+function openweb-ui-logs() {
+  compose-app-logs openweb-ui "$@"
+}
+
 function owlistic-start() {
   compose-app-start owlistic
 }

@@ -1,0 +1,79 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    nodejs \
+    npm \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python packages
+RUN pip install --no-cache-dir \
+    mcpo \
+    uv
+
+# Install Node.js MCP servers globally
+RUN npm install -g ref-tools-mcp@latest
+
+# Environment variables for configuration
+ENV MCP_SERVER_TYPE="ref"
+ENV GITHUB_PERSONAL_ACCESS_TOKEN=""
+ENV MCP_PORT=8000
+ENV MCP_HOST="0.0.0.0"
+
+# Create a startup script
+RUN cat > /app/start.sh << 'EOF'
+#!/bin/bash
+set -e
+
+echo "Starting MCP server type: $MCP_SERVER_TYPE"
+
+case "$MCP_SERVER_TYPE" in
+    "github")
+        if [ -z "$GITHUB_PERSONAL_ACCESS_TOKEN" ]; then
+            echo "Error: GITHUB_PERSONAL_ACCESS_TOKEN is required for GitHub MCP server"
+            exit 1
+        fi
+        echo "Starting GitHub MCP server via Docker-in-Docker..."
+        # Note: This requires Docker socket mounting or Docker-in-Docker setup
+        # For now, we'll use the GitHub MCP server directly if available
+        uvx mcpo --host $MCP_HOST --port $MCP_PORT -- \
+            docker run -i --rm \
+            -e GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_PERSONAL_ACCESS_TOKEN" \
+            ghcr.io/github/github-mcp-server
+        ;;
+
+    "ref")
+        echo "Starting ref-tools MCP server..."
+        uvx mcpo --host $MCP_HOST --port $MCP_PORT -- \
+            npx ref-tools-mcp@latest
+        ;;
+
+    "time")
+        echo "Starting time MCP server (example/demo)..."
+        uvx mcpo --host $MCP_HOST --port $MCP_PORT -- \
+            uvx mcp-server-time --local-timezone=America/New_York
+        ;;
+
+    *)
+        echo "Error: Unknown MCP_SERVER_TYPE: $MCP_SERVER_TYPE"
+        echo "Valid options: github, ref, time"
+        exit 1
+        ;;
+esac
+EOF
+
+RUN chmod +x /app/start.sh
+
+# Expose the default port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:$MCP_PORT/health || curl -f http://localhost:$MCP_PORT/docs || exit 1
+
+# Run the startup script
+CMD ["/app/start.sh"]

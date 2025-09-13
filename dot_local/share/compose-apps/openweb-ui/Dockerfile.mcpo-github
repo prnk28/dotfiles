@@ -1,0 +1,61 @@
+# Dockerfile for GitHub MCP server proxy
+# This uses mcpo to wrap the GitHub MCP server and expose it via OpenAPI
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies including Docker CLI
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates \
+    gnupg \
+    lsb-release \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Docker CLI (for running the GitHub MCP server container)
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update && \
+    apt-get install -y docker-ce-cli && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Python packages
+RUN pip install --no-cache-dir mcpo uv
+
+# Environment variables
+ENV GITHUB_PERSONAL_ACCESS_TOKEN=""
+ENV MCP_PORT=8000
+ENV MCP_HOST="0.0.0.0"
+
+# Create startup script that runs GitHub MCP server via Docker
+RUN cat > /app/start.sh << 'EOF'
+#!/bin/bash
+set -e
+
+if [ -z "$GITHUB_PERSONAL_ACCESS_TOKEN" ]; then
+    echo "Error: GITHUB_PERSONAL_ACCESS_TOKEN is required"
+    exit 1
+fi
+
+echo "Starting GitHub MCP server proxy..."
+
+# Run mcpo with the GitHub MCP server Docker container
+# The server runs via Docker and communicates through stdio
+exec uvx mcpo --host $MCP_HOST --port $MCP_PORT -- \
+    docker run -i --rm \
+    -e GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_PERSONAL_ACCESS_TOKEN" \
+    ghcr.io/github/github-mcp-server
+EOF
+
+RUN chmod +x /app/start.sh
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:$MCP_PORT/health || curl -f http://localhost:$MCP_PORT/docs || exit 1
+
+# Expose port
+EXPOSE 8000
+
+# Run the startup script
+CMD ["/app/start.sh"]
