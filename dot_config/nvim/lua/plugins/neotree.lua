@@ -264,7 +264,6 @@ return {
             "go.mod",
             "pnpm-workspace.yaml",
             "examples",
-            "scripts",
             "bridge",
             "client",
           },

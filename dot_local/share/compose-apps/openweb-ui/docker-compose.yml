@@ -1,0 +1,135 @@
+version: "3.8"
+
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    ports:
+      - "3000:8080" # Host:Container
+    volumes:
+      - open-webui:/app/backend/data
+    environment:
+      # Ollama Configuration (if running locally)
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+
+      # OpenAI API Configuration (uncomment if using OpenAI instead of Ollama)
+      # - OPENAI_API_KEY=your_openai_api_key_here
+
+      # Other optional environment variables
+      # - WEBUI_NAME=Open WebUI
+      # - DEFAULT_USER_ROLE=pending
+      # - ENABLE_SIGNUP=true
+      # - ENABLE_LOGIN_FORM=true
+
+      # Offline mode (set to 1 if running in offline environment)
+      # - HF_HUB_OFFLINE=1
+
+    extra_hosts:
+      # This allows the container to access Ollama running on the host
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+    # Uncomment the following lines if you need GPU support
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  # Optional: Include Ollama service if you want to run it in the same compose stack
+  # Uncomment this section if you want to run Ollama alongside Open WebUI
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: ollama
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama:/root/.ollama
+  #   restart: unless-stopped
+  #
+  #   # Uncomment for GPU support in Ollama
+  #   # deploy:
+  #   #   resources:
+  #   #     reservations:
+  #   #       devices:
+  #   #         - driver: nvidia
+  #   #           count: all
+  #   #           capabilities: [gpu]
+
+volumes:
+  open-webui:
+    driver: local
+  # Uncomment if using the Ollama service above
+  # ollama:
+  #   driver: local
+# Alternative configurations (comment out the main service above and uncomment one of these):
+
+# Configuration 1: Open WebUI with bundled Ollama (CPU only)
+# services:
+#   open-webui:
+#     image: ghcr.io/open-webui/open-webui:ollama
+#     container_name: open-webui-ollama
+#     ports:
+#       - "3000:8080"
+#     volumes:
+#       - ollama:/root/.ollama
+#       - open-webui:/app/backend/data
+#     restart: unless-stopped
+
+# Configuration 2: Open WebUI with bundled Ollama (GPU enabled)
+# services:
+#   open-webui:
+#     image: ghcr.io/open-webui/open-webui:ollama
+#     container_name: open-webui-ollama-gpu
+#     ports:
+#       - "3000:8080"
+#     volumes:
+#       - ollama:/root/.ollama
+#       - open-webui:/app/backend/data
+#     restart: unless-stopped
+#     deploy:
+#       resources:
+#         reservations:
+#           devices:
+#             - driver: nvidia
+#               count: all
+#               capabilities: [gpu]
+
+# Configuration 3: Open WebUI with CUDA support (separate Ollama)
+# services:
+#   open-webui:
+#     image: ghcr.io/open-webui/open-webui:cuda
+#     container_name: open-webui-cuda
+#     ports:
+#       - "3000:8080"
+#     volumes:
+#       - open-webui:/app/backend/data
+#     environment:
+#       - OLLAMA_BASE_URL=http://host.docker.internal:11434
+#     extra_hosts:
+#       - "host.docker.internal:host-gateway"
+#     restart: unless-stopped
+#     deploy:
+#       resources:
+#         reservations:
+#           devices:
+#             - driver: nvidia
+#               count: all
+#               capabilities: [gpu]
+
+# Configuration 4: OpenAI API only (no Ollama)
+# services:
+#   open-webui:
+#     image: ghcr.io/open-webui/open-webui:main
+#     container_name: open-webui-openai
+#     ports:
+#       - "3000:8080"
+#     volumes:
+#       - open-webui:/app/backend/data
+#     environment:
+#       - OPENAI_API_KEY=your_openai_api_key_here
+#       # Optional: Add other OpenAI-compatible API endpoints
+#       # - OPENAI_API_BASE_URL=https://api.openai.com/v1
+#     restart: unless-stopped

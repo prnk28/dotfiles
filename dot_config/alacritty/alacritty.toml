@@ -17,7 +17,7 @@ blur = false
 dynamic_padding = true
 decorations = "Buttonless"
 opacity = 0.85
-option_as_alt = "Both"
+# option_as_alt = "Both"
 
 [font]
 size = 10
@@ -89,3 +89,23 @@ save_to_clipboard = true                      # Automatically copy selection to 
 key = "Enter"
 mods = "Shift"
 chars = "\u001b\r"
+
+[[keyboard.bindings]]
+key = "H"
+mods = "Alt"
+action = "None"
+
+[[keyboard.bindings]]
+key = "L"
+mods = "Alt"
+action = "None"
+
+[[keyboard.bindings]]
+key = "J"
+mods = "Alt"
+action = "None"
+
+[[keyboard.bindings]]
+key = "K"
+mods = "Alt"
+action = "None"

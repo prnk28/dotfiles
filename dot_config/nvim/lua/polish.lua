@@ -31,9 +31,9 @@ require("toggleterm").setup {
 }
 
 -- Register Devbox template for Overseer
-local overseer = require("overseer")
+local overseer = require "overseer"
 
-overseer.register_template({
+overseer.register_template {
   name = "devbox",
   params = {
     script = {
@@ -46,44 +46,38 @@ overseer.register_template({
     callback = function(opts)
       -- Look for devbox.json in the git root directory
       local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
-      if vim.v.shell_error ~= 0 then
-        return false, "Not in a git repository"
-      end
-      
+      if vim.v.shell_error ~= 0 then return false, "Not in a git repository" end
+
       local devbox_file = git_root .. "/devbox.json"
-      if vim.fn.filereadable(devbox_file) == 0 then
-        return false, "No devbox.json found in git root"
-      end
-      
-      if vim.fn.executable("devbox") == 0 then
-        return false, "devbox command not found"
-      end
-      
+      if vim.fn.filereadable(devbox_file) == 0 then return false, "No devbox.json found in git root" end
+
+      if vim.fn.executable "devbox" == 0 then return false, "devbox command not found" end
+
       return true
     end,
   },
   generator = function(opts, cb)
     local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
     local devbox_file = git_root .. "/devbox.json"
-    
+
     -- Read and parse devbox.json
     local file = io.open(devbox_file, "r")
     if not file then
-      cb({})
+      cb {}
       return
     end
-    
-    local content = file:read("*all")
+
+    local content = file:read "*all"
     file:close()
-    
+
     local ok, data = pcall(vim.json.decode, content)
     if not ok or not data then
-      cb({})
+      cb {}
       return
     end
-    
+
     local ret = {}
-    
+
     -- Add tasks for each script in devbox.json
     if data.shell and data.shell.scripts then
       for script_name, _ in pairs(data.shell.scripts) do
@@ -99,7 +93,7 @@ overseer.register_template({
         })
       end
     end
-    
+
     -- Add a generic devbox shell task
     table.insert(ret, {
       name = "devbox shell",
@@ -111,7 +105,7 @@ overseer.register_template({
         }
       end,
     })
-    
+
     cb(ret)
   end,
-})
+}

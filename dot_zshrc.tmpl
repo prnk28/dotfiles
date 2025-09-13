@@ -40,6 +40,7 @@ export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
 {{ template "zsh/rust" . }}
 {{ template "zsh/node" . }}
 {{ template "zsh/python" . }}
+{{ template "zsh/docker" . }}
 
 # Initialize interactive tools
 {{ template "zsh/tools" . }}

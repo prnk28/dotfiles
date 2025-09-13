@@ -1,0 +1,127 @@
+
+function compose-app-start() {
+  local app_name="$1"
+  if [[ -z "$app_name" ]]; then
+    echo "Usage: compose-app-start <app-name>"
+    echo "Available apps:"
+    ls -d {{ .chezmoi.homeDir }}/.local/share/compose-apps/*/ 2>/dev/null | xargs -n1 basename | sort
+    return 1
+  fi
+
+  local app_dir="{{ .chezmoi.homeDir }}/.local/share/compose-apps/$app_name"
+  if [[ ! -d "$app_dir" ]]; then
+    echo "Error: App '$app_name' not found in compose-apps directory"
+    return 1
+  fi
+
+  cd "$app_dir"
+  if docker compose ps --services --filter status=running | grep -q .; then
+    echo "$app_name is already running"
+  else
+    echo "Starting $app_name..."
+    docker compose up -d
+  fi
+  cd - > /dev/null
+}
+
+function compose-app-stop() {
+  local app_name="$1"
+  if [[ -z "$app_name" ]]; then
+    echo "Usage: compose-app-stop <app-name>"
+    echo "Running apps:"
+    for dir in {{ .chezmoi.homeDir }}/.local/share/compose-apps/*/; do
+      if [[ -d "$dir" ]]; then
+        local name=$(basename "$dir")
+        cd "$dir" 2>/dev/null && {
+          if docker compose ps --services --filter status=running | grep -q .; then
+            echo "  - $name"
+          fi
+          cd - > /dev/null
+        }
+      fi
+    done
+    return 1
+  fi
+
+  local app_dir="{{ .chezmoi.homeDir }}/.local/share/compose-apps/$app_name"
+  if [[ ! -d "$app_dir" ]]; then
+    echo "Error: App '$app_name' not found in compose-apps directory"
+    return 1
+  fi
+
+  cd "$app_dir"
+  echo "Stopping $app_name..."
+  docker compose down
+  cd - > /dev/null
+}
+
+function compose-app-status() {
+  echo "Compose Apps Status:"
+  for dir in {{ .chezmoi.homeDir }}/.local/share/compose-apps/*/; do
+    if [[ -d "$dir" ]]; then
+      local name=$(basename "$dir")
+      cd "$dir" 2>/dev/null && {
+        if docker compose ps --services --filter status=running | grep -q .; then
+          echo "  ✓ $name (running)"
+        else
+          echo "  ✗ $name (stopped)"
+        fi
+        cd - > /dev/null
+      }
+    fi
+  done
+}
+
+function compose-app-restart() {
+  local app_name="$1"
+  if [[ -z "$app_name" ]]; then
+    echo "Usage: compose-app-restart <app-name>"
+    return 1
+  fi
+
+  compose-app-stop "$app_name" && compose-app-start "$app_name"
+}
+
+function compose-app-logs() {
+  local app_name="$1"
+  if [[ -z "$app_name" ]]; then
+    echo "Usage: compose-app-logs <app-name> [docker-compose-logs-options]"
+    return 1
+  fi
+
+  local app_dir="{{ .chezmoi.homeDir }}/.local/share/compose-apps/$app_name"
+  if [[ ! -d "$app_dir" ]]; then
+    echo "Error: App '$app_name' not found in compose-apps directory"
+    return 1
+  fi
+
+  shift
+  cd "$app_dir"
+  docker compose logs "$@"
+  cd - > /dev/null
+}
+
+# Convenience aliases for specific apps
+function openweb-ui-start() {
+  compose-app-start openweb-ui
+}
+
+function openweb-ui-stop() {
+  compose-app-stop openweb-ui
+}
+
+function owlistic-start() {
+  compose-app-start owlistic
+}
+
+function owlistic-stop() {
+  compose-app-stop owlistic
+}
+
+function graphiti-mcp-start() {
+  compose-app-start graphiti-mcp
+}
+
+function graphiti-mcp-stop() {
+  compose-app-stop graphiti-mcp
+}
