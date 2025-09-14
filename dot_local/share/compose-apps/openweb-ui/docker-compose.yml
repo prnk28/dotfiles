@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
@@ -9,67 +7,24 @@ services:
     volumes:
       - open-webui:/app/backend/data
     environment:
-      # Ollama Configuration (if running locally)
-      - OLLAMA_BASE_URL=http://host.docker.internal:11434
-
-      # OpenAI API Configuration (uncomment if using OpenAI instead of Ollama)
-      # - OPENAI_API_KEY=your_openai_api_key_here
-
-      # Other optional environment variables
-      # - WEBUI_NAME=Open WebUI
-      # - DEFAULT_USER_ROLE=pending
-      # - ENABLE_SIGNUP=true
-      # - ENABLE_LOGIN_FORM=true
-
-      # Offline mode (set to 1 if running in offline environment)
-      # - HF_HUB_OFFLINE=1
-
+      - DATABASE_URL=${OPENWEBUI_DATABASE_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
     extra_hosts:
-      # This allows the container to access Ollama running on the host
       - "host.docker.internal:host-gateway"
     restart: unless-stopped
     networks:
       - webui-network
 
-    # Uncomment the following lines if you need GPU support
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: all
-    #           capabilities: [gpu]
-
-  # Optional: Include Ollama service if you want to run it in the same compose stack
-  # Uncomment this section if you want to run Ollama alongside Open WebUI
-  # ollama:
-  #   image: ollama/ollama:latest
-  #   container_name: ollama
-  #   ports:
-  #     - "11434:11434"
-  #   volumes:
-  #     - ollama:/root/.ollama
-  #   restart: unless-stopped
-  #
-  #   # Uncomment for GPU support in Ollama
-  #   # deploy:
-  #   #   resources:
-  #   #     reservations:
-  #   #       devices:
-  #   #         - driver: nvidia
-  #   #           count: all
-  #   #           capabilities: [gpu]
-
   # MCP Proxy Server - ref-tools (default)
   mcpo-ref:
     build:
       context: .
-      dockerfile: Dockerfile.mcpo
+      dockerfile: Dockerfile
+      target: ref
     container_name: mcpo-ref
     ports:
       - "8001:8000" # Host:Container - ref-tools MCP proxy on port 8001
     environment:
-      - MCP_SERVER_TYPE=ref
       - MCP_HOST=0.0.0.0
       - MCP_PORT=8000
     restart: unless-stopped
@@ -81,7 +36,8 @@ services:
   mcpo-github:
     build:
       context: .
-      dockerfile: Dockerfile.mcpo-github
+      dockerfile: Dockerfile
+      target: github
     container_name: mcpo-github
     ports:
       - "8002:8000" # Host:Container - GitHub MCP proxy on port 8002
@@ -100,7 +56,8 @@ services:
   mcpo-filesystem:
     build:
       context: .
-      dockerfile: Dockerfile.mcpo-filesystem
+      dockerfile: Dockerfile
+      target: filesystem
     container_name: mcpo-filesystem
     ports:
       - "8003:8000" # Host:Container - Filesystem MCP proxy on port 8003
@@ -122,7 +79,8 @@ services:
   mcpo-obsidian:
     build:
       context: .
-      dockerfile: Dockerfile.mcpo-obsidian
+      dockerfile: Dockerfile
+      target: obsidian
     container_name: mcpo-obsidian
     ports:
       - "8004:8000" # Host:Container - Obsidian MCP proxy on port 8004
@@ -141,7 +99,8 @@ services:
   mcpo-context7:
     build:
       context: .
-      dockerfile: Dockerfile.mcpo-context7
+      dockerfile: Dockerfile
+      target: context7
     container_name: mcpo-context7
     ports:
       - "8005:8000" # Host:Container - Context7 MCP proxy on port 8005
@@ -159,7 +118,8 @@ services:
   mcpo-sequentialthinking:
     build:
       context: .
-      dockerfile: Dockerfile.mcpo-sequentialthinking
+      dockerfile: Dockerfile
+      target: sequentialthinking
     container_name: mcpo-sequentialthinking
     ports:
       - "8006:8000" # Host:Container - Sequential Thinking MCP proxy on port 8006
@@ -172,25 +132,6 @@ services:
     networks:
       - webui-network
 
-  # Alternative: Run GitHub MCP using Docker socket (requires Docker access)
-  # mcpo-github-docker:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.mcpo
-  #   container_name: mcpo-github-docker
-  #   ports:
-  #     - "8002:8000"
-  #   environment:
-  #     - MCP_SERVER_TYPE=github
-  #     - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PERSONAL_ACCESS_TOKEN}
-  #     - MCP_HOST=0.0.0.0
-  #     - MCP_PORT=8000
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock # Mount Docker socket
-  #   restart: unless-stopped
-  #   networks:
-  #     - webui-network
-
 networks:
   webui-network:
     driver: bridge
@@ -198,76 +139,3 @@ networks:
 volumes:
   open-webui:
     driver: local
-  # Uncomment if using the Ollama service above
-  # ollama:
-  #   driver: local
-
-# Alternative configurations (comment out the main service above and uncomment one of these):
-
-# Configuration 1: Open WebUI with bundled Ollama (CPU only)
-# services:
-#   open-webui:
-#     image: ghcr.io/open-webui/open-webui:ollama
-#     container_name: open-webui-ollama
-#     ports:
-#       - "3000:8080"
-#     volumes:
-#       - ollama:/root/.ollama
-#       - open-webui:/app/backend/data
-#     restart: unless-stopped
-
-# Configuration 2: Open WebUI with bundled Ollama (GPU enabled)
-# services:
-#   open-webui:
-#     image: ghcr.io/open-webui/open-webui:ollama
-#     container_name: open-webui-ollama-gpu
-#     ports:
-#       - "3000:8080"
-#     volumes:
-#       - ollama:/root/.ollama
-#       - open-webui:/app/backend/data
-#     restart: unless-stopped
-#     deploy:
-#       resources:
-#         reservations:
-#           devices:
-#             - driver: nvidia
-#               count: all
-#               capabilities: [gpu]
-
-# Configuration 3: Open WebUI with CUDA support (separate Ollama)
-# services:
-#   open-webui:
-#     image: ghcr.io/open-webui/open-webui:cuda
-#     container_name: open-webui-cuda
-#     ports:
-#       - "3000:8080"
-#     volumes:
-#       - open-webui:/app/backend/data
-#     environment:
-#       - OLLAMA_BASE_URL=http://host.docker.internal:11434
-#     extra_hosts:
-#       - "host.docker.internal:host-gateway"
-#     restart: unless-stopped
-#     deploy:
-#       resources:
-#         reservations:
-#           devices:
-#             - driver: nvidia
-#               count: all
-#               capabilities: [gpu]
-
-# Configuration 4: OpenAI API only (no Ollama)
-# services:
-#   open-webui:
-#     image: ghcr.io/open-webui/open-webui:main
-#     container_name: open-webui-openai
-#     ports:
-#       - "3000:8080"
-#     volumes:
-#       - open-webui:/app/backend/data
-#     environment:
-#       - OPENAI_API_KEY=your_openai_api_key_here
-#       # Optional: Add other OpenAI-compatible API endpoints
-#       # - OPENAI_API_BASE_URL=https://api.openai.com/v1
-#     restart: unless-stopped
