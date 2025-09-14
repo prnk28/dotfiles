@@ -137,6 +137,24 @@ services:
     networks:
       - webui-network
 
+  # MCP Proxy Server - Context7
+  mcpo-context7:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcpo-context7
+    container_name: mcpo-context7
+    ports:
+      - "8005:8000" # Host:Container - Context7 MCP proxy on port 8005
+    environment:
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=8000
+      # Context7 configuration (using existing env var)
+      - CONTEXT7_API_KEY=${CONTEXT7_API_KEY}
+      - CONTEXT7_URL=https://mcp.context7.com/mcp
+    restart: unless-stopped
+    networks:
+      - webui-network
+
   # Alternative: Run GitHub MCP using Docker socket (requires Docker access)
   # mcpo-github-docker:
   #   build:
