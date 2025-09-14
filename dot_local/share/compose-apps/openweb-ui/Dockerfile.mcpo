@@ -16,7 +16,9 @@ RUN pip install --no-cache-dir \
     uv
 
 # Install Node.js MCP servers globally
-RUN npm install -g ref-tools-mcp@latest
+RUN npm install -g \
+    ref-tools-mcp@latest \
+    @modelcontextprotocol/server-filesystem@latest
 
 # Environment variables for configuration
 ENV MCP_SERVER_TYPE="ref"
@@ -58,9 +60,17 @@ case "$MCP_SERVER_TYPE" in
             uvx mcp-server-time --local-timezone=America/New_York
         ;;
 
+    "filesystem")
+        echo "Starting filesystem MCP server..."
+        # Convert FILESYSTEM_DIRS string to array
+        IFS=' ' read -r -a DIRS <<< "${FILESYSTEM_DIRS:-/data}"
+        uvx mcpo --host $MCP_HOST --port $MCP_PORT -- \
+            npx @modelcontextprotocol/server-filesystem "${DIRS[@]}"
+        ;;
+
     *)
         echo "Error: Unknown MCP_SERVER_TYPE: $MCP_SERVER_TYPE"
-        echo "Valid options: github, ref, time"
+        echo "Valid options: github, ref, time, filesystem"
         exit 1
         ;;
 esac

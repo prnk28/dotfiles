@@ -96,6 +96,28 @@ services:
     networks:
       - webui-network
 
+  # MCP Proxy Server - Filesystem
+  mcpo-filesystem:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcpo-filesystem
+    container_name: mcpo-filesystem
+    ports:
+      - "8003:8000" # Host:Container - Filesystem MCP proxy on port 8003
+    environment:
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=8000
+      # Paths inside container (mapped via volumes)
+      - FILESYSTEM_DIRS=/data/sonr /data/ui /data/notes
+    volumes:
+      # Map host directories to container paths
+      - /home/prad/code/github.com/sonr-io/sonr:/data/sonr:ro
+      - /home/prad/code/github.com/go-sonr/ui:/data/ui:ro
+      - /home/prad/Notes:/data/notes:ro
+    restart: unless-stopped
+    networks:
+      - webui-network
+
   # Alternative: Run GitHub MCP using Docker socket (requires Docker access)
   # mcpo-github-docker:
   #   build:

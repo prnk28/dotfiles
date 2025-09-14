@@ -118,6 +118,40 @@ function openweb-ui-logs() {
   compose-app-logs openweb-ui "$@"
 }
 
+function openweb-ui-mcps() {
+  local compose_file="{{ .chezmoi.homeDir }}/.local/share/compose-apps/openweb-ui/docker-compose.yml"
+
+  if [[ ! -f "$compose_file" ]]; then
+    echo "Error: docker-compose.yml not found for openweb-ui"
+    return 1
+  fi
+
+  echo "OpenWebUI MCP Servers:"
+  echo "----------------------"
+
+  # Use yq to query all services starting with mcpo- and their ports
+  local services=$(yq '.services | keys | .[] | select(. | startswith("mcpo-"))' "$compose_file")
+
+  for service in $services; do
+    # Get the first port mapping for this service (removing quotes)
+    local port_mapping=$(yq ".services.\"$service\".ports[0]" "$compose_file" | tr -d '"')
+
+    if [[ -n "$port_mapping" ]] && [[ "$port_mapping" != "null" ]]; then
+      # Extract host port from the mapping (format: "8001:8000")
+      local host_port=$(echo "$port_mapping" | cut -d: -f1)
+
+      # Format service name for display
+      local display_name=$(echo "$service" | sed 's/^mcpo-//' | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1')
+
+      printf "  • %-15s → localhost:%s\n" "$display_name" "$host_port"
+    fi
+  done
+
+  echo ""
+  echo "Access MCP OpenAPI docs at:"
+  echo "  • http://localhost:<port>/docs"
+}
+
 function owlistic-start() {
   compose-app-start owlistic
 }

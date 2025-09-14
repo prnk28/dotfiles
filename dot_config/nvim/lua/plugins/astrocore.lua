@@ -221,9 +221,9 @@ return {
         dirs = {}, -- list of directory patterns (Ex. { "~/.cargo/*" })
       },
       -- automatically update working directory (update manually with `:AstroRoot`)
-      autochdir = false,
+      autochdir = true,
       -- scope of working directory to change ("global"|"tab"|"win")
-      scope = "global", -- Changed from "win" to "global" to make directory changes apply globally
+      scope = "win", -- Changed from "win" to "global" to make directory changes apply globally
       -- show notification on every working directory change
       notify = false,
     },
@@ -382,6 +382,7 @@ return {
         ["K"] = { function() vim.diagnostic.goto_prev() end, desc = "Previous Diagnostic" },
         ["J"] = { function() vim.diagnostic.goto_next() end, desc = "Next Diagnostic" },
         ["vv"] = { "gg0VG$", desc = "Select all contents in buffer" },
+
         ["<C-f>r"] = {
           _G.Scooter_toggle,
           desc = "Find and replace",
@@ -418,6 +419,7 @@ return {
           end,
           desc = "Find Claude files",
         },
+        ["<C-f>go"] = { "<Cmd>ObsidianSearch<CR>", desc = "Find in Obsidian" },
         ["<C-f>p"] = { desc = "Find Package files" },
         ["<C-f>pc"] = {
           function()

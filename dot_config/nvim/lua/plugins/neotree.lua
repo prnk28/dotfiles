@@ -268,6 +268,9 @@ return {
             "client",
           },
           never_show_by_pattern = {
+            "*DS_Store",
+            ".obsidian",
+            "*._*",
             "CLAUDE*",
             ".pkl-lsp",
             ".tsbuildinfo",

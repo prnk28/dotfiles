@@ -1,0 +1,56 @@
+# Dockerfile for Filesystem MCP server proxy
+# This uses mcpo to wrap the filesystem MCP server and expose it via OpenAPI
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    nodejs \
+    npm \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python packages
+RUN pip install --no-cache-dir mcpo uv
+
+# Install Node.js MCP filesystem server
+RUN npm install -g @modelcontextprotocol/server-filesystem@latest
+
+# Environment variables
+ENV MCP_PORT=8000
+ENV MCP_HOST="0.0.0.0"
+# Default directories to expose (can be overridden)
+ENV FILESYSTEM_DIRS="/data/sonr /data/ui /data/notes"
+
+# Create startup script
+RUN cat > /app/start.sh << 'EOF'
+#!/bin/bash
+set -e
+
+echo "Starting Filesystem MCP server proxy..."
+echo "Exposing directories: $FILESYSTEM_DIRS"
+
+# Convert FILESYSTEM_DIRS string to array
+IFS=' ' read -r -a DIRS <<< "$FILESYSTEM_DIRS"
+
+# Run mcpo with the filesystem MCP server
+exec uvx mcpo --host $MCP_HOST --port $MCP_PORT -- \
+    npx @modelcontextprotocol/server-filesystem "${DIRS[@]}"
+EOF
+
+RUN chmod +x /app/start.sh
+
+# Create default mount points
+RUN mkdir -p /data/sonr /data/ui /data/notes
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:$MCP_PORT/health || curl -f http://localhost:$MCP_PORT/docs || exit 1
+
+# Expose port
+EXPOSE 8000
+
+# Run the startup script
+CMD ["/app/start.sh"]
