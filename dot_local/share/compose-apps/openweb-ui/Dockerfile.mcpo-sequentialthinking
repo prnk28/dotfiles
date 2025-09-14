@@ -1,0 +1,52 @@
+# Dockerfile for Sequential Thinking MCP server proxy
+# This uses mcpo to wrap the Sequential Thinking MCP server and expose it via OpenAPI
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    nodejs \
+    npm \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python packages
+RUN pip install --no-cache-dir mcpo uv
+
+# Install Sequential Thinking MCP server
+RUN npm install -g @modelcontextprotocol/server-sequential-thinking@latest
+
+# Environment variables
+ENV MCP_PORT=8000
+ENV MCP_HOST="0.0.0.0"
+# Optional: Disable thought logging
+ENV DISABLE_THOUGHT_LOGGING="false"
+
+# Create startup script
+RUN cat > /app/start.sh << 'EOF'
+#!/bin/bash
+set -e
+
+echo "Starting Sequential Thinking MCP server proxy..."
+if [ "$DISABLE_THOUGHT_LOGGING" = "true" ]; then
+    echo "Thought logging is disabled"
+fi
+
+# Run mcpo with the Sequential Thinking MCP server
+exec uvx mcpo --host $MCP_HOST --port $MCP_PORT -- \
+    npx @modelcontextprotocol/server-sequential-thinking
+EOF
+
+RUN chmod +x /app/start.sh
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:$MCP_PORT/health || curl -f http://localhost:$MCP_PORT/docs || exit 1
+
+# Expose port
+EXPOSE 8000
+
+# Run the startup script
+CMD ["/app/start.sh"]

@@ -19,7 +19,8 @@ RUN pip install --no-cache-dir \
 # Install Node.js MCP servers globally
 RUN npm install -g \
     ref-tools-mcp@latest \
-    @modelcontextprotocol/server-filesystem@latest
+    @modelcontextprotocol/server-filesystem@latest \
+    @modelcontextprotocol/server-sequential-thinking@latest
 
 # Environment variables for configuration
 ENV MCP_SERVER_TYPE="ref"
@@ -79,9 +80,18 @@ case "$MCP_SERVER_TYPE" in
             uvx mcp-obsidian
         ;;
 
+    "sequentialthinking")
+        echo "Starting Sequential Thinking MCP server..."
+        if [ "$DISABLE_THOUGHT_LOGGING" = "true" ]; then
+            echo "Thought logging is disabled"
+        fi
+        uvx mcpo --host $MCP_HOST --port $MCP_PORT -- \
+            npx @modelcontextprotocol/server-sequential-thinking
+        ;;
+
     *)
         echo "Error: Unknown MCP_SERVER_TYPE: $MCP_SERVER_TYPE"
-        echo "Valid options: github, ref, time, filesystem, obsidian"
+        echo "Valid options: github, ref, time, filesystem, obsidian, sequentialthinking"
         exit 1
         ;;
 esac

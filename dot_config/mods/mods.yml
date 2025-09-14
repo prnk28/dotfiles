@@ -8,19 +8,72 @@ format-text:
   json: "Format the response as json without enclosing backticks."
 # MCP Servers configurations
 mcp-servers:
+  # When Docker containers are running (access via localhost ports)
   github:
-    command: docker
-    args:
-      - run
-      - "-i"
-      - "--rm"
-      - "-e"
-      - GITHUB_PERSONAL_ACCESS_TOKEN
-      - "ghcr.io/github/github-mcp-server"
+    transport: http
+    url: http://localhost:8002
+    headers:
+      Authorization: "Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"
+
   ref:
-    command: npx
-    args:
-      - ref-tools-mcp@latest
+    transport: http
+    url: http://localhost:8001
+
+  filesystem:
+    transport: http
+    url: http://localhost:8003
+
+  obsidian:
+    transport: http
+    url: http://localhost:8004
+    headers:
+      OBSIDIAN_API_KEY: "${OBSIDIAN_API_KEY}"
+
+  context7:
+    transport: http
+    url: http://localhost:8005
+    headers:
+      CONTEXT7_API_KEY: "${CONTEXT7_API_KEY}"
+
+  sequentialthinking:
+    transport: http
+    url: http://localhost:8006
+
+  # Alternative: Direct command execution (when Docker containers are not running)
+  # github-direct:
+  #   command: docker
+  #   args:
+  #     - run
+  #     - "-i"
+  #     - "--rm"
+  #     - "-e"
+  #     - GITHUB_PERSONAL_ACCESS_TOKEN
+  #     - "ghcr.io/github/github-mcp-server"
+  # ref-direct:
+  #   command: npx
+  #   args:
+  #     - ref-tools-mcp@latest
+  # filesystem-direct:
+  #   command: npx
+  #   args:
+  #     - "-y"
+  #     - "@modelcontextprotocol/server-filesystem"
+  #     - "/home/prad/code/github.com/sonr-io/sonr"
+  #     - "/home/prad/code/github.com/go-sonr/ui"
+  #     - "/home/prad/Notes"
+  # obsidian-direct:
+  #   command: uvx
+  #   args:
+  #     - mcp-obsidian
+  #   env:
+  #     OBSIDIAN_API_KEY: "${OBSIDIAN_API_KEY}"
+  #     OBSIDIAN_HOST: "${OBSIDIAN_HOST}"
+  #     OBSIDIAN_PORT: "${OBSIDIAN_PORT}"
+  # sequentialthinking-direct:
+  #   command: npx
+  #   args:
+  #     - "-y"
+  #     - "@modelcontextprotocol/server-sequential-thinking"
 # Timeout for MCP server calls, defaults to 15 seconds
 mcp-timeout: 15s
 # List of predefined system messages that can be used as roles

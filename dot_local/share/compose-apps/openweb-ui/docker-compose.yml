@@ -155,6 +155,23 @@ services:
     networks:
       - webui-network
 
+  # MCP Proxy Server - Sequential Thinking
+  mcpo-sequentialthinking:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcpo-sequentialthinking
+    container_name: mcpo-sequentialthinking
+    ports:
+      - "8006:8000" # Host:Container - Sequential Thinking MCP proxy on port 8006
+    environment:
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=8000
+      # Optional: Set to "true" to disable thought logging
+      - DISABLE_THOUGHT_LOGGING=false
+    restart: unless-stopped
+    networks:
+      - webui-network
+
   # Alternative: Run GitHub MCP using Docker socket (requires Docker access)
   # mcpo-github-docker:
   #   build:
