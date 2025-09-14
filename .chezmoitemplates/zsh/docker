@@ -1,179 +1,74 @@
+# Docker Compose Services Management Functions
+# Service-specific convenience functions that wrap the global taskfile services commands
 
-function compose-app-start() {
-  local app_name="$1"
-  if [[ -z "$app_name" ]]; then
-    echo "Usage: compose-app-start <app-name>"
-    echo "Available apps:"
-    ls -d {{ .chezmoi.homeDir }}/.local/share/services/*/ 2>/dev/null | xargs -n1 basename | sort
-    return 1
-  fi
-
-  local app_dir="{{ .chezmoi.homeDir }}/.local/share/services/$app_name"
-  if [[ ! -d "$app_dir" ]]; then
-    echo "Error: App '$app_name' not found in services directory"
-    return 1
-  fi
-
-  cd "$app_dir"
-  if docker compose ps --services --filter status=running | grep -q .; then
-    echo "$app_name is already running"
-  else
-    echo "Starting $app_name..."
-    docker compose up -d
-  fi
-  cd - > /dev/null
+# Convenience functions for OpenWebUI
+function openwebui-start() {
+  task -g services:start:openwebui
 }
 
-function compose-app-stop() {
-  local app_name="$1"
-  if [[ -z "$app_name" ]]; then
-    echo "Usage: compose-app-stop <app-name>"
-    echo "Running apps:"
-    for dir in {{ .chezmoi.homeDir }}/.local/share/services/*/; do
-      if [[ -d "$dir" ]]; then
-        local name=$(basename "$dir")
-        cd "$dir" 2>/dev/null && {
-          if docker compose ps --services --filter status=running | grep -q .; then
-            echo "  - $name"
-          fi
-          cd - > /dev/null
-        }
-      fi
-    done
-    return 1
-  fi
-
-  local app_dir="{{ .chezmoi.homeDir }}/.local/share/services/$app_name"
-  if [[ ! -d "$app_dir" ]]; then
-    echo "Error: App '$app_name' not found in services directory"
-    return 1
-  fi
-
-  cd "$app_dir"
-  echo "Stopping $app_name..."
-  docker compose down
-  cd - > /dev/null
+function openwebui-stop() {
+  task -g services:stop:openwebui
 }
 
-function compose-app-status() {
-  echo "Compose Apps Status:"
-  for dir in {{ .chezmoi.homeDir }}/.local/share/services/*/; do
-    if [[ -d "$dir" ]]; then
-      local name=$(basename "$dir")
-      cd "$dir" 2>/dev/null && {
-        if docker compose ps --services --filter status=running | grep -q .; then
-          echo "  ✓ $name (running)"
-        else
-          echo "  ✗ $name (stopped)"
-        fi
-        cd - > /dev/null
-      }
-    fi
-  done
+function openwebui-restart() {
+  task -g services:restart:openwebui
 }
 
-function compose-app-restart() {
-  local app_name="$1"
-  if [[ -z "$app_name" ]]; then
-    echo "Usage: compose-app-restart <app-name>"
-    return 1
-  fi
-
-  compose-app-stop "$app_name" && compose-app-start "$app_name"
+function openwebui-logs() {
+  task -g services:logs:openwebui -- "$@"
 }
 
-function compose-app-logs() {
-  local app_name="$1"
-  if [[ -z "$app_name" ]]; then
-    echo "Usage: compose-app-logs <app-name> [docker-compose-logs-options]"
-    return 1
-  fi
-
-  local app_dir="{{ .chezmoi.homeDir }}/.local/share/services/$app_name"
-  if [[ ! -d "$app_dir" ]]; then
-    echo "Error: App '$app_name' not found in services directory"
-    return 1
-  fi
-
-  shift
-  cd "$app_dir"
-  docker compose logs "$@"
-  cd - > /dev/null
+function openwebui-mcps() {
+  task -g services:mcps:openwebui
 }
 
-# Convenience aliases for specific apps
-function openweb-ui-start() {
-  compose-app-start openweb-ui
+# Convenience functions for Flame
+function flame-start() {
+  task -g services:start:flame
 }
 
-function openweb-ui-stop() {
-  compose-app-stop openweb-ui
+function flame-stop() {
+  task -g services:stop:flame
 }
 
-function openweb-ui-restart() {
-  compose-app-restart openweb-ui
+function flame-restart() {
+  task -g services:restart:flame
 }
 
-function openweb-ui-logs() {
-  compose-app-logs openweb-ui "$@"
+function flame-logs() {
+  task -g services:logs:flame -- "$@"
 }
 
-function openweb-ui-mcps() {
-  local compose_file="{{ .chezmoi.homeDir }}/.local/share/services/openweb-ui/docker-compose.yml"
-
-  if [[ ! -f "$compose_file" ]]; then
-    echo "Error: docker-compose.yml not found for openweb-ui"
-    return 1
-  fi
-
-  echo "OpenWebUI MCP Servers:"
-  echo "----------------------"
-
-  # Use yq to query all services starting with mcpo- and their ports
-  local services=$(yq '.services | keys | .[] | select(. | startswith("mcpo-"))' "$compose_file" | tr -d '"')
-
-  while IFS= read -r service; do
-    if [[ -z "$service" ]]; then
-      continue
-    fi
-
-    # Get the container name for this service
-    local container_name=$(yq ".services[\"$service\"].container_name" "$compose_file" 2>/dev/null | tr -d '"')
-
-    # Get the first port mapping for this service
-    local port_mapping=$(yq ".services[\"$service\"].ports[0]" "$compose_file" 2>/dev/null | tr -d '"')
-
-    if [[ -n "$port_mapping" ]] && [[ "$port_mapping" != "null" ]]; then
-      # Extract host port from the mapping (format: "8001:8000")
-      local host_port=$(echo "$port_mapping" | cut -d: -f1)
-
-      # Format service name for display
-      local display_name=$(echo "$service" | sed 's/^mcpo-//' | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1')
-
-      # Use container name if available, otherwise use service name
-      local host_name="${container_name:-$service}"
-
-      printf "  • %-15s → %s:%s\n" "$display_name" "$host_name" "$host_port"
-    fi
-  done <<< "$services"
-
-  echo ""
-  echo "Access MCP OpenAPI docs at:"
-  echo "  • http://<container-name>:<port>/docs"
-}
-
+# Convenience functions for Owlistic
 function owlistic-start() {
-  compose-app-start owlistic
+  task -g services:start:owlistic
 }
 
 function owlistic-stop() {
-  compose-app-stop owlistic
+  task -g services:stop:owlistic
 }
 
+function owlistic-restart() {
+  task -g services:restart:owlistic
+}
+
+function owlistic-logs() {
+  task -g services:logs:owlistic -- "$@"
+}
+
+# Convenience functions for Graphiti MCP
 function graphiti-mcp-start() {
-  compose-app-start graphiti-mcp
+  task -g services:start:graphiti-mcp
 }
 
 function graphiti-mcp-stop() {
-  compose-app-stop graphiti-mcp
+  task -g services:stop:graphiti-mcp
+}
+
+function graphiti-mcp-restart() {
+  task -g services:restart:graphiti-mcp
+}
+
+function graphiti-mcp-logs() {
+  task -g services:logs:graphiti-mcp -- "$@"
 }

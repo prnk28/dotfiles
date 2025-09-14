@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  flame:
+    image: pawelmalak/flame:latest
+    container_name: flame
+    volumes:
+      # Data persistence
+      - ./data:/app/data
+      # Docker socket for Docker integration (optional)
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "${FLAME_PORT:-5005}:5005"
+    environment:
+      # No password configuration - running without authentication
+      - PASSWORD=
+    restart: unless-stopped
+    networks:
+      - flame-network
+
+networks:
+  flame-network:
+    driver: bridge

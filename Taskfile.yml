@@ -1,0 +1,4 @@
+version: "3"
+includes:
+  services: $HOME/.local/share/taskfiles/Taskfile.services.yml
+  github: $HOME/.local/share/taskfiles/Taskfile.github.yml

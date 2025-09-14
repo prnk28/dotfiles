@@ -1,0 +1,387 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  SERVICES_DIR: "{{.HOME}}/.local/share/services"
+
+tasks:
+  # Generic service management tasks
+  start:
+    desc: Start a service
+    summary: |
+      Start a Docker Compose service from the services directory.
+      Usage: task services:start -- <service-name>
+    cmds:
+      - |
+        if [ -z "{{.CLI_ARGS}}" ]; then
+          echo "Usage: task services:start -- <service-name>"
+          echo "Available services:"
+          ls -d {{.SERVICES_DIR}}/*/ 2>/dev/null | xargs -n1 basename | sort
+          exit 1
+        fi
+        SERVICE_NAME="{{.CLI_ARGS}}"
+        SERVICE_DIR="{{.SERVICES_DIR}}/$SERVICE_NAME"
+        if [ ! -d "$SERVICE_DIR" ]; then
+          echo "Error: Service '$SERVICE_NAME' not found in services directory"
+          exit 1
+        fi
+        cd "$SERVICE_DIR"
+        if docker compose ps --services --filter status=running | grep -q .; then
+          echo "$SERVICE_NAME is already running"
+        else
+          echo "Starting $SERVICE_NAME..."
+          docker compose up -d
+        fi
+    silent: false
+
+  stop:
+    desc: Stop a service
+    summary: |
+      Stop a Docker Compose service.
+      Usage: task services:stop -- <service-name>
+    cmds:
+      - |
+        if [ -z "{{.CLI_ARGS}}" ]; then
+          echo "Usage: task services:stop -- <service-name>"
+          echo "Running services:"
+          for dir in {{.SERVICES_DIR}}/*/; do
+            if [ -d "$dir" ]; then
+              name=$(basename "$dir")
+              cd "$dir" 2>/dev/null && {
+                if docker compose ps --services --filter status=running | grep -q .; then
+                  echo "  - $name"
+                fi
+                cd - > /dev/null
+              }
+            fi
+          done
+          exit 1
+        fi
+        SERVICE_NAME="{{.CLI_ARGS}}"
+        SERVICE_DIR="{{.SERVICES_DIR}}/$SERVICE_NAME"
+        if [ ! -d "$SERVICE_DIR" ]; then
+          echo "Error: Service '$SERVICE_NAME' not found in services directory"
+          exit 1
+        fi
+        cd "$SERVICE_DIR"
+        echo "Stopping $SERVICE_NAME..."
+        docker compose down
+    silent: false
+
+  restart:
+    desc: Restart a service
+    summary: |
+      Restart a Docker Compose service.
+      Usage: task services:restart -- <service-name>
+    deps:
+      - task: stop
+        vars:
+          CLI_ARGS: "{{.CLI_ARGS}}"
+      - task: start
+        vars:
+          CLI_ARGS: "{{.CLI_ARGS}}"
+
+  status:
+    desc: Show status of all services
+    summary: Display the running status of all Docker Compose services
+    cmds:
+      - |
+        echo "Services Status:"
+        echo "================"
+        for dir in {{.SERVICES_DIR}}/*/; do
+          if [ -d "$dir" ]; then
+            name=$(basename "$dir")
+            cd "$dir" 2>/dev/null && {
+              if docker compose ps --services --filter status=running | grep -q .; then
+                echo "  ✓ $name (running)"
+              else
+                echo "  ✗ $name (stopped)"
+              fi
+              cd - > /dev/null
+            }
+          fi
+        done
+    silent: false
+
+  logs:
+    desc: Show logs for a service
+    summary: |
+      Display logs for a Docker Compose service.
+      Usage: task services:logs -- <service-name> [docker-compose-logs-options]
+    cmds:
+      - |
+        SERVICE_NAME=$(echo "{{.CLI_ARGS}}" | awk '{print $1}')
+        if [ -z "$SERVICE_NAME" ]; then
+          echo "Usage: task services:logs -- <service-name> [docker-compose-logs-options]"
+          exit 1
+        fi
+        SERVICE_DIR="{{.SERVICES_DIR}}/$SERVICE_NAME"
+        if [ ! -d "$SERVICE_DIR" ]; then
+          echo "Error: Service '$SERVICE_NAME' not found in services directory"
+          exit 1
+        fi
+        # Get additional options (everything after the first argument)
+        OPTIONS=$(echo "{{.CLI_ARGS}}" | cut -d' ' -f2-)
+        if [ "$OPTIONS" = "$SERVICE_NAME" ]; then
+          OPTIONS=""
+        fi
+        cd "$SERVICE_DIR"
+        docker compose logs $OPTIONS
+    silent: false
+
+  ps:
+    desc: List running containers for a service
+    summary: |
+      Show running containers for a specific service.
+      Usage: task services:ps -- <service-name>
+    cmds:
+      - |
+        if [ -z "{{.CLI_ARGS}}" ]; then
+          echo "Usage: task services:ps -- <service-name>"
+          exit 1
+        fi
+        SERVICE_NAME="{{.CLI_ARGS}}"
+        SERVICE_DIR="{{.SERVICES_DIR}}/$SERVICE_NAME"
+        if [ ! -d "$SERVICE_DIR" ]; then
+          echo "Error: Service '$SERVICE_NAME' not found in services directory"
+          exit 1
+        fi
+        cd "$SERVICE_DIR"
+        docker compose ps
+    silent: false
+
+  list:
+    desc: List all available services
+    summary: Display all services in the services directory
+    cmds:
+      - |
+        echo "Available services:"
+        echo "==================="
+        ls -d {{.SERVICES_DIR}}/*/ 2>/dev/null | xargs -n1 basename | sort | while read service; do
+          echo "  • $service"
+        done
+    silent: false
+
+  # OpenWebUI specific tasks
+  start:openwebui:
+    desc: Start OpenWebUI service
+    cmds:
+      - task: start
+        vars:
+          CLI_ARGS: "openweb-ui"
+
+  stop:openwebui:
+    desc: Stop OpenWebUI service
+    cmds:
+      - task: stop
+        vars:
+          CLI_ARGS: "openweb-ui"
+
+  restart:openwebui:
+    desc: Restart OpenWebUI service
+    cmds:
+      - task: restart
+        vars:
+          CLI_ARGS: "openweb-ui"
+
+  logs:openwebui:
+    desc: Show OpenWebUI logs
+    cmds:
+      - task: logs
+        vars:
+          CLI_ARGS: "openweb-ui {{.CLI_ARGS}}"
+
+  mcps:openwebui:
+    desc: Show OpenWebUI MCP servers
+    summary: Display all MCP servers configured in OpenWebUI
+    cmds:
+      - |
+        COMPOSE_FILE="{{.SERVICES_DIR}}/openweb-ui/docker-compose.yml"
+        if [ ! -f "$COMPOSE_FILE" ]; then
+          echo "Error: docker-compose.yml not found for openweb-ui"
+          exit 1
+        fi
+        echo "OpenWebUI MCP Servers:"
+        echo "======================"
+        # Use yq to query all services starting with mcpo- and their ports
+        services=$(yq '.services | keys | .[] | select(. | startswith("mcpo-"))' "$COMPOSE_FILE" | tr -d '"')
+        while IFS= read -r service; do
+          if [ -z "$service" ]; then
+            continue
+          fi
+          # Get the container name for this service
+          container_name=$(yq ".services[\"$service\"].container_name" "$COMPOSE_FILE" 2>/dev/null | tr -d '"')
+          # Get the first port mapping for this service
+          port_mapping=$(yq ".services[\"$service\"].ports[0]" "$COMPOSE_FILE" 2>/dev/null | tr -d '"')
+          if [ -n "$port_mapping" ] && [ "$port_mapping" != "null" ]; then
+            # Extract host port from the mapping (format: "8001:8000")
+            host_port=$(echo "$port_mapping" | cut -d: -f1)
+            # Format service name for display
+            display_name=$(echo "$service" | sed 's/^mcpo-//' | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1')
+            # Use container name if available, otherwise use service name
+            host_name="${container_name:-$service}"
+            printf "  • %-20s → %s:%s\n" "$display_name" "$host_name" "$host_port"
+          fi
+        done <<< "$services"
+        echo ""
+        echo "Access MCP OpenAPI docs at:"
+        echo "  • http://<container-name>:<port>/docs"
+    silent: false
+
+  # Flame specific tasks
+  start:flame:
+    desc: Start Flame dashboard
+    cmds:
+      - task: start
+        vars:
+          CLI_ARGS: "flame"
+
+  stop:flame:
+    desc: Stop Flame dashboard
+    cmds:
+      - task: stop
+        vars:
+          CLI_ARGS: "flame"
+
+  restart:flame:
+    desc: Restart Flame dashboard
+    cmds:
+      - task: restart
+        vars:
+          CLI_ARGS: "flame"
+
+  logs:flame:
+    desc: Show Flame logs
+    cmds:
+      - task: logs
+        vars:
+          CLI_ARGS: "flame {{.CLI_ARGS}}"
+
+  # Owlistic specific tasks
+  start:owlistic:
+    desc: Start Owlistic service
+    cmds:
+      - task: start
+        vars:
+          CLI_ARGS: "owlistic"
+
+  stop:owlistic:
+    desc: Stop Owlistic service
+    cmds:
+      - task: stop
+        vars:
+          CLI_ARGS: "owlistic"
+
+  restart:owlistic:
+    desc: Restart Owlistic service
+    cmds:
+      - task: restart
+        vars:
+          CLI_ARGS: "owlistic"
+
+  logs:owlistic:
+    desc: Show Owlistic logs
+    cmds:
+      - task: logs
+        vars:
+          CLI_ARGS: "owlistic {{.CLI_ARGS}}"
+
+  # Graphiti MCP specific tasks
+  start:graphiti-mcp:
+    desc: Start Graphiti MCP service
+    cmds:
+      - task: start
+        vars:
+          CLI_ARGS: "graphiti-mcp"
+
+  stop:graphiti-mcp:
+    desc: Stop Graphiti MCP service
+    cmds:
+      - task: stop
+        vars:
+          CLI_ARGS: "graphiti-mcp"
+
+  restart:graphiti-mcp:
+    desc: Restart Graphiti MCP service
+    cmds:
+      - task: restart
+        vars:
+          CLI_ARGS: "graphiti-mcp"
+
+  logs:graphiti-mcp:
+    desc: Show Graphiti MCP logs
+    cmds:
+      - task: logs
+        vars:
+          CLI_ARGS: "graphiti-mcp {{.CLI_ARGS}}"
+
+  # Helper tasks
+  build:
+    desc: Build/rebuild a service
+    summary: |
+      Build or rebuild a Docker Compose service.
+      Usage: task services:build -- <service-name>
+    cmds:
+      - |
+        if [ -z "{{.CLI_ARGS}}" ]; then
+          echo "Usage: task services:build -- <service-name>"
+          exit 1
+        fi
+        SERVICE_NAME="{{.CLI_ARGS}}"
+        SERVICE_DIR="{{.SERVICES_DIR}}/$SERVICE_NAME"
+        if [ ! -d "$SERVICE_DIR" ]; then
+          echo "Error: Service '$SERVICE_NAME' not found in services directory"
+          exit 1
+        fi
+        cd "$SERVICE_DIR"
+        echo "Building $SERVICE_NAME..."
+        docker compose build
+    silent: false
+
+  pull:
+    desc: Pull latest images for a service
+    summary: |
+      Pull the latest Docker images for a service.
+      Usage: task services:pull -- <service-name>
+    cmds:
+      - |
+        if [ -z "{{.CLI_ARGS}}" ]; then
+          echo "Usage: task services:pull -- <service-name>"
+          exit 1
+        fi
+        SERVICE_NAME="{{.CLI_ARGS}}"
+        SERVICE_DIR="{{.SERVICES_DIR}}/$SERVICE_NAME"
+        if [ ! -d "$SERVICE_DIR" ]; then
+          echo "Error: Service '$SERVICE_NAME' not found in services directory"
+          exit 1
+        fi
+        cd "$SERVICE_DIR"
+        echo "Pulling latest images for $SERVICE_NAME..."
+        docker compose pull
+    silent: false
+
+  exec:
+    desc: Execute command in a service container
+    summary: |
+      Execute a command in a running service container.
+      Usage: task services:exec -- <service-name> <command>
+    cmds:
+      - |
+        SERVICE_NAME=$(echo "{{.CLI_ARGS}}" | awk '{print $1}')
+        if [ -z "$SERVICE_NAME" ]; then
+          echo "Usage: task services:exec -- <service-name> <command>"
+          exit 1
+        fi
+        SERVICE_DIR="{{.SERVICES_DIR}}/$SERVICE_NAME"
+        if [ ! -d "$SERVICE_DIR" ]; then
+          echo "Error: Service '$SERVICE_NAME' not found in services directory"
+          exit 1
+        fi
+        # Get command (everything after the first argument)
+        COMMAND=$(echo "{{.CLI_ARGS}}" | cut -d' ' -f2-)
+        if [ "$COMMAND" = "$SERVICE_NAME" ]; then
+          COMMAND="sh"
+        fi
+        cd "$SERVICE_DIR"
+        docker compose exec $SERVICE_NAME $COMMAND
+    silent: false
