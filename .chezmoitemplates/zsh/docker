@@ -4,13 +4,13 @@ function compose-app-start() {
   if [[ -z "$app_name" ]]; then
     echo "Usage: compose-app-start <app-name>"
     echo "Available apps:"
-    ls -d {{ .chezmoi.homeDir }}/.local/share/compose-apps/*/ 2>/dev/null | xargs -n1 basename | sort
+    ls -d {{ .chezmoi.homeDir }}/.local/share/services/*/ 2>/dev/null | xargs -n1 basename | sort
     return 1
   fi
 
-  local app_dir="{{ .chezmoi.homeDir }}/.local/share/compose-apps/$app_name"
+  local app_dir="{{ .chezmoi.homeDir }}/.local/share/services/$app_name"
   if [[ ! -d "$app_dir" ]]; then
-    echo "Error: App '$app_name' not found in compose-apps directory"
+    echo "Error: App '$app_name' not found in services directory"
     return 1
   fi
 
@@ -29,7 +29,7 @@ function compose-app-stop() {
   if [[ -z "$app_name" ]]; then
     echo "Usage: compose-app-stop <app-name>"
     echo "Running apps:"
-    for dir in {{ .chezmoi.homeDir }}/.local/share/compose-apps/*/; do
+    for dir in {{ .chezmoi.homeDir }}/.local/share/services/*/; do
       if [[ -d "$dir" ]]; then
         local name=$(basename "$dir")
         cd "$dir" 2>/dev/null && {
@@ -43,9 +43,9 @@ function compose-app-stop() {
     return 1
   fi
 
-  local app_dir="{{ .chezmoi.homeDir }}/.local/share/compose-apps/$app_name"
+  local app_dir="{{ .chezmoi.homeDir }}/.local/share/services/$app_name"
   if [[ ! -d "$app_dir" ]]; then
-    echo "Error: App '$app_name' not found in compose-apps directory"
+    echo "Error: App '$app_name' not found in services directory"
     return 1
   fi
 
@@ -57,7 +57,7 @@ function compose-app-stop() {
 
 function compose-app-status() {
   echo "Compose Apps Status:"
-  for dir in {{ .chezmoi.homeDir }}/.local/share/compose-apps/*/; do
+  for dir in {{ .chezmoi.homeDir }}/.local/share/services/*/; do
     if [[ -d "$dir" ]]; then
       local name=$(basename "$dir")
       cd "$dir" 2>/dev/null && {
@@ -89,9 +89,9 @@ function compose-app-logs() {
     return 1
   fi
 
-  local app_dir="{{ .chezmoi.homeDir }}/.local/share/compose-apps/$app_name"
+  local app_dir="{{ .chezmoi.homeDir }}/.local/share/services/$app_name"
   if [[ ! -d "$app_dir" ]]; then
-    echo "Error: App '$app_name' not found in compose-apps directory"
+    echo "Error: App '$app_name' not found in services directory"
     return 1
   fi
 
@@ -119,7 +119,7 @@ function openweb-ui-logs() {
 }
 
 function openweb-ui-mcps() {
-  local compose_file="{{ .chezmoi.homeDir }}/.local/share/compose-apps/openweb-ui/docker-compose.yml"
+  local compose_file="{{ .chezmoi.homeDir }}/.local/share/services/openweb-ui/docker-compose.yml"
 
   if [[ ! -f "$compose_file" ]]; then
     echo "Error: docker-compose.yml not found for openweb-ui"

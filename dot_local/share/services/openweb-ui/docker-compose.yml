@@ -126,7 +126,6 @@ services:
     environment:
       - MCP_HOST=0.0.0.0
       - MCP_PORT=8000
-      # Optional: Set to "true" to disable thought logging
       - DISABLE_THOUGHT_LOGGING=false
     restart: unless-stopped
     networks:
