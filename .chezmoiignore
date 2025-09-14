@@ -6,6 +6,7 @@ extensions
 Makefile
 .aider.chat.history.md
 .aider.input.history
+devbox.lock
 
 {{- if eq .chezmoi.os "linux" }}
 dot_raycast

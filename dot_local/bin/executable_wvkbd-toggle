@@ -1,0 +1,27 @@
+#!/bin/bash
+# Toggle wvkbd on-screen keyboard visibility
+# SIGUSR1 = hide keyboard
+# SIGUSR2 = show keyboard
+
+# Check if wvkbd is running
+if ! pgrep -x "wvkbd-mobintl" > /dev/null; then
+    # Start wvkbd if not running, then immediately hide it
+    wvkbd-mobintl -L 280 --fn "Victor Mono 20" -l simple,special,emoji &
+    sleep 0.5
+    pkill -SIGUSR1 wvkbd-mobintl  # Hide the keyboard
+    # Keyboard starts hidden, so don't create the state file
+    exit 0
+fi
+
+# Check current visibility state by looking for a state file
+STATE_FILE="/tmp/wvkbd-visible"
+
+if [ -f "$STATE_FILE" ]; then
+    # Keyboard is visible, hide it with SIGUSR1
+    pkill -SIGUSR1 wvkbd-mobintl
+    rm -f "$STATE_FILE"
+else
+    # Keyboard is hidden, show it with SIGUSR2
+    pkill -SIGUSR2 wvkbd-mobintl
+    touch "$STATE_FILE"
+fi

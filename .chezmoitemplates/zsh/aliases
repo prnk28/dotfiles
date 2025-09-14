@@ -12,7 +12,7 @@ alias gdi="ghid"
 
 # Shell & Terminal
 alias x="clear"
-alias update="exec zsh && tmux source {{ .chezmoi.homeDir }}/.tmux.conf && chezmoi apply && clear"
+alias update="refresh-global && source {{ .chezmoi.homeDir }}/.zshrc && exec zsh && tmux source {{ .chezmoi.homeDir }}/.tmux.conf && chezmoi apply && clear"
 alias change="cd $ENV_DIR && nvim"
 
 function q() {

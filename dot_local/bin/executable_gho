@@ -140,7 +140,4 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     echo ""
     echo "Running in subshell (directory change won't persist)..."
     gho
-else
-    # Script is being sourced, function is now available
-    echo "✅ gho function loaded! Use 'gho' to navigate repositories."
 fi

@@ -1,4 +1,5 @@
 old-dots
+devbox.lock
 .DS_Store
 .claude*
 .aider.chat.history.md
