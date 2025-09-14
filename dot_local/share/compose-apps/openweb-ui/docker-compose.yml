@@ -118,6 +118,25 @@ services:
     networks:
       - webui-network
 
+  # MCP Proxy Server - Obsidian
+  mcpo-obsidian:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcpo-obsidian
+    container_name: mcpo-obsidian
+    ports:
+      - "8004:8000" # Host:Container - Obsidian MCP proxy on port 8004
+    environment:
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=8000
+      # Obsidian configuration (using existing env vars)
+      - OBSIDIAN_API_KEY=${OBSIDIAN_API_KEY}
+      - OBSIDIAN_HOST=${OBSIDIAN_HOST}
+      - OBSIDIAN_PORT=${OBSIDIAN_PORT}
+    restart: unless-stopped
+    networks:
+      - webui-network
+
   # Alternative: Run GitHub MCP using Docker socket (requires Docker access)
   # mcpo-github-docker:
   #   build:

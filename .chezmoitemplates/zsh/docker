@@ -130,11 +130,18 @@ function openweb-ui-mcps() {
   echo "----------------------"
 
   # Use yq to query all services starting with mcpo- and their ports
-  local services=$(yq '.services | keys | .[] | select(. | startswith("mcpo-"))' "$compose_file")
+  local services=$(yq '.services | keys | .[] | select(. | startswith("mcpo-"))' "$compose_file" | tr -d '"')
 
-  for service in $services; do
-    # Get the first port mapping for this service (removing quotes)
-    local port_mapping=$(yq ".services.\"$service\".ports[0]" "$compose_file" | tr -d '"')
+  while IFS= read -r service; do
+    if [[ -z "$service" ]]; then
+      continue
+    fi
+
+    # Get the container name for this service
+    local container_name=$(yq ".services[\"$service\"].container_name" "$compose_file" 2>/dev/null | tr -d '"')
+
+    # Get the first port mapping for this service
+    local port_mapping=$(yq ".services[\"$service\"].ports[0]" "$compose_file" 2>/dev/null | tr -d '"')
 
     if [[ -n "$port_mapping" ]] && [[ "$port_mapping" != "null" ]]; then
       # Extract host port from the mapping (format: "8001:8000")
@@ -143,13 +150,16 @@ function openweb-ui-mcps() {
       # Format service name for display
       local display_name=$(echo "$service" | sed 's/^mcpo-//' | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1')
 
-      printf "  • %-15s → localhost:%s\n" "$display_name" "$host_port"
+      # Use container name if available, otherwise use service name
+      local host_name="${container_name:-$service}"
+
+      printf "  • %-15s → %s:%s\n" "$display_name" "$host_name" "$host_port"
     fi
-  done
+  done <<< "$services"
 
   echo ""
   echo "Access MCP OpenAPI docs at:"
-  echo "  • http://localhost:<port>/docs"
+  echo "  • http://<container-name>:<port>/docs"
 }
 
 function owlistic-start() {
