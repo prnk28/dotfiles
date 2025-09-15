@@ -32,7 +32,6 @@ require("toggleterm").setup {
 
 -- Register Devbox template for Overseer
 local overseer = require "overseer"
-
 overseer.register_template {
   name = "devbox",
   params = {
@@ -47,12 +46,9 @@ overseer.register_template {
       -- Look for devbox.json in the git root directory
       local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
       if vim.v.shell_error ~= 0 then return false, "Not in a git repository" end
-
       local devbox_file = git_root .. "/devbox.json"
       if vim.fn.filereadable(devbox_file) == 0 then return false, "No devbox.json found in git root" end
-
       if vim.fn.executable "devbox" == 0 then return false, "devbox command not found" end
-
       return true
     end,
   },
@@ -93,7 +89,6 @@ overseer.register_template {
         })
       end
     end
-
     -- Add a generic devbox shell task
     table.insert(ret, {
       name = "devbox shell",
@@ -105,7 +100,6 @@ overseer.register_template {
         }
       end,
     })
-
     cb(ret)
   end,
 }

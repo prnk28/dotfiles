@@ -2,8 +2,6 @@
 ---
 version: "3"
 silent: true
-vars:
-  KVN: 3a872e35b85c49bb8f5fe753198b5848
 tasks:
   default:
     cmds:
