@@ -385,3 +385,4 @@ tasks:
         cd "$SERVICE_DIR"
         docker compose exec $SERVICE_NAME $COMMAND
     silent: false
+
