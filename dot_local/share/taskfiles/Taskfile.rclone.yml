@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+---
+version: "3"
+silent: true
+vars:
+  CODE_ROOT:
+    sh: ghq root
+  GH_ROOT: "{{.CODE_ROOT}}/github.com"
+tasks:
+  sync:claude:*:*:
+    desc: Sync Claude files for a specific repo
+    vars:
+      ORG: "{{index .MATCH 0}}"
+      REPO: "{{index .MATCH 1}}"
+    dir: "{{.GH_ROOT}}/{{.ORG}}/{{.REPO}}"
+    sources:
+      - .claude
+    cmds:
+      - rclone sync r2:claude .claude
+    status:
+      - test -d .claude
+
+  copy:claude:*:*:
+    desc: Copy Claude files for a specific repo
+    vars:
+      ORG: "{{index .MATCH 0}}"
+      REPO: "{{index .MATCH 1}}"
+    dir: "{{.GH_ROOT}}/{{.ORG}}/{{.REPO}}"
+    generates:
+      - .claude
+    cmds:
+      - rclone copy r2:claude .claude
+    status:
+      - test -d .claude || exit 1
