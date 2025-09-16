@@ -318,6 +318,12 @@ function ghdocdl() {
   gum log --level info "Current directory" path "$PWD"
 }
 
+function rga() {
+  local rg_command=$(git ls-files | mods "$(gum input --header 'What would you like to filter by?')" -R rg-assistant -f bash -r)
+  gum confirm "Do you want to run the command?" || return
+  eval "$rg_command"
+}
+
 # ============================================
 # Development Tools
 # ============================================
@@ -385,6 +391,7 @@ function docker-nuke() {
 
   echo "✅ Docker environment has been nuked! Only Kubernetes and BuilderKit related resources remain."
 }
+
 function docker-compose-up() {
   local compose_file="$1"
   
@@ -747,9 +754,6 @@ alias ght='git_root=$(git rev-parse --show-toplevel 2>/dev/null) && taskfile="$g
 ## [Completion]
 ## Completion scripts setup. Remove the following line to uninstall
 [[ -f {{ .chezmoi.homeDir }}/.config/.dart-cli-completion/zsh-config.zsh ]] && . {{ .chezmoi.homeDir }}/.config/.dart-cli-completion/zsh-config.zsh || true
-## [/Completion]
-{{ end -}}
-
 
 function sesh-sessions() {
   {
@@ -767,5 +771,8 @@ zle     -N             sesh-sessions
 bindkey -M emacs '\es' sesh-sessions
 bindkey -M vicmd '\es' sesh-sessions
 bindkey -M viins '\es' sesh-sessions
+
+{{ end -}}
+
 
 

@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# Script which uses cariddi, mods, markitdown,
+
+set -e # Exit on any error
+
+# Configuration
+NOTES_PATH="/home/prad/Notes/1 - Inbox/"
+
+crwldir=$(mktemp -d)
+urls_file="$crwldir/urls.txt"
+
+# Function to check if gum is installed
+check_gum() {
+    if ! command -v gum &>/dev/null; then
+        echo "ERROR: gum is not installed. Please install it first:"
+        echo "Arch Linux: sudo pacman -S gum"
+        echo "Or: yay -S gum"
+        exit 1
+    fi
+}
+
+# Use gum input to collect multi line urls then create use mktemp
+# to create a directory to store the urls.txt file
+collect_urls() {
+    log_info "Collecting URLs"
+    echo
+
+    gum style --foreground 212 --border-foreground 212 --border double \
+        --align center --width 60 --margin "1 2" --padding "1 2" \
+        "URL Collection" \
+        "Enter URLs to scrape"
+
+    echo
+
+    gum input --prompt "URLs to scrape:" --placeholder "e.g., https://taskfile.dev https://docs.cosmos.network" >"$urls_file"
+    log_success "URLs collected" "$(wc -l <"$urls_file")"
+}
+
+# Function to crawl the urls and create a directory for each url
+crawl_urls() {
+    log_info "Crawling URLs"
+    echo
+    cat "$urls_file" | cariddi -info
+}
+
+# Main execution
+main() {
+    check_gum
+    gum style --foreground 212 --border-foreground 212 --border thick \
+        --align center --width 70 --margin "1 2" --padding "2 4" \
+        "Markdown Website Scraper"
+    collect_urls
+    crawl_urls
+
+    log_success "All operations completed successfully!"
+}
+
+# Function to log messages using gum [1]
+log_info() {
+    gum log --structured --level info "$1"
+}
+log_success() {
+    gum log --structured --level info --time kitchen "✅ $1"
+}
+log_warning() {
+    gum log --structured --level warn "$1"
+}
+log_error() {
+    gum log --structured --level error "$1"
+}
+log_debug() {
+    gum log --structured --level debug "$1"
+}
+
+# Run main function
+main "$@"
