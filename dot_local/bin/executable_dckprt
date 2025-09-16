@@ -1,0 +1,431 @@
+#!/bin/bash
+
+# Script to partition a 2TB drive into 10 partitions for Docker volumes
+# Target drive: /run/media/prad/Drive
+
+set -e # Exit on any error
+
+# Configuration
+DRIVE_PATH="/run/media/prad/Drive"
+DEVICE=""
+PARTITION_COUNT=10
+FILESYSTEM="ext4"
+MOUNT_BASE="/var/lib"
+
+# Array to store volume names
+declare -a VOLUME_NAMES
+
+# Function to log messages using gum [1]
+log_info() {
+    gum log --structured --level info "$1"
+}
+
+log_success() {
+    gum log --structured --level info --time kitchen "✅ $1"
+}
+
+log_warning() {
+    gum log --structured --level warn "$1"
+}
+
+log_error() {
+    gum log --structured --level error "$1"
+}
+
+log_debug() {
+    gum log --structured --level debug "$1"
+}
+
+# Function to check if gum is installed
+check_gum() {
+    if ! command -v gum &>/dev/null; then
+        echo "ERROR: gum is not installed. Please install it first:"
+        echo "Arch Linux: sudo pacman -S gum"
+        echo "Or: yay -S gum"
+        exit 1
+    fi
+}
+
+# Function to collect volume names using gum [1]
+collect_volume_names() {
+    log_info "Collecting volume names for $PARTITION_COUNT partitions"
+    echo
+
+    gum style --foreground 212 --border-foreground 212 --border double \
+        --align center --width 60 --margin "1 2" --padding "1 2" \
+        "Docker Volume Configuration" \
+        "Enter names for $PARTITION_COUNT volumes"
+
+    echo
+
+    for ((i = 1; i <= PARTITION_COUNT; i++)); do
+        local volume_name
+        while true; do
+            volume_name=$(gum input \
+                --prompt "Volume $i name: " \
+                --placeholder "e.g., mysql-data, redis-cache, app-logs" \
+                --width 50)
+
+            # Validate volume name (alphanumeric, hyphens, underscores only)
+            if [[ "$volume_name" =~ ^[a-zA-Z0-9_-]+$ ]] && [[ ${#volume_name} -gt 0 ]]; then
+                # Check for duplicates
+                local duplicate=false
+                for existing in "${VOLUME_NAMES[@]}"; do
+                    if [[ "$existing" == "$volume_name" ]]; then
+                        duplicate=true
+                        break
+                    fi
+                done
+
+                if [[ "$duplicate" == true ]]; then
+                    gum style --foreground 196 "❌ Volume name '$volume_name' already used. Please choose a different name."
+                    log_warning "Duplicate volume name rejected: $volume_name"
+                else
+                    VOLUME_NAMES+=("$volume_name")
+                    gum style --foreground 82 "✅ Added volume: $volume_name"
+                    log_info "Added volume name: $volume_name"
+                    break
+                fi
+            else
+                gum style --foreground 196 "❌ Invalid name. Use only letters, numbers, hyphens, and underscores."
+                log_warning "Invalid volume name rejected: $volume_name"
+            fi
+        done
+    done
+
+    echo
+    gum style --foreground 99 --border-foreground 99 --border rounded \
+        --align center --width 60 --margin "1 2" --padding "1 2" \
+        "Volume Summary" \
+        "$(printf '%s\n' "${VOLUME_NAMES[@]}")"
+
+    echo
+    if ! gum confirm "Continue with these volume names?"; then
+        log_info "User requested to restart volume name collection"
+        VOLUME_NAMES=()
+        collect_volume_names
+    fi
+
+    log_success "Volume names collection completed"
+}
+
+# Function to find the device from mount point
+find_device() {
+    log_info "Detecting device for mount path: $DRIVE_PATH"
+
+    DEVICE=$(df "$DRIVE_PATH" | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//')
+    if [[ -z "$DEVICE" ]]; then
+        log_error "Could not determine device for $DRIVE_PATH"
+        exit 1
+    fi
+
+    log_success "Found device: $DEVICE"
+}
+
+# Function to check if running as root
+check_root() {
+    if [[ $EUID -ne 0 ]]; then
+        log_error "This script must be run as root (use sudo)"
+        exit 1
+    fi
+    log_debug "Root privileges confirmed"
+}
+
+# Function to check prerequisites
+check_prerequisites() {
+    log_info "Checking system prerequisites"
+
+    local missing_tools=()
+
+    for tool in parted mkfs.ext4 lsblk; do
+        if ! command -v "$tool" &>/dev/null; then
+            missing_tools+=("$tool")
+        fi
+    done
+
+    if [[ ${#missing_tools[@]} -gt 0 ]]; then
+        log_error "Missing required tools: ${missing_tools[*]}"
+        log_info "Install with: pacman -S parted e2fsprogs util-linux"
+        exit 1
+    fi
+
+    log_success "All prerequisites satisfied"
+}
+
+# Function to confirm the operation
+confirm_operation() {
+    echo
+    log_warning "Preparing to show destruction warning for device: $DEVICE"
+
+    gum style --foreground 196 --border-foreground 196 --border thick \
+        --align center --width 80 --margin "1 2" --padding "2 4" \
+        "⚠️  DANGER ZONE ⚠️" \
+        "This will DESTROY ALL DATA on $DEVICE" \
+        "Current partition layout shown below:"
+
+    echo
+    lsblk "$DEVICE"
+    echo
+
+    local mount_summary=""
+    for ((i = 0; i < ${#VOLUME_NAMES[@]}; i++)); do
+        mount_summary+="/var/lib/${VOLUME_NAMES[$i]}\n"
+    done
+
+    gum style --foreground 99 --border-foreground 99 --border rounded \
+        --align left --width 60 --margin "1 2" --padding "1 2" \
+        "Volumes will be mounted at:" \
+        "$(echo -e "$mount_summary")"
+
+    echo
+    if ! gum confirm "Are you absolutely sure you want to DESTROY all data and continue?"; then
+        log_info "Operation cancelled by user"
+        exit 0
+    fi
+
+    log_warning "User confirmed data destruction - proceeding with partitioning"
+}
+
+# Function to unmount all partitions on the device
+unmount_partitions() {
+    log_info "Checking for mounted partitions on $DEVICE"
+
+    # Get all mounted partitions for this device
+    local mounted_partitions
+    mounted_partitions=$(mount | grep "^$DEVICE" | awk '{print $1}' || true)
+
+    if [[ -n "$mounted_partitions" ]]; then
+        while IFS= read -r partition; do
+            log_info "Unmounting partition: $partition"
+            umount "$partition" 2>/dev/null || true
+        done <<<"$mounted_partitions"
+    else
+        log_debug "No mounted partitions found on $DEVICE"
+    fi
+
+    # Additional safety check
+    if mount | grep -q "^$DEVICE"; then
+        log_error "Some partitions are still mounted. Please unmount manually and try again"
+        mount | grep "^$DEVICE"
+        exit 1
+    fi
+
+    log_success "All partitions unmounted successfully"
+}
+
+# Function to create partition table and partitions
+create_partitions() {
+    log_info "Creating new GPT partition table on $DEVICE"
+    parted -s "$DEVICE" mklabel gpt
+    log_success "GPT partition table created"
+
+    # Calculate partition size (leaving some space for alignment)
+    # 2TB = ~1863GB usable, so ~186GB per partition
+    local start_sector="1MB"
+
+    log_info "Creating $PARTITION_COUNT partitions"
+
+    for ((i = 1; i <= PARTITION_COUNT; i++)); do
+        local end_sector="${i}86GB"
+        if [[ $i -eq $PARTITION_COUNT ]]; then
+            end_sector="100%" # Use remaining space for last partition
+        fi
+
+        log_info "Creating partition $i for volume '${VOLUME_NAMES[$((i - 1))]}'"
+        parted -s "$DEVICE" mkpart primary "$start_sector" "$end_sector"
+
+        start_sector="$end_sector"
+    done
+
+    log_info "Informing kernel of partition table changes"
+    # Inform kernel of partition table changes
+    partprobe "$DEVICE"
+    sleep 2
+
+    log_success "All partitions created successfully"
+}
+
+# Function to format partitions
+format_partitions() {
+    log_info "Starting filesystem formatting with $FILESYSTEM"
+
+    for ((i = 1; i <= PARTITION_COUNT; i++)); do
+        local partition="${DEVICE}${i}"
+        local volume_name="${VOLUME_NAMES[$((i - 1))]}"
+
+        # Handle nvme drives (e.g., /dev/nvme0n1p1 instead of /dev/nvme0n11)
+        if [[ "$DEVICE" == *"nvme"* ]]; then
+            partition="${DEVICE}p${i}"
+        fi
+
+        log_info "Formatting $partition for volume '$volume_name'"
+        mkfs.ext4 -F -L "$volume_name" "$partition" >/dev/null 2>&1
+        log_success "Formatted $partition as $FILESYSTEM with label '$volume_name'"
+    done
+
+    log_success "All partitions formatted successfully"
+}
+
+# Function to create mount points
+create_mount_points() {
+    log_info "Creating mount points in $MOUNT_BASE"
+
+    for volume_name in "${VOLUME_NAMES[@]}"; do
+        local mount_point="${MOUNT_BASE}/${volume_name}"
+        mkdir -p "$mount_point"
+        log_debug "Created mount point: $mount_point"
+    done
+
+    log_success "All mount points created"
+}
+
+# Function to create fstab entries
+create_fstab_entries() {
+    log_info "Creating fstab entries for persistent mounting"
+
+    local fstab_backup="/etc/fstab.backup.$(date +%Y%m%d_%H%M%S)"
+    cp /etc/fstab "$fstab_backup"
+    log_info "Backed up fstab to: $fstab_backup"
+
+    echo "" >>/etc/fstab
+    echo "# Docker volume partitions - Created $(date)" >>/etc/fstab
+
+    for ((i = 1; i <= PARTITION_COUNT; i++)); do
+        local partition="${DEVICE}${i}"
+        local volume_name="${VOLUME_NAMES[$((i - 1))]}"
+
+        if [[ "$DEVICE" == *"nvme"* ]]; then
+            partition="${DEVICE}p${i}"
+        fi
+
+        local mount_point="${MOUNT_BASE}/${volume_name}"
+        local uuid
+        uuid=$(blkid -s UUID -o value "$partition")
+
+        echo "UUID=$uuid $mount_point $FILESYSTEM defaults,noatime 0 2" >>/etc/fstab
+        log_debug "Added fstab entry: $partition -> $mount_point"
+    done
+
+    log_success "fstab entries created for all volumes"
+}
+
+# Function to mount all partitions
+mount_partitions() {
+    log_info "Mounting all partitions"
+
+    for volume_name in "${VOLUME_NAMES[@]}"; do
+        local mount_point="${MOUNT_BASE}/${volume_name}"
+        mount "$mount_point"
+        log_success "Mounted volume: $mount_point"
+    done
+
+    log_success "All partitions mounted successfully"
+}
+
+# Function to set permissions for Docker
+set_permissions() {
+    log_info "Configuring permissions for Docker usage"
+
+    # Create docker group if it doesn't exist
+    if ! getent group docker >/dev/null 2>&1; then
+        groupadd docker
+        log_info "Created docker group"
+    else
+        log_debug "Docker group already exists"
+    fi
+
+    # Set ownership and permissions
+    for volume_name in "${VOLUME_NAMES[@]}"; do
+        local mount_point="${MOUNT_BASE}/${volume_name}"
+        chown root:docker "$mount_point"
+        chmod 775 "$mount_point"
+        log_debug "Set permissions for: $mount_point"
+    done
+
+    log_success "Permissions configured for all volumes"
+}
+
+# Function to display summary
+display_summary() {
+    echo
+    gum style --foreground 82 --border-foreground 82 --border double \
+        --align center --width 80 --margin "1 2" --padding "2 4" \
+        "🎉 PARTITIONING COMPLETE 🎉"
+
+    echo
+    log_info "Partitioning operation completed successfully"
+    log_info "Drive: $DEVICE"
+    log_info "Partitions created: $PARTITION_COUNT"
+    log_info "Filesystem: $FILESYSTEM"
+    echo
+
+    gum log --structured --level info "Volume mappings created:"
+    for ((i = 0; i < ${#VOLUME_NAMES[@]}; i++)); do
+        local partition_num=$((i + 1))
+        local partition="${DEVICE}${partition_num}"
+        if [[ "$DEVICE" == *"nvme"* ]]; then
+            partition="${DEVICE}p${partition_num}"
+        fi
+        echo "  ${partition} -> /var/lib/${VOLUME_NAMES[$i]}"
+    done
+
+    echo
+    log_info "Current partition layout:"
+    lsblk "$DEVICE"
+    echo
+
+    log_info "Mounted volumes:"
+    for volume_name in "${VOLUME_NAMES[@]}"; do
+        df -h "/var/lib/$volume_name" 2>/dev/null || echo "  /var/lib/$volume_name (mounting...)"
+    done
+
+    echo
+    gum style --foreground 99 --border-foreground 99 --border rounded \
+        --align left --width 70 --margin "1 2" --padding "1 2" \
+        "Usage Examples:" \
+        "Create Docker volumes manually:" \
+        "  docker volume create --driver local --opt type=none --opt o=bind --opt device=/var/lib/${VOLUME_NAMES[0]} ${VOLUME_NAMES[0]}" \
+        "" \
+        "Use in Docker containers:" \
+        "  docker run -v /var/lib/${VOLUME_NAMES[0]}:/app/data nginx" \
+        "  docker run -v /var/lib/${VOLUME_NAMES[1]}:/var/lib/mysql mysql"
+
+    log_success "Setup complete! Volumes are ready for Docker usage"
+}
+
+# Main execution
+main() {
+    gum style --foreground 212 --border-foreground 212 --border thick \
+        --align center --width 70 --margin "1 2" --padding "2 4" \
+        "🐳 Docker Volume Drive Partitioner 🐳" \
+        "Preparing $PARTITION_COUNT partitions for Docker volumes"
+
+    echo
+    log_info "Starting Docker volume drive partitioner"
+
+    check_root
+    check_gum
+    check_prerequisites
+
+    if [[ ! -d "$DRIVE_PATH" ]]; then
+        log_error "Drive path $DRIVE_PATH does not exist"
+        exit 1
+    fi
+
+    collect_volume_names
+    find_device
+    confirm_operation
+    unmount_partitions
+    create_partitions
+    format_partitions
+    create_mount_points
+    create_fstab_entries
+    mount_partitions
+    set_permissions
+    display_summary
+
+    log_success "All operations completed successfully!"
+}
+
+# Run main function
+main "$@"

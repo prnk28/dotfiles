@@ -382,6 +382,7 @@ return {
         ["K"] = { function() vim.diagnostic.goto_prev() end, desc = "Previous Diagnostic" },
         ["J"] = { function() vim.diagnostic.goto_next() end, desc = "Next Diagnostic" },
         ["vv"] = { "gg0VG$", desc = "Select all contents in buffer" },
+        ["T"] = { "gg", desc = "Go to top of file" },
 
         ["<C-f>r"] = {
           _G.Scooter_toggle,
