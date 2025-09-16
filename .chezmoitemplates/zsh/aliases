@@ -148,8 +148,7 @@ alias /g="gemini"
 alias /m="mods"
 alias /o="opencode"
 alias /v="npx vibe-kanban"
-
-alias @c="ssh -C code"
+alias oc="opencode"
 
 # npm/pnpm aliases
 alias p="pnpm"
