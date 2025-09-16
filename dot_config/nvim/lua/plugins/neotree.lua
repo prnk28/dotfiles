@@ -203,6 +203,8 @@ return {
           hide_dotfiles = false,
           hide_gitignored = true,
           hide_by_pattern = {
+            "*-compose.yml",
+            "*-compose.yaml",
             "chain_*.json",
             "Library",
             ".typecopy",
