@@ -72,3 +72,37 @@ function graphiti-mcp-restart() {
 function graphiti-mcp-logs() {
   task -g services:logs:graphiti-mcp -- "$@"
 }
+
+# Convenience functions for n8n
+function n8n-start() {
+  task -g services:start:n8n
+}
+
+function n8n-stop() {
+  task -g services:stop:n8n
+}
+
+function n8n-restart() {
+  task -g services:restart:n8n
+}
+
+function n8n-logs() {
+  task -g services:logs:n8n -- "$@"
+}
+
+# Convenience functions for Twenty CRM
+function twenty-start() {
+  task -g services:start:twenty
+}
+
+function twenty-stop() {
+  task -g services:stop:twenty
+}
+
+function twenty-restart() {
+  task -g services:restart:twenty
+}
+
+function twenty-logs() {
+  task -g services:logs:twenty -- "$@"
+}

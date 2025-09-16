@@ -316,6 +316,64 @@ tasks:
         vars:
           CLI_ARGS: "graphiti-mcp {{.CLI_ARGS}}"
 
+  # n8n specific tasks
+  start:n8n:
+    desc: Start n8n workflow automation
+    cmds:
+      - task: start
+        vars:
+          CLI_ARGS: "n8n"
+
+  stop:n8n:
+    desc: Stop n8n workflow automation
+    cmds:
+      - task: stop
+        vars:
+          CLI_ARGS: "n8n"
+
+  restart:n8n:
+    desc: Restart n8n workflow automation
+    cmds:
+      - task: restart
+        vars:
+          CLI_ARGS: "n8n"
+
+  logs:n8n:
+    desc: Show n8n logs
+    cmds:
+      - task: logs
+        vars:
+          CLI_ARGS: "n8n {{.CLI_ARGS}}"
+
+  # Twenty CRM specific tasks
+  start:twenty:
+    desc: Start Twenty CRM service
+    cmds:
+      - task: start
+        vars:
+          CLI_ARGS: "twenty"
+
+  stop:twenty:
+    desc: Stop Twenty CRM service
+    cmds:
+      - task: stop
+        vars:
+          CLI_ARGS: "twenty"
+
+  restart:twenty:
+    desc: Restart Twenty CRM service
+    cmds:
+      - task: restart
+        vars:
+          CLI_ARGS: "twenty"
+
+  logs:twenty:
+    desc: Show Twenty CRM logs
+    cmds:
+      - task: logs
+        vars:
+          CLI_ARGS: "twenty {{.CLI_ARGS}}"
+
   # Helper tasks
   build:
     desc: Build/rebuild a service
