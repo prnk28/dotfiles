@@ -1,17 +1,41 @@
 [user]
 	name = Prad Nukala
 	email = prad@sonr.io
+	editor = nvim
+	pager = diffnav
 
+{{ if eq .chezmoi.os "darwin" -}}
 [credential "https://github.com"]
-	helper =
 	helper = !/home/prad/.local/share/devbox/global/default/.devbox/nix/profile/default/bin/gh auth git-credential
 
 [credential "https://gist.github.com"]
-	helper =
 	helper = !/home/prad/.local/share/devbox/global/default/.devbox/nix/profile/default/bin/gh auth git-credential[core]
 
+[ghq]
+	root = /Users/prad/Developer
+
+[ghq "https://github.com/sonr-io"]
+	vcs = git
+	root = /Users/prad/Developer/github.com/sonr-io
+{{ end -}}
+
+{{ if eq .chezmoi.os "linux" -}}
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper = !/usr/bin/gh auth git-credential
 	editor = nvim
 	pager = diffnav
+
+[ghq]
+	root = /home/prad/code
+
+[ghq "https://github.com/sonr-io"]
+	vcs = git
+	root = /home/prad/code/github.com/sonr-io
+{{ end -}}
 
 [interactive]
 	diffFilter = diffnav
@@ -29,13 +53,6 @@
 
 [merge]
 	conflictstyle = zdiff3
-
-[ghq]
-	root = /home/prad/code
-
-[ghq "https://github.com/sonr-io"]
-	vcs = git
-	root = /home/prad/code/sonr-io
 
 [filter "lfs"]
 	process = git-lfs filter-process
