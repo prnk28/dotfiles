@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=OpenWebUI
+Comment=OpenWebUI
+Exec=omarchy-launch-webapp http://localhost:3000
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Cloudflare R2.png
+StartupNotify=true
