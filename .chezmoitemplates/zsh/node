@@ -7,8 +7,16 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 export PNPM_HOME="{{ .chezmoi.homeDir }}/Library/pnpm"
 {{ else -}}
 export PNPM_HOME="{{ .chezmoi.homeDir }}/.local/share/pnpm"
+export PNPM_HOME="/home/prad/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 {{ end -}}
-export PATH="$PNPM_HOME:$PATH"
 
 export PATH="{{ .chezmoi.homeDir }}/.deno/bin:$PATH"
 [[ -s "{{ .chezmoi.homeDir }}/.deno/env" ]] && source "{{ .chezmoi.homeDir }}/.deno/env"
