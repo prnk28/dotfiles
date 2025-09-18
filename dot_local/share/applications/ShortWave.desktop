@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=ShortWave
+Comment=ShortWave
+Exec=omarchy-launch-webapp http://app.shortwave.com
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/ShortWave.png
+StartupNotify=true

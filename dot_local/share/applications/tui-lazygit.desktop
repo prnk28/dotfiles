@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Name=Lazygit
-Comment=Lazygit
-Exec=alacritty --class TUI.tile -e lazygit
-Terminal=false
-Type=Application
-Icon=/home/prad/.local/share/applications/icons/GitHub.png
-StartupNotify=true

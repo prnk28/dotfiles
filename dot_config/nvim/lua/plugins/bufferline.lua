@@ -43,7 +43,8 @@ return {
 
             -- Module groups
             {
-              name = "DEX",
+              name = "",
+              auto_close = true,
               highlight = { fg = "#5ef1ff" },
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
@@ -52,6 +53,7 @@ return {
             },
             {
               name = "DID",
+              auto_close = true,
               highlight = { fg = "#5ef1ff" },
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
@@ -60,6 +62,7 @@ return {
             },
             {
               name = "DWN",
+              auto_close = true,
               highlight = { fg = "#5ef1ff" },
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
@@ -69,6 +72,7 @@ return {
             {
               name = "SVC",
               highlight = { fg = "#5ef1ff" },
+              auto_close = true,
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)
                 return bufname:match "x/svc/.*%.go$" or bufname:match "proto/svc/.*%.proto$"
@@ -78,6 +82,7 @@ return {
             -- Tests
             {
               name = "Tests",
+              auto_close = true,
               highlight = { fg = "#ff5ea0" },
               matcher = function(buf)
                 local bufname = vim.api.nvim_buf_get_name(buf.id)

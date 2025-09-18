@@ -204,6 +204,7 @@ return {
         "lsp", -- highest priority is getting workspace from running language servers
         { ".git", "_darcs", ".hg", ".bzr", ".svn" }, -- next check for a version controlled parent directory
         {
+          "go.work",
           "package.json",
           "lua",
           "Cargo.toml",
@@ -219,7 +220,7 @@ return {
       -- automatically update working directory (update manually with `:AstroRoot`)
       autochdir = true,
       -- scope of working directory to change ("global"|"tab"|"win")
-      scope = "global", -- Changed from "win" to "global" to make directory changes apply globally
+      scope = "win", -- Changed from "win" to "global" to make directory changes apply globally
       -- show notification on every working directory change
       notify = false,
     },
