@@ -1,0 +1,344 @@
+#!/bin/bash
+
+# curlog - Download the best dashboard icon from websites
+# Usage: curlog <url>
+# Prioritizes Apple Touch Icons and high-resolution icons suitable for dashboard use
+
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Function to print colored output
+print_status() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+print_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Function to show usage
+show_usage() {
+    echo "Usage: $0 <url>"
+    echo "Downloads the best dashboard icon from the specified URL"
+    echo "Prioritizes Apple Touch Icons and high-resolution icons suitable for dashboard use"
+    echo ""
+    echo "Examples:"
+    echo "  $0 https://github.com"
+    echo "  $0 https://twitter.com"
+    exit 1
+}
+
+# Function to validate URL
+validate_url() {
+    local url="$1"
+    if [[ ! "$url" =~ ^https?:// ]]; then
+        print_error "Invalid URL format. Please include http:// or https://"
+        exit 1
+    fi
+}
+
+# Function to extract domain from URL
+get_domain() {
+    local url="$1"
+    echo "$url" | sed -E 's|^https?://([^/]+).*|\1|'
+}
+
+# Function to resolve relative URLs
+resolve_url() {
+    local base_url="$1"
+    local relative_url="$2"
+
+    # If already absolute URL, return as-is
+    if [[ "$relative_url" =~ ^https?:// ]]; then
+        echo "$relative_url"
+        return
+    fi
+
+    # Remove trailing slash from base URL
+    base_url="${base_url%/}"
+
+    # Handle protocol-relative URLs
+    if [[ "$relative_url" =~ ^// ]]; then
+        local protocol=$(echo "$base_url" | sed -E 's|^(https?)://.*|\1|')
+        echo "${protocol}:${relative_url}"
+        return
+    fi
+
+    # Handle absolute paths
+    if [[ "$relative_url" =~ ^/ ]]; then
+        local base_domain=$(echo "$base_url" | sed -E 's|^(https?://[^/]+).*|\1|')
+        echo "${base_domain}${relative_url}"
+        return
+    fi
+
+    # Handle relative paths
+    echo "${base_url}/${relative_url}"
+}
+
+# Function to download image
+download_image() {
+    local url="$1"
+    local filename="$2"
+    local description="$3"
+
+    print_status "Downloading $description: $url"
+
+    if curl -sL --fail --max-time 30 -o "$filename" "$url"; then
+        # Check if file is actually an image by checking file size and basic validation
+        if [[ -s "$filename" ]]; then
+            local file_type=$(file --brief --mime-type "$filename" 2>/dev/null || echo "unknown")
+            if [[ "$file_type" =~ ^image/ ]]; then
+                print_success "Downloaded $description: $filename"
+                return 0
+            else
+                print_warning "Downloaded file doesn't appear to be an image (type: $file_type)"
+                rm -f "$filename"
+                return 1
+            fi
+        else
+            print_warning "Downloaded file is empty"
+            rm -f "$filename"
+            return 1
+        fi
+    else
+        print_warning "Failed to download $description from: $url"
+        rm -f "$filename"
+        return 1
+    fi
+}
+
+# Function to extract size from sizes attribute
+extract_size() {
+    local sizes="$1"
+    # Extract the largest dimension (e.g., "180x180" -> 180, "any" -> 0)
+    if [[ "$sizes" == "any" ]]; then
+        echo "999" # Treat "any" as highest priority
+    else
+        echo "$sizes" | grep -o '[0-9]\+' | head -1 | grep -o '[0-9]\+' || echo "0"
+    fi
+}
+
+# Function to find the best dashboard icon
+find_best_dashboard_icon() {
+    local html="$1"
+    local base_url="$2"
+    local domain="$3"
+
+    print_status "Searching for the best dashboard icon..."
+
+    # Create temporary file to store icon candidates
+    local temp_file=$(mktemp)
+
+    # Look for Apple Touch Icons with sizes
+    echo "$html" | grep -io '<link[^>]*rel="apple-touch-icon[^"]*"[^>]*>' | while read -r line; do
+        local href=$(echo "$line" | sed -n 's/.*href="\([^"]*\)".*/\1/p')
+        local sizes=$(echo "$line" | sed -n 's/.*sizes="\([^"]*\)".*/\1/p')
+        if [[ -z "$sizes" ]]; then
+            sizes="180" # Default Apple Touch Icon size
+        fi
+        local size_num=$(extract_size "$sizes")
+        echo "$size_num|apple-touch-icon|$href|$sizes" >>"$temp_file"
+    done
+
+    # Look for Apple Touch Icon precomposed
+    echo "$html" | grep -io '<link[^>]*rel="apple-touch-icon-precomposed"[^>]*>' | while read -r line; do
+        local href=$(echo "$line" | sed -n 's/.*href="\([^"]*\)".*/\1/p')
+        local sizes=$(echo "$line" | sed -n 's/.*sizes="\([^"]*\)".*/\1/p')
+        if [[ -z "$sizes" ]]; then
+            sizes="180" # Default Apple Touch Icon size
+        fi
+        local size_num=$(extract_size "$sizes")
+        echo "$size_num|apple-touch-icon-precomposed|$href|$sizes" >>"$temp_file"
+    done
+
+    # Look for regular icons with sizes (good for dashboard)
+    echo "$html" | grep -io '<link[^>]*rel="icon"[^>]*>' | while read -r line; do
+        local href=$(echo "$line" | sed -n 's/.*href="\([^"]*\)".*/\1/p')
+        local sizes=$(echo "$line" | sed -n 's/.*sizes="\([^"]*\)".*/\1/p')
+        local type=$(echo "$line" | sed -n 's/.*type="\([^"]*\)".*/\1/p')
+
+        # Prefer PNG icons for dashboard use
+        if [[ "$type" =~ png ]] || [[ "$href" =~ \.png$ ]]; then
+            if [[ -n "$sizes" && "$sizes" != "" ]]; then
+                local size_num=$(extract_size "$sizes")
+                # Only consider reasonably sized icons (32px and above)
+                if [[ $size_num -ge 32 ]]; then
+                    echo "$size_num|icon-png|$href|$sizes" >>"$temp_file"
+                fi
+            fi
+        fi
+    done
+
+    # Look for shortcut icons
+    echo "$html" | grep -io '<link[^>]*rel="shortcut icon"[^>]*>' | while read -r line; do
+        local href=$(echo "$line" | sed -n 's/.*href="\([^"]*\)".*/\1/p')
+        local type=$(echo "$line" | sed -n 's/.*type="\([^"]*\)".*/\1/p')
+
+        # Only include if it's PNG and likely to be good quality
+        if [[ "$type" =~ png ]] || [[ "$href" =~ \.png$ ]]; then
+            echo "64|shortcut-icon|$href|default" >>"$temp_file"
+        fi
+    done
+
+    # Sort by size (descending) and pick the best one
+    local best_icon
+    if [[ -s "$temp_file" ]]; then
+        best_icon=$(sort -t'|' -k1,1nr "$temp_file" | head -1)
+        rm -f "$temp_file"
+
+        local size=$(echo "$best_icon" | cut -d'|' -f1)
+        local type=$(echo "$best_icon" | cut -d'|' -f2)
+        local href=$(echo "$best_icon" | cut -d'|' -f3)
+        local sizes_attr=$(echo "$best_icon" | cut -d'|' -f4)
+
+        print_status "Found best icon: $type (${sizes_attr}) - size priority: $size"
+
+        local resolved_url=$(resolve_url "$base_url" "$href")
+        local extension="${resolved_url##*.}"
+
+        # Determine best extension for dashboard icon
+        if [[ ${#extension} -gt 4 ]] || [[ ! "$extension" =~ ^(jpg|jpeg|png|gif|webp|ico|svg)$ ]]; then
+            extension="png" # Default to PNG for icons
+        fi
+
+        local filename="${domain}.${extension}"
+        download_image "$resolved_url" "$filename" "Dashboard icon ($type - ${sizes_attr})"
+        return $?
+    else
+        rm -f "$temp_file"
+        print_warning "No suitable dashboard icons found"
+        return 1
+    fi
+}
+
+# Function to extract and download Open Graph image (fallback)
+download_og_image() {
+    local html="$1"
+    local base_url="$2"
+    local domain="$3"
+
+    # Extract Open Graph image URL
+    local og_image=$(echo "$html" | grep -io '<meta[^>]*property="og:image"[^>]*>' |
+        sed -n 's/.*content="\([^"]*\)".*/\1/p' | head -1)
+
+    if [[ -n "$og_image" ]]; then
+        local resolved_url=$(resolve_url "$base_url" "$og_image")
+        local extension="${resolved_url##*.}"
+        # Limit extension to reasonable length and common image extensions
+        if [[ ${#extension} -gt 4 ]] || [[ ! "$extension" =~ ^(jpg|jpeg|png|gif|webp|svg)$ ]]; then
+            extension="jpg"
+        fi
+        local filename="${domain}_og.${extension}"
+        download_image "$resolved_url" "$filename" "Open Graph image (fallback)"
+        return $?
+    else
+        print_warning "No Open Graph image found"
+        return 1
+    fi
+}
+
+# Function to download favicon as fallback
+download_favicon() {
+    local base_url="$1"
+    local domain="$2"
+
+    # Try common favicon locations
+    local favicon_urls=(
+        "${base_url}/favicon.ico"
+        "${base_url}/favicon.png"
+    )
+
+    for favicon_url in "${favicon_urls[@]}"; do
+        local filename="${domain}_favicon.ico"
+        if download_image "$favicon_url" "$filename" "Favicon"; then
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+# Main function
+main() {
+    # Check if URL is provided
+    if [[ $# -eq 0 ]]; then
+        print_error "No URL provided"
+        show_usage
+    fi
+
+    local url="$1"
+    validate_url "$url"
+
+    local domain=$(get_domain "$url")
+    local base_url=$(echo "$url" | sed -E 's|^(https?://[^/]+).*|\1|')
+
+    print_status "Processing: $url"
+    print_status "Domain: $domain"
+
+    # Check if curl is available
+    if ! command -v curl &>/dev/null; then
+        print_error "curl is required but not installed"
+        exit 1
+    fi
+
+    # Check if file command is available
+    if ! command -v file &>/dev/null; then
+        print_warning "file command not available - skipping file type validation"
+    fi
+
+    # Fetch HTML content
+    print_status "Fetching HTML content..."
+    local html
+    if ! html=$(curl -sL --fail --max-time 30 -H "User-Agent: Mozilla/5.0 (compatible; curlog/1.0)" "$url"); then
+        print_error "Failed to fetch HTML content from: $url"
+        exit 1
+    fi
+
+    local success_count=0
+
+    # Primary: Try to find the best dashboard icon (prioritizes Apple Touch Icons and high-res icons)
+    if find_best_dashboard_icon "$html" "$base_url" "$domain"; then
+        ((success_count++))
+    fi
+
+    # Fallback 1: Try Open Graph image if no dashboard icon found
+    if [[ $success_count -eq 0 ]]; then
+        print_status "No dashboard icons found, trying Open Graph image..."
+        if download_og_image "$html" "$base_url" "$domain"; then
+            ((success_count++))
+        fi
+    fi
+
+    # Fallback 2: Try favicon as last resort
+    if [[ $success_count -eq 0 ]]; then
+        print_status "No suitable icons found, trying favicon..."
+        if download_favicon "$base_url" "$domain"; then
+            ((success_count++))
+        fi
+    fi
+
+    # Summary
+    if [[ $success_count -gt 0 ]]; then
+        print_success "Successfully downloaded dashboard icon for $domain"
+    else
+        print_error "No suitable dashboard icon was found for $domain"
+        exit 1
+    fi
+}
+
+# Run main function with all arguments
+main "$@"
