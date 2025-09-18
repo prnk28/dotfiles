@@ -1,5 +1,8 @@
 local Terminal = require("toggleterm.terminal").Terminal
 
+-- Track closed buffers
+local closed_buffers = {}
+
 -- Shared ignore patterns from neotree configuration
 local ignore_patterns = {
   -- Hidden patterns
@@ -259,12 +262,49 @@ return {
       -- first key is the mode
       n = {
         -- navigate buffer tabs
-        ["<C-c>"] = { "<Cmd>wa<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Added C-x to save and close buffer
+        ["<C-c>"] = {
+          function()
+            -- Save the buffer path before closing
+            local bufname = vim.api.nvim_buf_get_name(0)
+            if bufname ~= "" then
+              table.insert(closed_buffers, bufname)
+              -- Keep only the last 10 closed buffers
+              if #closed_buffers > 10 then
+                table.remove(closed_buffers, 1)
+              end
+            end
+            vim.cmd("wa")
+            vim.cmd("bd")
+          end,
+          desc = "Save and close buffer",
+        },
         ["F"] = { "za", desc = "Toggle fold under cursor" },
         ["L"] = { "<Cmd>BufferLineCycleNext<CR>", desc = "Next buffer" },
         ["H"] = { "<Cmd>BufferLineCyclePrev<CR>", desc = "Previous buffer" },
-        ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Open Explorer" },
+        ["<C-e>"] = {
+          function()
+            -- Toggle explorer using the proper Snacks.explorer API
+            local snacks = require("snacks")
+            -- Check if there's an active explorer picker
+            local pickers = snacks.picker.get({ source = "explorer" })
+            if #pickers > 0 then
+              -- Close the explorer
+              for _, picker in ipairs(pickers) do
+                picker:close()
+              end
+            else
+              -- Open the explorer
+              snacks.explorer()
+            end
+          end,
+          desc = "Toggle Explorer",
+        },
         ["<C-m>"] = { "<Cmd>OverseerRun<CR>", desc = "Run Overseer" },
+        ["<C-l>"] = { "<Cmd>b#<CR>", desc = "Return to last buffer" },
+        ["<leader>e"] = {
+          function() require("snacks").explorer.reveal() end,
+          desc = "Reveal file in Explorer",
+        },
         ["<leader><leader>"] = {
           function() require("snacks").picker.smart() end,
           desc = "Find files",
@@ -291,6 +331,18 @@ return {
             end
           end,
           desc = "Toggle all buffer groups",
+        },
+        ["<C-b>z"] = {
+          function()
+            if #closed_buffers > 0 then
+              local last_closed = table.remove(closed_buffers)
+              vim.cmd("e " .. vim.fn.fnameescape(last_closed))
+              vim.notify("Reopened: " .. vim.fn.fnamemodify(last_closed, ":t"))
+            else
+              vim.notify("No recently closed buffer found", vim.log.levels.WARN)
+            end
+          end,
+          desc = "Reopen last closed buffer",
         },
         -- Quick group toggles
         ["<C-b>l"] = {
@@ -632,12 +684,46 @@ return {
         ["<C-x>"] = { "<Cmd>wa<CR><Cmd>bd<CR><Esc>", desc = "Save, close buffer, and return to normal mode" }, -- Added C-x for insert mode
       },
       v = {
-        ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Open Explorer" },
+        ["<C-e>"] = {
+          function()
+            -- Toggle explorer using the proper Snacks.explorer API
+            local snacks = require("snacks")
+            -- Check if there's an active explorer picker
+            local pickers = snacks.picker.get({ source = "explorer" })
+            if #pickers > 0 then
+              -- Close the explorer
+              for _, picker in ipairs(pickers) do
+                picker:close()
+              end
+            else
+              -- Open the explorer
+              snacks.explorer()
+            end
+          end,
+          desc = "Toggle Explorer",
+        },
         ["<C-c>"] = { "<Cmd>w<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Modified to save and close buffer
         ["<C-x>"] = { "<Cmd>w<CR><Cmd>bd<CR>", desc = "Save and close buffer" }, -- Added C-x for visual mode
       },
       t = {
-        ["<C-e>"] = { "<Cmd>Neotree toggle<CR>", desc = "Open Explorer" },
+        ["<C-e>"] = {
+          function()
+            -- Toggle explorer using the proper Snacks.explorer API
+            local snacks = require("snacks")
+            -- Check if there's an active explorer picker
+            local pickers = snacks.picker.get({ source = "explorer" })
+            if #pickers > 0 then
+              -- Close the explorer
+              for _, picker in ipairs(pickers) do
+                picker:close()
+              end
+            else
+              -- Open the explorer
+              snacks.explorer()
+            end
+          end,
+          desc = "Toggle Explorer",
+        },
         ["<C-b>f"] = {
           function() require("snacks").picker.buffers() end,
           desc = "Find buffers",

@@ -1,6 +1,7 @@
 require("lazy").setup({
   {
     "AstroNvim/AstroNvim",
+    version = "^4", -- Ensure we use AstroNvim v4+
     import = "astronvim.plugins",
     opts = {
       -- Leaders are set early in init.lua to ensure consistency

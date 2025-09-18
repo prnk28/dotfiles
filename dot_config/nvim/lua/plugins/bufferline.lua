@@ -34,7 +34,7 @@ return {
         left_trunc_marker = "",
         right_trunc_marker = "",
         offsets = {
-          { filetype = "neo-tree", text = "", padding = 0 },
+          { filetype = "snacks_picker", text = "", padding = 0 },
         },
         groups = {
           options = { toggle_hidden_on_enter = true },
