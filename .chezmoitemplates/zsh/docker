@@ -106,3 +106,20 @@ function twenty-restart() {
 function twenty-logs() {
   task -g services:logs:twenty -- "$@"
 }
+
+# Convenience functions for Plane
+function plane-start() {
+  task -g services:start:plane
+}
+
+function plane-stop() {
+  task -g services:stop:plane
+}
+
+function plane-restart() {
+  task -g services:restart:plane
+}
+
+function plane-logs() {
+  task -g services:logs:plane -- "$@"
+}
