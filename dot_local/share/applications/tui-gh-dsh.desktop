@@ -5,5 +5,5 @@ Comment=Gh Dash
 Exec=alacritty --class TUI.tile -e gh dash
 Terminal=false
 Type=Application
-Icon=/home/prad/.local/share/applications/icons/Gh Dash.png
+Icon=/home/prad/.local/share/applications/icons/GitHub.png
 StartupNotify=true

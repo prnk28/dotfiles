@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=NeonDB
+Comment=NeonDB
+Exec=omarchy-launch-webapp https://console.neon.tech
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/NeonDB.png
+StartupNotify=true

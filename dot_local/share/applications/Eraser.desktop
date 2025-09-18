@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Eraser
+Comment=Eraser
+Exec=omarchy-launch-webapp https://app.eraser.io/dashboard
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Eraser.png
+StartupNotify=true

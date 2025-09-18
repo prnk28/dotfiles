@@ -5,5 +5,5 @@ Comment=Doppler
 Exec=omarchy-launch-webapp https://dashboard.doppler.com/workplace/7ba97bfdf06daee20462/projects
 Terminal=false
 Type=Application
-Icon=/home/prad/.local/share/applications/icons/Cloudflare R2.png
+Icon=/home/prad/.local/share/applications/icons/Doppler.png
 StartupNotify=true

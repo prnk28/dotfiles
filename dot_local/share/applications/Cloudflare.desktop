@@ -5,5 +5,5 @@ Comment=Cloudflare Workers
 Exec=omarchy-launch-webapp https://dash.cloudflare.com/eb37925850388bca807b7fab964c12bb/workers-and-pages
 Terminal=false
 Type=Application
-Icon=/home/prad/.local/share/applications/icons/Cloudflare Workers.png
+Icon=/home/prad/.local/share/applications/icons/Cloudflare.png
 StartupNotify=true
