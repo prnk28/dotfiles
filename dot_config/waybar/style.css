@@ -33,15 +33,16 @@ tooltip.background {
   padding: 0 6px;
   margin: 0 1.5px;
   min-width: 9px;
-  opacity: 0.9;
 }
 
 #workspaces button.empty {
   opacity: 0.3;
+  scale: 0.8;
 }
 
 #workspaces button.active {
-  opacity: 0.5;
+  opacity: 0.6;
+  scale: 0.9;
 }
 
 #tray,
