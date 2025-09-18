@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Netflix
+Comment=Browse Netflix
+Exec=omarchy-launch-webapp https://netflix.com/browse
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Netflix.png
+StartupNotify=true

@@ -37,12 +37,12 @@ tooltip.background {
 
 #workspaces button.empty {
   opacity: 0.3;
-  scale: 0.8;
+  min-width: 3px;
 }
 
 #workspaces button.active {
   opacity: 0.6;
-  scale: 0.9;
+  min-width: 6px;
 }
 
 #tray,
