@@ -5,5 +5,5 @@ Comment=TLDraw
 Exec=omarchy-launch-webapp https://tldraw.com
 Terminal=false
 Type=Application
-Icon=/home/prad/.local/share/applications/icons/Eraser.png
+Icon=/home/prad/.local/share/applications/icons/TLDraw.png
 StartupNotify=true
