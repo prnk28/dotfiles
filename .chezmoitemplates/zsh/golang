@@ -2,7 +2,7 @@
 export GOPATH="{{ .chezmoi.homeDir }}/.go"
 export GOBIN="$GOPATH/bin"
 export GOROOT="$GOPATH/current"
-export GOPROXY=https://proxy.golang.org,direct
+export GOPROXY='https://github.com,https://proxy.golang.org,direct'
 
 {{ if eq .chezmoi.os "linux" -}}
 # goup installs itself to ~/.go/bin and Go binaries to ~/.go/current/bin

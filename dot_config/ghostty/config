@@ -30,8 +30,6 @@ macos-titlebar-proxy-icon = hidden
 
 cursor-style-blink = true
 
-command = /home/prad/.local/bin/gho
-
 keybind = all:super+shift+j=new_split:down
 keybind = all:super+shift+k=new_split:up
 keybind = all:super+shift+h=new_split:left
