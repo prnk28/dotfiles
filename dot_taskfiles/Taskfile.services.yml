@@ -258,6 +258,14 @@ tasks:
         vars:
           CLI_ARGS: "flame {{.CLI_ARGS}}"
 
+  # n8n specific tasks
+  start:n8n:
+    desc: Start n8n workflow automation
+    cmds:
+      - task: start
+        vars:
+          CLI_ARGS: "n8n"
+
   stop:n8n:
     desc: Stop n8n workflow automation
     cmds:
@@ -278,6 +286,35 @@ tasks:
       - task: logs
         vars:
           CLI_ARGS: "n8n {{.CLI_ARGS}}"
+
+  # Plane specific tasks
+  start:plane:
+    desc: Start Plane project management service
+    cmds:
+      - task: start
+        vars:
+          CLI_ARGS: "plane"
+
+  stop:plane:
+    desc: Stop Plane project management service
+    cmds:
+      - task: stop
+        vars:
+          CLI_ARGS: "plane"
+
+  restart:plane:
+    desc: Restart Plane project management service
+    cmds:
+      - task: restart
+        vars:
+          CLI_ARGS: "plane"
+
+  logs:plane:
+    desc: Show Plane logs
+    cmds:
+      - task: logs
+        vars:
+          CLI_ARGS: "plane {{.CLI_ARGS}}"
 
   # Twenty CRM specific tasks
   start:twenty:
