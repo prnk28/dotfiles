@@ -258,72 +258,6 @@ tasks:
         vars:
           CLI_ARGS: "flame {{.CLI_ARGS}}"
 
-  # Owlistic specific tasks
-  start:owlistic:
-    desc: Start Owlistic service
-    cmds:
-      - task: start
-        vars:
-          CLI_ARGS: "owlistic"
-
-  stop:owlistic:
-    desc: Stop Owlistic service
-    cmds:
-      - task: stop
-        vars:
-          CLI_ARGS: "owlistic"
-
-  restart:owlistic:
-    desc: Restart Owlistic service
-    cmds:
-      - task: restart
-        vars:
-          CLI_ARGS: "owlistic"
-
-  logs:owlistic:
-    desc: Show Owlistic logs
-    cmds:
-      - task: logs
-        vars:
-          CLI_ARGS: "owlistic {{.CLI_ARGS}}"
-
-  # Graphiti MCP specific tasks
-  start:graphiti-mcp:
-    desc: Start Graphiti MCP service
-    cmds:
-      - task: start
-        vars:
-          CLI_ARGS: "graphiti-mcp"
-
-  stop:graphiti-mcp:
-    desc: Stop Graphiti MCP service
-    cmds:
-      - task: stop
-        vars:
-          CLI_ARGS: "graphiti-mcp"
-
-  restart:graphiti-mcp:
-    desc: Restart Graphiti MCP service
-    cmds:
-      - task: restart
-        vars:
-          CLI_ARGS: "graphiti-mcp"
-
-  logs:graphiti-mcp:
-    desc: Show Graphiti MCP logs
-    cmds:
-      - task: logs
-        vars:
-          CLI_ARGS: "graphiti-mcp {{.CLI_ARGS}}"
-
-  # n8n specific tasks
-  start:n8n:
-    desc: Start n8n workflow automation
-    cmds:
-      - task: start
-        vars:
-          CLI_ARGS: "n8n"
-
   stop:n8n:
     desc: Stop n8n workflow automation
     cmds:
@@ -444,3 +378,59 @@ tasks:
         cd "$SERVICE_DIR"
         docker compose exec $SERVICE_NAME $COMMAND
     silent: false
+
+  start:all:
+    desc: Start all services
+    summary: Start all services in the services directory
+    cmds:
+      - task: start
+        vars:
+          CLI_ARGS: "{{.SERVICES_DIR}}/*/"
+
+  stop:all:
+    desc: Stop all services
+    summary: Stop all services in the services directory
+    cmds:
+      - task: stop
+        vars:
+          CLI_ARGS: "{{.SERVICES_DIR}}/*/"
+
+  restart:all:
+    desc: Restart all services
+    summary: Restart all services in the services directory
+    cmds:
+      - task: restart
+        vars:
+          CLI_ARGS: "{{.SERVICES_DIR}}/*/"
+
+  status:all:
+    desc: Show status of all services
+    summary: Display the running status of all services in the services directory
+    cmds:
+      - task: status
+        vars:
+          CLI_ARGS: "{{.SERVICES_DIR}}/*/"
+
+  logs:all:
+    desc: Show logs for all services
+    summary: Display logs for all services in the services directory
+    cmds:
+      - task: logs
+        vars:
+          CLI_ARGS: "{{.SERVICES_DIR}}/*/"
+
+  ps:all:
+    desc: List running containers for all services
+    summary: Show running containers for all services in the services directory
+    cmds:
+      - task: ps
+        vars:
+          CLI_ARGS: "{{.SERVICES_DIR}}/*/"
+
+  list:all:
+    desc: List all available services
+    summary: Display all services in the services directory
+    cmds:
+      - task: list
+        vars:
+          CLI_ARGS: "{{.SERVICES_DIR}}/*/"

@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Name=Actions
-Comment=Github Actions
-Exec=omarchy-launch-webapp https://github.com/sonr-io/sonr/actions
-Terminal=false
-Type=Application
-Icon=/home/prad/.local/share/applications/icons/Github Actions.png
-StartupNotify=true

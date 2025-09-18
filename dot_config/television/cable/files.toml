@@ -14,4 +14,9 @@ env = { BAT_THEME = "Catppuccin Mocha" }
 preview_panel = { "size" = 70, "scrollbar" = true }
 
 [keybindings]
-shortcut = "f1"
+shortcut = "f"
+enter = "actions:edit"
+
+[actions.edit]
+description = "Edit file"
+command = "nvim {}"

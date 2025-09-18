@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   twenty:
@@ -91,3 +91,4 @@ networks:
 volumes:
   redis_data:
     driver: local
+

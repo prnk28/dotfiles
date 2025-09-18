@@ -204,13 +204,9 @@ return {
         "lsp", -- highest priority is getting workspace from running language servers
         { ".git", "_darcs", ".hg", ".bzr", ".svn" }, -- next check for a version controlled parent directory
         {
-          "go.mod",
           "package.json",
           "lua",
           "Cargo.toml",
-          "go.work",
-          "go.mod",
-          "package.json",
           "Pipfile",
           "docs.json",
         }, -- lastly check for a file named `main`

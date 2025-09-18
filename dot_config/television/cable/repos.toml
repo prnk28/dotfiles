@@ -1,0 +1,19 @@
+[metadata]
+name = "repos"
+description = "A channel to select Github repos"
+requirements = ["gh", "ghq", "nvim"]
+
+[source]
+command = "ghq list -p"
+
+[preview]
+command = "gh repo view '{}'"
+
+[exec]
+command = "nvim {}"
+
+[ui]
+preview_panel = { "size" = 70, "scrollbar" = true }
+
+[keybindings]
+shortcut = "r"
