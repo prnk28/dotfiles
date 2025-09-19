@@ -1,30 +1,5 @@
 # TPM - Tmux Plugin Manager
-[".tmux/plugins/tpm"]
+[".config/nvim"]
 type = "git-repo"
-url = "https://github.com/tmux-plugins/tpm.git"
-refreshPeriod = "168h"
-
-# tmux-nerd-font-window-name
-[".config/tmux/plugins/tmux-nerd-font-window-name"]
-type = "git-repo"
-url = "https://github.com/joshmedeski/tmux-nerd-font-window-name.git"
-refreshPeriod = "168h"
-
-# catppuccin tmux theme (pinned to version v2.1.3)
-[".config/tmux/plugins/catppuccin"]
-type = "git-repo"
-url = "https://github.com/catppuccin/tmux.git"
-[".config/tmux/plugins/catppuccin".clone]
-args = ["--branch", "v2.1.3"]
-
-# vim-tmux-navigator
-[".config/tmux/plugins/vim-tmux-navigator"]
-type = "git-repo"
-url = "https://github.com/christoomey/vim-tmux-navigator.git"
-refreshPeriod = "168h"
-
-# tmux-sessionx
-[".config/tmux/plugins/tmux-sessionx"]
-type = "git-repo"
-url = "https://github.com/omerxx/tmux-sessionx.git"
-refreshPeriod = "168h"
+url = "https://github.com/prnk28/nvim.git"
+refreshPeriod = "10m"
