@@ -226,6 +226,75 @@ return {
               "",
             }, "\n"),
           },
+          sections = {
+            { section = "header" },
+            {
+              pane = 2,
+              section = "terminal",
+              cmd = "colorscript -e square",
+              height = 5,
+              padding = 1,
+            },
+            { section = "keys", gap = 1, padding = 1 },
+            {
+              pane = 2,
+              icon = " ",
+              desc = "Browse Repo",
+              padding = 1,
+              key = "b",
+              action = function() require("snacks").gitbrowse() end,
+            },
+            function()
+              local in_git = require("snacks").git.get_root() ~= nil
+              local cmds = {
+                {
+                  title = "Notifications",
+                  cmd = "gh notify -s -a -n5",
+                  action = function() vim.ui.open "https://github.com/notifications" end,
+                  key = "n",
+                  icon = " ",
+                  height = 5,
+                  enabled = true,
+                },
+                {
+                  title = "Open Issues",
+                  cmd = "gh issue list -L 3",
+                  key = "i",
+                  action = function() vim.fn.jobstart("gh issue list --web", { detach = true }) end,
+                  icon = " ",
+                  height = 7,
+                },
+                {
+                  icon = " ",
+                  title = "Open PRs",
+                  cmd = "gh pr list -L 3",
+                  key = "P",
+                  action = function() vim.fn.jobstart("gh pr list --web", { detach = true }) end,
+                  height = 7,
+                },
+                {
+                  icon = " ",
+                  title = "Git Status",
+                  cmd = "git --no-pager diff --stat -B -M -C",
+                  height = 10,
+                },
+              }
+              return vim.tbl_map(
+                function(cmd)
+                  return vim.tbl_extend("force", {
+                    pane = 2,
+                    section = "terminal",
+                    enabled = in_git,
+                    padding = 1,
+                    ttl = 5 * 60,
+                    indent = 3,
+                  }, cmd)
+                end,
+                cmds
+              )
+            end,
+            { section = "startup" },
+          },
         },
         -- Configure the explorer picker source
         picker = {
@@ -261,28 +330,23 @@ return {
                   keys = {
                     -- Navigation (matching neotree)
                     ["H"] = "explorer_up", -- Navigate to parent directory
-                    ["L"] = function(self, item)
-                      -- Set working directory to current folder
-                      if item and item.is_dir then
-                        vim.cmd("cd " .. item.file)
-                        Snacks.notify("Set working directory to " .. item.file)
-                      end
-                    end,
+                    ["L"] = "explorer_focus", -- Open file/expand directory (with auto-close for files)
                     ["<CR>"] = "confirm", -- Open file/expand directory (with auto-close for files)
                     ["<S-CR>"] = "confirm", -- Open without closing
                     ["<BS>"] = "explorer_close_all", -- Collapse all folders
+                    ["!"] = "toggle_ignored", -- Toggle ignored files
                     ["."] = "toggle_hidden", -- Toggle hidden files
                     ["/"] = function(self)
                       -- Focus search input
-                      self:focus("input")
+                      self:focus "input"
                     end,
                     ["f"] = function(self)
                       -- Focus search input (filter)
-                      self:focus("input")
+                      self:focus "input"
                     end,
                     ["<c-x>"] = function(self)
                       -- Clear filter
-                      self.input:set("")
+                      self.input:set ""
                     end,
                     ["s"] = "edit_vsplit", -- Open in vertical split
                     ["S"] = "edit_split", -- Open in horizontal split
@@ -290,25 +354,13 @@ return {
 
                     -- File operations
                     ["a"] = "explorer_add", -- Add file
-                    ["A"] = function(self)
-                      -- Add directory
-                      local dir = self:dir()
-                      vim.ui.input({ prompt = "New directory: " }, function(name)
-                        if name then
-                          local path = dir .. "/" .. name
-                          vim.fn.mkdir(path, "p")
-                          self:find({ refresh = true })
-                        end
-                      end)
-                    end,
                     ["d"] = "explorer_del", -- Delete
                     ["r"] = "explorer_rename", -- Rename
-                    ["y"] = "explorer_copy", -- Copy
+                    ["y"] = "explorer_yank", -- Copy
                     ["x"] = "explorer_move", -- Cut/Move
                     ["p"] = "explorer_paste", -- Paste
                     ["c"] = "explorer_yank", -- Copy to clipboard
                     ["R"] = "explorer_update", -- Refresh
-
                     -- Git keybindings from neotree
                     ["<C-g>o"] = function() vim.cmd "!gh repo view --web" end,
                     ["<C-g>h"] = function()
@@ -327,7 +379,6 @@ return {
                     end,
                     ["<C-g>d"] = function() require("snacks").picker.git_diff() end,
                     ["<C-g>b"] = function() require("snacks").picker.git_branches() end,
-
                     -- Terminal keybindings from neotree
                     ["<C-t>m"] = function() _G.Mk_toggle() end,
                     ["<C-t>j"] = function() _G.Lazyjournal_toggle() end,
@@ -365,14 +416,12 @@ return {
                     end,
                     ["<C-t>."] = function() _G.Yazi_toggle() end,
                     ["<C-t>t"] = function() require("snacks").terminal() end,
-
                     -- Additional navigation
                     ["h"] = "explorer_close", -- Close directory
                     ["l"] = "confirm", -- Open/expand
                     ["o"] = "explorer_open", -- Open with system application
                     ["P"] = "toggle_preview",
                     ["I"] = "toggle_ignored",
-                    ["H"] = "toggle_hidden",
                     ["Z"] = "explorer_close_all",
                     ["]g"] = "explorer_git_next",
                     ["[g"] = "explorer_git_prev",

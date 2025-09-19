@@ -238,7 +238,7 @@ return {
 
     -- Diagnostics configuration (for vim.diagnostics.config({...})) when diagnostics are on
     diagnostics = {
-      virtual_text = true,
+      virtual_text = false,
       underline = true,
     },
     -- vim options can be configured here
@@ -269,12 +269,10 @@ return {
             if bufname ~= "" then
               table.insert(closed_buffers, bufname)
               -- Keep only the last 10 closed buffers
-              if #closed_buffers > 10 then
-                table.remove(closed_buffers, 1)
-              end
+              if #closed_buffers > 10 then table.remove(closed_buffers, 1) end
             end
-            vim.cmd("wa")
-            vim.cmd("bd")
+            vim.cmd "wa"
+            vim.cmd "bd"
           end,
           desc = "Save and close buffer",
         },
@@ -284,9 +282,9 @@ return {
         ["<C-e>"] = {
           function()
             -- Toggle explorer using the proper Snacks.explorer API
-            local snacks = require("snacks")
+            local snacks = require "snacks"
             -- Check if there's an active explorer picker
-            local pickers = snacks.picker.get({ source = "explorer" })
+            local pickers = snacks.picker.get { source = "explorer" }
             if #pickers > 0 then
               -- Close the explorer
               for _, picker in ipairs(pickers) do
@@ -441,6 +439,10 @@ return {
           function() require("snacks").picker.diagnostics() end,
           desc = "Find diagnostics",
         },
+        ["<C-f>l"] = {
+          function() require("snacks").picker.lines() end,
+          desc = "Find diagnostics",
+        },
         ["<C-f>f"] = {
           function() require("snacks").picker.git_files { transform = file_filter } end,
           desc = "Find files",
@@ -471,25 +473,27 @@ return {
         },
         ["<C-f>go"] = { "<Cmd>ObsidianSearch<CR>", desc = "Find in Obsidian" },
         ["<C-f>p"] = { desc = "Find Package files" },
-        ["<C-f>pc"] = {
+        ["<C-f>P"] = {
           function()
             require("snacks").picker.files {
-              dirs = { "/home/prad/code/github.com/sonr-io/sonr/packages/cli" },
-              exclude = { "packages/cli/dist" },
-              ft = { "ts", "tsx", "js" },
+              dirs = { "/home/prad/code/github.com/sonr-io/sonr/proto" },
+              ft = { "proto" },
             }
           end,
-          desc = "Find @sonr.io/cli files",
+          desc = "Find Proto files",
         },
-        ["<C-f>pe"] = {
+        ["<C-f>W"] = {
           function()
             require("snacks").picker.files {
-              dirs = { "/home/prad/code/github.com/sonr-io/sonr/packages/es" },
-              exclude = { "packages/es/dist" },
-              ft = { "ts", "tsx", "js" },
+              dirs = {
+                "/home/prad/code/github.com/sonr-io/sonr/packages",
+                "/home/prad/code/github.com/sonr-io/sonr/web",
+              },
+              exclude = { "packages/**/dist", "web/**/dist" },
+              ft = { "ts", "tsx", "js", "html", "css", "json", "yaml" },
             }
           end,
-          desc = "Find @sonr.io/es files",
+          desc = "Find Web Dev files",
         },
         ["<C-f>pp"] = {
           function()
@@ -687,9 +691,9 @@ return {
         ["<C-e>"] = {
           function()
             -- Toggle explorer using the proper Snacks.explorer API
-            local snacks = require("snacks")
+            local snacks = require "snacks"
             -- Check if there's an active explorer picker
-            local pickers = snacks.picker.get({ source = "explorer" })
+            local pickers = snacks.picker.get { source = "explorer" }
             if #pickers > 0 then
               -- Close the explorer
               for _, picker in ipairs(pickers) do
@@ -709,9 +713,9 @@ return {
         ["<C-e>"] = {
           function()
             -- Toggle explorer using the proper Snacks.explorer API
-            local snacks = require("snacks")
+            local snacks = require "snacks"
             -- Check if there's an active explorer picker
-            local pickers = snacks.picker.get({ source = "explorer" })
+            local pickers = snacks.picker.get { source = "explorer" }
             if #pickers > 0 then
               -- Close the explorer
               for _, picker in ipairs(pickers) do
