@@ -280,22 +280,8 @@ return {
         ["L"] = { "<Cmd>BufferLineCycleNext<CR>", desc = "Next buffer" },
         ["H"] = { "<Cmd>BufferLineCyclePrev<CR>", desc = "Previous buffer" },
         ["<C-e>"] = {
-          function()
-            -- Toggle explorer using the proper Snacks.explorer API
-            local snacks = require "snacks"
-            -- Check if there's an active explorer picker
-            local pickers = snacks.picker.get { source = "explorer" }
-            if #pickers > 0 then
-              -- Close the explorer
-              for _, picker in ipairs(pickers) do
-                picker:close()
-              end
-            else
-              -- Open the explorer
-              snacks.explorer()
-            end
-          end,
-          desc = "Toggle Explorer",
+          function() require("snacks").explorer.reveal() end,
+          desc = "Reveal file in Explorer",
         },
         ["<C-m>"] = { "<Cmd>OverseerRun<CR>", desc = "Run Overseer" },
         ["<C-l>"] = { "<Cmd>b#<CR>", desc = "Return to last buffer" },

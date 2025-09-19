@@ -9,18 +9,20 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
 -- Allow overriding lazy path via LAZY env
-local lazypath = vim.env.LAZY or (vim.fn.stdpath("data") .. "/lazy/lazy.nvim")
+local lazypath = vim.env.LAZY or (vim.fn.stdpath "data" .. "/lazy/lazy.nvim")
 
 -- Bootstrap lazy.nvim only if not provided via env and not installed
 if not vim.env.LAZY and not (uv and uv.fs_stat(lazypath)) then
-  if vim.fn.executable("git") == 1 then
-    local result = vim.fn.system({
-      "git", "clone", "--filter=blob:none",
-      "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath,
-    })
-    if vim.v.shell_error ~= 0 then
-      vim.notify(("Error cloning lazy.nvim:\n%s"):format(result), vim.log.levels.ERROR)
-    end
+  if vim.fn.executable "git" == 1 then
+    local result = vim.fn.system {
+      "git",
+      "clone",
+      "--filter=blob:none",
+      "https://github.com/folke/lazy.nvim.git",
+      "--branch=stable",
+      lazypath,
+    }
+    if vim.v.shell_error ~= 0 then vim.notify(("Error cloning lazy.nvim:\n%s"):format(result), vim.log.levels.ERROR) end
   else
     vim.notify("git not found; skipping lazy.nvim bootstrap", vim.log.levels.WARN)
   end
