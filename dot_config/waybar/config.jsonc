@@ -4,13 +4,8 @@
 	"position": "top",
 	"spacing": 0,
 	"height": 26,
-	"modules-left": [
-		"custom/omarchy"
-	],
-	"modules-center": [
-		"custom/screenrecording-indicator",
-		"hyprland/workspaces"
-	],
+	"modules-left": ["custom/omarchy"],
+	"modules-center": ["custom/screenrecording-indicator", "hyprland/workspaces"],
 	"modules-right": [
 		"bluetooth",
 		"network",
@@ -27,12 +22,12 @@
 			"1": "󰖨",
 			"2": "",
 			"3": "󰖟",
-			"4": "󰺿",
-			"5": "",
-			"6": "",
-			"7": "󰝆",
-			"8": "󰠲",
-			"9": ""
+			"4": "󰣪",
+			"5": "󰺿",
+			"6": "",
+			"7": "",
+			"8": "󰝆",
+			"9": "󰠲"
 		},
 		"persistent-workspaces": {
 			"1": [],
@@ -65,13 +60,7 @@
 		"on-click-right": "omarchy-cmd-tzupdate"
 	},
 	"network": {
-		"format-icons": [
-			"󰤯",
-			"󰤟",
-			"󰤢",
-			"󰤥",
-			"󰤨"
-		],
+		"format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
 		"format": "{icon}",
 		"format-wifi": "{icon}",
 		"format-ethernet": "󰀂",
@@ -89,30 +78,8 @@
 		"format-charging": "{icon}",
 		"format-plugged": "",
 		"format-icons": {
-			"charging": [
-				"󰢜",
-				"󰂆",
-				"󰂇",
-				"󰂈",
-				"󰢝",
-				"󰂉",
-				"󰢞",
-				"󰂊",
-				"󰂋",
-				"󰂅"
-			],
-			"default": [
-				"󰁺",
-				"󰁻",
-				"󰁼",
-				"󰁽",
-				"󰁾",
-				"󰁿",
-				"󰂀",
-				"󰂁",
-				"󰂂",
-				"󰁹"
-			]
+			"charging": ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"],
+			"default": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
 		},
 		"format-full": "󰂅",
 		"tooltip-format-discharging": "{power:>1.0f}W↓ {capacity}%",
@@ -139,11 +106,7 @@
 		"scroll-step": 5,
 		"format-muted": "",
 		"format-icons": {
-			"default": [
-				"",
-				"",
-				""
-			]
+			"default": ["", "", ""]
 		}
 	},
 	"group/tray-expander": {
@@ -152,10 +115,7 @@
 			"transition-duration": 600,
 			"children-class": "tray-group-item"
 		},
-		"modules": [
-			"custom/expand-icon",
-			"tray"
-		]
+		"modules": ["custom/expand-icon", "tray"]
 	},
 	"custom/expand-icon": {
 		"format": " ",
