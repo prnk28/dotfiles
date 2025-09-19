@@ -53,6 +53,9 @@ defaults:
         hidden: true
   refetchIntervalMinutes: 2
 keybindings:
+  prs:
+    - key: S
+      command: "nvim-pr {{.RepoPath}} {{.PrNumber}}"
   issues:
     - key: N
       command: >
@@ -67,7 +70,7 @@ keybindings:
         task -t ~/.config/gh-dash/Taskfile.yml open-issue ISSUE_NUMBER={{.IssueNumber}} REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
 
     - key: S
-      command: "task -t ~/.local/taskfiles/Taskfile.gh-dash.yml start-issue NUMBER={{.IssueNumber}} PATH={{.RepoPath}}"
+      command: "nvim-issue {{.RepoPath}} {{.IssueNumber}}"
   branches: []
 repoPaths:
   sonr-io/sonr: /home/prad/code/github.com/sonr-io/sonr

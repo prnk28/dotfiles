@@ -10,6 +10,7 @@ alias e.usr="cd /usr/local/bin && sudo nvim"
 alias vtd="open http://prads-macbook-pro-2.moray-bleak.ts.net:4020"
 alias gdi="ghid"
 alias cdl="cd ~/.local/share"
+alias mkiso="caligula"
 
 # Shell & Terminal
 alias x="clear"

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# nvim-milestone - Opens a ghostty window with given directory, and milestone number
+# Usage: nvim-edit DIRECTORY MILESTONE_NUMBER
+
+if [[ -z "$1" ]]; then
+    echo "Usage: nvim-edit DIRECTORY ISSUE_NUMBER"
+    exit 1
+fi
+
+DIRECTORY="$1"
+MILESTONE_NUMBER="$2"
+
+if [[ -z "$DIRECTORY" ]]; then
+    echo "Usage: nvim-edit DIRECTORY ISSUE_NUMBER"
+    exit 1
+fi
+
+if [[ -z "$MILESTONE_NUMBER" ]]; then
+    echo "Usage: nvim-edit DIRECTORY ISSUE_NUMBER"
+    exit 1
+fi
+
+uwsm app -- ghostty --working-directory="$DIRECTORY" -e nvim -c "Octo milestone edit $MILESTONE_NUMBER"
