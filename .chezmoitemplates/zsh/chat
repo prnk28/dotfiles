@@ -1,0 +1,76 @@
+# Function to get chat data from Claude JSONL files
+list-claude-sessions() {
+    fd -e jsonl --base-directory=$HOME/.claude -x sed 's/-home-prad--.*//' {} | \
+    jq '{messages: .message.content, dir: .cwd, id: .sessionId, branch: .gitBranch, timestamp: .timestamp, from: .type}' | \
+    jq -s -f $HOME/.config/jq/merge_claude_messages.jq
+}
+
+# Function to get relative time from timestamp
+get-relative-time() {
+    local timestamp="$1"
+    
+    # Convert timestamp to epoch seconds
+    local then=$(date -d "$timestamp" +%s 2>/dev/null || date -j -f "%Y-%m-%dT%H:%M:%S" "${timestamp%.*}" +%s 2>/dev/null)
+    local now=$(date +%s)
+    
+    # Calculate difference in seconds
+    local diff=$((now - then))
+    
+    # Convert to human readable
+    if (( diff < 60 )); then
+        echo "${diff}s ago"
+    elif (( diff < 3600 )); then
+        echo "$((diff / 60))m ago"
+    elif (( diff < 86400 )); then
+        echo "$((diff / 3600))h ago"
+    elif (( diff < 604800 )); then
+        echo "$((diff / 86400))d ago"
+    elif (( diff < 2592000 )); then
+        echo "$((diff / 604800))w ago"
+    else
+        echo "$((diff / 2592000))mo ago"
+    fi
+}
+
+print-claude-sessions() {
+    list-claude-sessions | jq -r '.[] | "\(.id) \(.cwd) \(.lastAccessed)"'
+}
+
+get-claude-session() {
+    local session_id="$1"
+    list-claude-sessions | jq '.[] | select(.id == "'$session_id'")'
+}
+
+get-claude-session-total-messages() {
+    get-claude-session "$1" | jq '.totalMessages'
+}
+
+get-claude-session-last-accessed() {
+    get-claude-session "$1" | jq '.lastAccessed' | get-relative-time
+}
+
+get-claude-session-cwd() {
+    get-claude-session "$1" | jq '.cwd'
+}
+
+get-claude-session-messages() {
+    get-claude-session "$1" | jq '[.messages.[] | select(.type == "text")]'
+}
+
+print-claude-messages() {
+    local session_id="$1"
+    echo "**Session: $session_id**"
+    echo "**Last Accessed: $(get-claude-session-last-accessed "$session_id")**"
+    while read item; do
+        from=$(echo "$item" | jq -r '.from')
+        text=$(echo "$item" | jq -r '.content')
+        echo "## $from"
+        echo "> $text"
+        echo "---"
+    done < <(get-claude-session-messages "$session_id" | jq -c '.[]')
+}
+    
+preview-claude-messages() {
+    local session_id="$1"
+    print-claude-messages "$session_id" | gum format
+}   

@@ -1,9 +1,30 @@
 # Docker Compose Services Management Functions
 # Service-specific convenience functions that wrap the global taskfile services commands
 
+# Service URLs mapping
+declare -A SERVICE_URLS=(
+  ["openwebui"]="http://localhost:3000"
+  ["flame"]="http://localhost:5005"
+  ["owlistic"]="http://localhost:8080"
+  ["graphiti-mcp"]="http://localhost:8000"
+  ["n8n"]="http://localhost:5678"
+  ["twenty"]="http://localhost:3000"
+  ["plane"]="http://localhost:8082"
+)
+
+# Helper function to display service URL
+function _display_service_url() {
+  local service=$1
+  local url=${SERVICE_URLS[$service]}
+  if [[ -n "$url" ]]; then
+    echo "  → Access $service at: $url"
+  fi
+}
+
 # Convenience functions for OpenWebUI
 function openwebui-start() {
   task -g services:start:openwebui
+  _display_service_url "openwebui"
 }
 
 function openwebui-stop() {
@@ -12,6 +33,7 @@ function openwebui-stop() {
 
 function openwebui-restart() {
   task -g services:restart:openwebui
+  _display_service_url "openwebui"
 }
 
 function openwebui-logs() {
@@ -25,6 +47,7 @@ function openwebui-mcps() {
 # Convenience functions for Flame
 function flame-start() {
   task -g services:start:flame
+  _display_service_url "flame"
 }
 
 function flame-stop() {
@@ -33,6 +56,7 @@ function flame-stop() {
 
 function flame-restart() {
   task -g services:restart:flame
+  _display_service_url "flame"
 }
 
 function flame-logs() {
@@ -42,6 +66,7 @@ function flame-logs() {
 # Convenience functions for Owlistic
 function owlistic-start() {
   task -g services:start:owlistic
+  _display_service_url "owlistic"
 }
 
 function owlistic-stop() {
@@ -50,6 +75,7 @@ function owlistic-stop() {
 
 function owlistic-restart() {
   task -g services:restart:owlistic
+  _display_service_url "owlistic"
 }
 
 function owlistic-logs() {
@@ -59,6 +85,7 @@ function owlistic-logs() {
 # Convenience functions for Graphiti MCP
 function graphiti-mcp-start() {
   task -g services:start:graphiti-mcp
+  _display_service_url "graphiti-mcp"
 }
 
 function graphiti-mcp-stop() {
@@ -67,6 +94,7 @@ function graphiti-mcp-stop() {
 
 function graphiti-mcp-restart() {
   task -g services:restart:graphiti-mcp
+  _display_service_url "graphiti-mcp"
 }
 
 function graphiti-mcp-logs() {
@@ -76,6 +104,7 @@ function graphiti-mcp-logs() {
 # Convenience functions for n8n
 function n8n-start() {
   task -g services:start:n8n
+  _display_service_url "n8n"
 }
 
 function n8n-stop() {
@@ -84,6 +113,7 @@ function n8n-stop() {
 
 function n8n-restart() {
   task -g services:restart:n8n
+  _display_service_url "n8n"
 }
 
 function n8n-logs() {
@@ -93,6 +123,7 @@ function n8n-logs() {
 # Convenience functions for Twenty CRM
 function twenty-start() {
   task -g services:start:twenty
+  _display_service_url "twenty"
 }
 
 function twenty-stop() {
@@ -101,6 +132,7 @@ function twenty-stop() {
 
 function twenty-restart() {
   task -g services:restart:twenty
+  _display_service_url "twenty"
 }
 
 function twenty-logs() {
@@ -110,6 +142,7 @@ function twenty-logs() {
 # Convenience functions for Plane
 function plane-start() {
   task -g services:start:plane
+  _display_service_url "plane"
 }
 
 function plane-stop() {
@@ -118,6 +151,7 @@ function plane-stop() {
 
 function plane-restart() {
   task -g services:restart:plane
+  _display_service_url "plane"
 }
 
 function plane-logs() {
