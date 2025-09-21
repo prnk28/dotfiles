@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=LazySSH
+Comment=LazySSH TUI
+Exec=alacritty --class TUI.float --config-file $XDG_CONFIG_HOME/alacritty/lazyssh.toml
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Lazyssh.png
+StartupNotify=true

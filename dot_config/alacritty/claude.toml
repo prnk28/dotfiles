@@ -8,37 +8,33 @@ args = ["-l", "-c", "claude"]
 
 [window]
 blur = false
-dynamic_padding = false
+dynamic_padding = true
 decorations = "Buttonless"
 opacity = 0.85
 option_as_alt = "Both"
 
 [font]
-size = 13.5
+size = 11.5
 
 [font.bold]
-family = "VictorMono Nerd Font Mono"
-style = "Light"
+family = "CaskaydiaMono Nerd Font"
+style = "Regular"
 
 [font.bold_italic]
-family = "VictorMono Nerd Font Mono"
-style = "Light Italic"
+family = "CaskaydiaMono Nerd Font"
+style = "Regular Italic"
 
 [font.italic]
-family = "VictorMono Nerd Font Mono"
-style = "ExtraLight Italic"
+family = "CaskaydiaMono Nerd Font"
+style = "Light Italic"
 
 [font.normal]
-family = "VictorMono Nerd Font Mono"
-style = "ExtraLight"
+family = "CaskaydiaMono Nerd Font"
+style = "Light"
 
 [mouse]
 hide_when_typing = true
 bindings = [{ mouse = "Right", mods = "Control", action = "Paste" }]
-
-[colors.cursor]
-cursor = "0xd8d8d8"
-text = "0x181818"
 
 [[keyboard.bindings]]
 key = "E"

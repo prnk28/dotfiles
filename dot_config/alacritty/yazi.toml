@@ -13,31 +13,27 @@ opacity = 0.95
 option_as_alt = "Both"
 
 [font]
-size = 12.5
+size = 12
 
 [font.bold]
-family = "VictorMono Nerd Font Mono"
-style = "Light"
+family = "JetbrainsMono Nerd Font Mono"
+style = "Regular"
 
 [font.bold_italic]
-family = "VictorMono Nerd Font Mono"
-style = "Light Italic"
+family = "JetbrainsMono Nerd Font Mono"
+style = "Regular Italic"
 
 [font.italic]
-family = "VictorMono Nerd Font Mono"
-style = "ExtraLight Italic"
+family = "JetbrainsMono Nerd Font Mono"
+style = "Light Italic"
 
 [font.normal]
-family = "VictorMono Nerd Font Mono"
-style = "ExtraLight"
+family = "JetbrainsMono Nerd Font Mono"
+style = "Light"
 
 [mouse]
 hide_when_typing = true
 bindings = [{ mouse = "Right", mods = "Control", action = "Paste" }]
-
-[colors.cursor]
-cursor = "0xd8d8d8"
-text = "0x181818"
 
 [[keyboard.bindings]]
 key = "E"

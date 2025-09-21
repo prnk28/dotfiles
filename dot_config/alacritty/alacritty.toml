@@ -8,13 +8,13 @@ args = ["-l"]
 
 [window]
 blur = false
-dynamic_padding = false
+dynamic_padding = true
 decorations = "Buttonless"
 opacity = 0.8
 option_as_alt = "Both"
 
 [font]
-size = 10
+size = 11
 
 [font.bold]
 family = "VictorMono Nerd Font Mono"
@@ -35,10 +35,6 @@ style = "ExtraLight"
 [mouse]
 hide_when_typing = true
 bindings = [{ mouse = "Right", mods = "Control", action = "Paste" }]
-
-[colors.cursor]
-cursor = "0xd8d8d8"
-text = "0x181818"
 
 [[keyboard.bindings]]
 key = "E"

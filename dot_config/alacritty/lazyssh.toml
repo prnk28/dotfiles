@@ -3,7 +3,7 @@ live_config_reload = true
 
 [terminal.shell]
 program = "/bin/zsh"
-args = ["-l", "-c", "lazygit"]
+args = ["-l", "-c", "lazyssh"]
 
 [window]
 blur = true
@@ -16,19 +16,19 @@ option_as_alt = "Both"
 size = 12
 
 [font.bold]
-family = "JetbrainsMono Nerd Font Mono"
+family = "JetbrainsMonoNL Nerd Font Mono"
 style = "Regular"
 
 [font.bold_italic]
-family = "JetbrainsMono Nerd Font Mono"
+family = "JetbrainsMonoNL Nerd Font Mono"
 style = "Regular Italic"
 
 [font.italic]
-family = "JetbrainsMono Nerd Font Mono"
+family = "JetbrainsMonoNL Nerd Font Mono"
 style = "Light Italic"
 
 [font.normal]
-family = "JetbrainsMono Nerd Font Mono"
+family = "JetbrainsMonoNL Nerd Font Mono"
 style = "Light"
 
 [mouse]
