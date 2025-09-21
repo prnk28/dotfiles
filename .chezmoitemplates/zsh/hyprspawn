@@ -5,7 +5,7 @@ function _claudespawn() {
 }
 
 
-alias /c="_claudespawn"
+alias /c="claude"
 
 alias /cr="claude --continue"
 
