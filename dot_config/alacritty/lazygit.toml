@@ -13,23 +13,23 @@ opacity = 0.95
 option_as_alt = "Both"
 
 [font]
-size = 12
+size = 11.5
 
 [font.bold]
-family = "JetbrainsMono Nerd Font Mono"
-style = "Regular"
+family = "JetbrainsMonoNL Nerd Font Mono"
+style = "ExtraLight"
 
 [font.bold_italic]
-family = "JetbrainsMono Nerd Font Mono"
-style = "Regular Italic"
+family = "JetbrainsMonoNL Nerd Font Mono"
+style = "ExtraLight Italic"
 
 [font.italic]
-family = "JetbrainsMono Nerd Font Mono"
-style = "Light Italic"
+family = "JetbrainsMonoNL Nerd Font Mono"
+style = "Thin Italic"
 
 [font.normal]
-family = "JetbrainsMono Nerd Font Mono"
-style = "Light"
+family = "JetbrainsMonoNL Nerd Font Mono"
+style = "Thin"
 
 [mouse]
 hide_when_typing = true

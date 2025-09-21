@@ -18,19 +18,19 @@ size = 11.5
 
 [font.bold]
 family = "CaskaydiaMono Nerd Font"
-style = "Regular"
+style = "ExtraLight"
 
 [font.bold_italic]
 family = "CaskaydiaMono Nerd Font"
-style = "Regular Italic"
+style = "ExtraLight Italic"
 
 [font.italic]
 family = "CaskaydiaMono Nerd Font"
-style = "Light Italic"
+style = "Thin Italic"
 
 [font.normal]
 family = "CaskaydiaMono Nerd Font"
-style = "Light"
+style = "Thin"
 
 [mouse]
 hide_when_typing = true
