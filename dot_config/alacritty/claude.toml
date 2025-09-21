@@ -14,7 +14,7 @@ opacity = 0.9
 option_as_alt = "Both"
 
 [font]
-size = 12
+size = 11
 
 [font.bold]
 family = "JetbrainsMonoNL Nerd Font Mono"
