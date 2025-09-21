@@ -1,26 +1,20 @@
 [general]
-import = ["~/.config/alacritty/themes/cyberdream.toml"]
 live_config_reload = true
-working_directory = "/Users/prad/Developer"
+working_directory = "/home/prad/code"
 
-# Tell Alacritty to run the ssh client directly.
-# [terminal.shell]
-# program = "/usr/bin/ssh"
-# args = ["-C", "code"]
-#
 [terminal.shell]
 program = "/bin/zsh"
 args = ["-l"]
 
 [window]
-blur = true
+blur = false
 dynamic_padding = false
 decorations = "Buttonless"
-opacity = 0.85
+opacity = 0.8
 option_as_alt = "Both"
 
 [font]
-size = 10.5
+size = 10
 
 [font.bold]
 family = "VictorMono Nerd Font Mono"

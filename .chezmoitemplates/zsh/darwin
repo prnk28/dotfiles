@@ -34,3 +34,13 @@ if [[ "$-" == *i* ]] && [[ -z "$TMUX" ]] && [ -x "$(command -v tt)" ]; then
   tt attach-session -t main || tt new-session -s main
 fi
 
+
+alias /a="aider"
+alias /c="claude"
+alias /cr="claude --continue"
+alias /g="gemini"
+alias /m="mods"
+alias /o="opencode"
+alias /v="npx vibe-kanban"
+alias oc="opencode"
+

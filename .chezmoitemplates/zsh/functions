@@ -25,6 +25,14 @@ dxr() {
 zle -N dxr-widget dxr
 bindkey '^A' dxr-widget
 
+function mdcp() {
+  local url="$1"
+  if [ -z "$url" ]; then
+    gum log --level error "Please provide a URL"
+    return 1
+  fi
+  markitdown "$url" | copy
+}
 
 fdcd() {
   local dir

@@ -1,0 +1,18 @@
+
+function _claudespawn() {
+  local cwd="$PWD"
+  uwsm app -- alacritty --hold --class="TUI.tile" --config-file="$XDG_CONFIG_HOME/alacritty/claude.toml" --working-directory="$cwd" -e claude
+}
+
+
+alias /c="_claudespawn"
+
+alias /cr="claude --continue"
+
+alias /g="gemini"
+
+alias /m="mods"
+
+alias /o="opencode"
+
+

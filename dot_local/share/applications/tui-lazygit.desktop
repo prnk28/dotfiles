@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Lazygit
+Comment=Lazygit
+Exec=alacritty --class TUI.float --config-file $XDG_CONFIG_HOME/alacritty/lazygit.toml
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Lazygit.png
+StartupNotify=true

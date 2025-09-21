@@ -39,6 +39,15 @@ function c() {
 }
 alias j="c"
 
+
+{{ if eq .chezmoi.os "darwin" -}}
+alias copy="pbcopy"
+alias paste="pbpaste"
+{{ else -}}
+alias copy="wl-copy"
+alias paste="wl-paste"
+{{ end -}}
+
 # ============================================
 # Directory Navigation
 # ============================================
@@ -143,13 +152,6 @@ alias chrome="/Applications/Google Chrome Dev.app/Contents/MacOS/Google Chrome D
 # ============================================
 # Quick Commands
 # ============================================
-alias /a="aider"
-alias /c="claude"
-alias /cr="claude --continue"
-alias /g="gemini"
-alias /m="mods"
-alias /o="opencode"
-alias /v="npx vibe-kanban"
 alias oc="opencode"
 
 # npm/pnpm aliases
