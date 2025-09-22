@@ -201,4 +201,9 @@ alias dxgsr="devbox global services restart"
 alias dxgss="devbox global services start"
 alias dxgsu="devbox global services up"
 
-
+alias mx="manx"
+alias mxi="manx index"
+alias mxs="manx search"
+alias mxd="manx doc"
+alias mxp="manx snippet"
+alias mxg="manx get"
