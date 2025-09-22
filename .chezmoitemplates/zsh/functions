@@ -782,5 +782,38 @@ bindkey -M viins '\es' sesh-sessions
 
 {{ end -}}
 
+function sshc() {
+  gum format "SSH Command on All Servers"
+  echo "\n"
+  # Get all variables after the command and make into a string
+  sshsync all "$(gum input --header "Enter SSH command: ")"
+}
 
+function sshb() {
+  gum format "# SSH Command on Build Server"
+  echo "\n"
+  # Get all variables after the command and make into a string
+  sshsync group builder "$(gum input --header "Enter SSH command: ")"
+}
+
+function ssht() {
+  gum format "# SSH Command on Testnet Server"
+  echo "\n"
+  # Get all variables after the command and make into a string
+  sshsync group testnet "$(gum input --header "Enter SSH command: ")"
+}
+
+function sshg() {
+  gum format "# SSH Command on Gateway Server"
+  echo "\n"
+  # Get all variables after the command and make into a string
+  sshsync group gateway "$(gum input --header "Enter SSH command: ")"
+}
+
+function sshr() {
+  gum format "# SSH Command on Tool Servers"
+  echo "\n"
+  # Get all variables after the command and make into a string
+  sshsync group tools "$(gum input --header "Enter SSH command: ")"
+}
 
