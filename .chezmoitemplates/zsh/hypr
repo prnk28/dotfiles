@@ -12,13 +12,13 @@ function _spawnTile() {
   return 0
 }
 
-alias /c="omarchy-launch-tui-tile claude"
-alias /cr="omarchy-launch-tui-tile claude --continue"
-alias /g="omarchy-launch-tui-tile gemini"
-alias /m="omarchy-launch-tui-tile mods"
-alias /o="omarchy-launch-tui-tile opencode"
-alias dd="omarchy-launch-tui-float lazydocker"
-alias e="omarchy-launch-tui-tile nvim"
-alias gg="omarchy-launch-tui-float lazygit"
-alias y="omarchy-launch-tui-float yazi"
+alias /c="_spawnTile claude"
+alias /cr="_spawnTile claude --continue"
+alias /g="_spawnTile gemini"
+alias /m="_spawnTile mods"
+alias /o="_spawnTile omarchy"
+alias dd="_spawnFloat lazydocker"
+alias e="_spawnTile nvim"
+alias gg="_spawnFloat lazygit"
+alias y="_spawnFloat yazi"
 
