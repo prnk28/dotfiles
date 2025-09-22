@@ -15,7 +15,6 @@ if [ -z "$CF_ACCOUNT_ID" ]; then
 fi
 curl -s "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/cfd_tunnel" \
   -H "Authorization: Bearer $CF_API_TOKEN" | \
-jq -r '.result[] | "\(.name)|\(.status)|\(.connections | length)|\(.created_at[:10])"' | \
 column -t -s '|' -N "NAME,STATUS,CONNS,CREATED" | \
 sort -k2,2 -k1,1
 """
@@ -26,26 +25,7 @@ command = """
 tunnel_name=$(echo '{}' | awk '{print $1}')
 curl -s "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/cfd_tunnel" \
   -H "Authorization: Bearer $CF_API_TOKEN" | \
-jq -r --arg name "$tunnel_name" '.result[] | select(.name == $name)' | \
-jq -r '
-"━━━ TUNNEL DETAILS ━━━
-Name:     \(.name)
-ID:       \(.id)
-Status:   \(.status)
-Type:     \(.tun_type)
-
-━━━ TIMESTAMPS ━━━
-Created:  \(.created_at)
-Deleted:  \(.deleted_at // "Active")
-Active:   \(.conns_active_at // "Never")
-Inactive: \(.conns_inactive_at // "N/A")
-
-━━━ CONNECTIONS (\(.connections | length)) ━━━
-\(.connections[] | "• \(.colo_name) [\(.origin_ip)]
-  ID:      \(.uuid)
-  Client:  \(.client_version)
-  Opened:  \(.opened_at)")
-"'
+jq -r --arg name "$tunnel_name" '.result[] | select(.name == $name)' | jq -r '.configuration.origins[0].address'
 """
 env = { CF_API_TOKEN = "${CF_API_TOKEN}", CF_ACCOUNT_ID = "${CF_ACCOUNT_ID}" }
 
@@ -53,4 +33,4 @@ env = { CF_API_TOKEN = "${CF_API_TOKEN}", CF_ACCOUNT_ID = "${CF_ACCOUNT_ID}" }
 preview_panel = { "size" = 65, "scrollbar" = true }
 
 [keybindings]
-shortcut = "t"
+shortcut = "f3"

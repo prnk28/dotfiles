@@ -59,8 +59,8 @@ gho() {
         if [ "$persistent_mode" = true ]; then
             header_text="$header_text [Persistent Mode - Ctrl+C to exit]"
         fi
-        
-        selected_repo=$( (echo ".local/share/chezmoi" && ghq list) | fzf \
+
+        selected_repo=$( (echo ".local/share/chezmoi" && (ghq list | rg 'sonr-io' --text) | fzf \
             --header "$header_text" \
             --preview "if [[ '{}' == '.local/share/chezmoi' ]]; then cd \$HOME/.local/share/chezmoi; else cd \$(ghq root)/{}; fi && echo -e '\033[1;34mRecent commits:\033[0m' && git log --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(blue)%an%C(reset), %C(green)%ar%C(reset) : %s' --abbrev-commit -8 && echo -e '\n\n\033[1;32mBranch info:\033[0m' && git branch -v 2>/dev/null || echo 'No git repository'" \
             --preview-window="right:60%" \
@@ -93,7 +93,7 @@ gho() {
             # Open in editor if edit or claude mode is enabled
             if [ "$edit_mode" = true ]; then
                 echo "🚀 Opening in nvim..."
-                nvim .
+                nvim
 
                 # If not in persistent mode, exit after nvim
                 if [ "$persistent_mode" = false ]; then
@@ -106,7 +106,7 @@ gho() {
                 fi
             elif [ "$claude_mode" = true ]; then
                 echo "🤖 Opening in Claude Code..."
-                claude .
+                claude
 
                 # If not in persistent mode, exit after claude
                 if [ "$persistent_mode" = false ]; then

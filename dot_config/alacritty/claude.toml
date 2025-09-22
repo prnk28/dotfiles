@@ -4,7 +4,7 @@ working_directory = "/home/prad/code/github.com/sonr-io/sonr"
 
 [terminal.shell]
 program = "/bin/zsh"
-args = ["-l", "-c", "claude"]
+args = ["-l", "-c", "/home/prad/.local/bin/ghc"]
 
 [window]
 blur = false
@@ -17,20 +17,20 @@ option_as_alt = "Both"
 size = 11
 
 [font.bold]
-family = "JetbrainsMonoNL Nerd Font Mono"
-style = "ExtraLight"
+family = "VictorMono Nerd Font Mono"
+style = "Light"
 
 [font.bold_italic]
-family = "JetbrainsMonoNL Nerd Font Mono"
-style = "ExtraLight Italic"
+family = "VictorMono Nerd Font Mono"
+style = "Light Italic"
 
 [font.italic]
-family = "JetbrainsMonoNL Nerd Font Mono"
-style = "Thin Italic"
+family = "VictorMono Nerd Font Mono"
+style = "ExtraLight Italic"
 
 [font.normal]
-family = "JetbrainsMonoNL Nerd Font Mono"
-style = "Thin"
+family = "VictorMono Nerd Font Mono"
+style = "ExtraLight"
 
 
 [mouse]

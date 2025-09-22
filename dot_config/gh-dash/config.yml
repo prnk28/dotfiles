@@ -60,17 +60,13 @@ keybindings:
     - key: N
       command: >
         task -t ~/.config/gh-dash/Taskfile.yml new-issue REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
-
     - key: E
       command: >
         task -t ~/.config/gh-dash/Taskfile.yml edit-issue ISSUE_NUMBER={{.IssueNumber}} REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
-
-    - key: O
-      command: >
-        task -t ~/.config/gh-dash/Taskfile.yml open-issue ISSUE_NUMBER={{.IssueNumber}} REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
-
+    - key: o
+      command: omarchy-launch-webapp "https://github.com/{{.RepoName}}/issues/{{.IssueNumber}}"
     - key: S
-      command: "nvim-issue {{.RepoPath}} {{.IssueNumber}}"
+      command: "nvim {{.RepoPath}} -c 'Octo issue edit {{.IssueNumber}}'"
   branches: []
 repoPaths:
   sonr-io/sonr: /home/prad/code/github.com/sonr-io/sonr

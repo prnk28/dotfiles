@@ -7,4 +7,5 @@
 source /home/prad/.local/bin/gho
 
 # Run gho in persistent Claude Code mode
-gho -C "$@"
+# The -C flag already handles the claude command, no need to pass additional arguments
+gho -C

@@ -14,7 +14,7 @@ env = { BAT_THEME = "Catppuccin Mocha" }
 preview_panel = { "size" = 70, "scrollbar" = true }
 
 [keybindings]
-shortcut = "f"
+shortcut = "f1"
 enter = "actions:edit"
 
 [actions.edit]

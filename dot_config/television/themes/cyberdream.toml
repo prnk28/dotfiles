@@ -1,0 +1,28 @@
+# Cyberdream theme for Television
+
+# general
+background = '#16181a'
+border_fg = '#5ea1ff'
+text_fg = '#ffffff'
+dimmed_text_fg = '#5ef1ff'
+
+# input
+input_text_fg = '#f1ff5e'
+result_count_fg = '#ff6e5e'
+
+# results
+result_name_fg = '#5ea1ff'
+result_line_number_fg = '#f1ff5e'
+result_value_fg = '#ffffff'
+selection_fg = '#5eff6c'
+selection_bg = '#3c4048'
+match_fg = '#ff6e5e'
+
+# preview
+preview_title_fg = '#bd5eff'
+
+# modes
+channel_mode_fg = '#16181a'
+channel_mode_bg = '#f1ff5e'
+remote_control_mode_fg = '#16181a'
+remote_control_mode_bg = '#5eff6c'
