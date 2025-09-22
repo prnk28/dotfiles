@@ -57,7 +57,8 @@ export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
 {{ template "zsh/darwin" . }}
 {{ else if eq .chezmoi.os "linux" -}}
 {{ template "zsh/linux" . }}
-{{ template "zsh/hyprspawn" . }}
+{{ template "zsh/hypr" . }}
+{{ template "zsh/ssh" . }}
 {{ end -}}
 
 # User specific aliases

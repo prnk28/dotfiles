@@ -1,0 +1,44 @@
+
+function _print_title() {
+  local title="$1"
+  local tags="$2"
+  gum format "# Remote SSH Command" "> Hosts: $title" "> Tags: $tags"
+  echo "\n"
+}
+
+function _prompt_command() {
+  echo "\n"
+  gum input --header "Enter Command: " --placeholder "docker ps" --prompt "$ "
+}
+
+function sshc() {
+  _print_title "All Servers" "hostinger, vps"
+  sshsync all "$(_prompt_command)" 
+}
+
+function sshs() {
+  host=$(awk '/^Host / {print $2}' ~/.ssh/config | fzf --height 12 --header "Select a server")
+  _print_title "$host"
+  ssh -t -o LogLevel=QUIET $host $(_prompt_command)
+}
+
+function sshb() {
+  _print_title "Build Server" "github, airbyte, synapse, plane"
+  sshsync group builder "$(_prompt_command)" 
+}
+
+function ssht() {
+  _print_title "Testnet Server" "val-4, ipfsctl, postgres"
+  sshsync group testnet "$(_prompt_command)"
+}
+
+function sshg() {
+  _print_title "Gateway Server" "ipfs, postgres, sonr"
+  sshsync group gateway "$(_prompt_command)" 
+}
+
+function sshr() {
+  _print_title "Tool Servers" "airbyte"
+  sshsync group tools "$(_prompt_command)"
+}
+
