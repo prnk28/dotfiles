@@ -782,38 +782,45 @@ bindkey -M viins '\es' sesh-sessions
 
 {{ end -}}
 
-function sshc() {
-  gum format "SSH Command on All Servers"
+function _print_title() {
+  local title="$1"
+  gum format "# Remote SSH Command" "> Hosts: $title" ""
   echo "\n"
-  # Get all variables after the command and make into a string
-  sshsync all "$(gum input --header "Enter SSH command: ")"
+}
+
+function _prompt_command() {
+  echo "\n"
+  gum input --header "Enter Command: " --placeholder "docker ps" --prompt "$ "
+}
+
+function sshc() {
+  _print_title "All Servers"
+  sshsync all "$(_prompt_command)"
+}
+
+function sshs() {
+  host=$(awk '/^Host / {print $2}' ~/.ssh/config | fzf --height 12 --header "Select a server")
+  _print_title "$host"
+  ssh -t -o LogLevel=QUIET $host $(_prompt_command)
 }
 
 function sshb() {
-  gum format "# SSH Command on Build Server"
-  echo "\n"
-  # Get all variables after the command and make into a string
-  sshsync group builder "$(gum input --header "Enter SSH command: ")"
+  _print_title "Build Server"
+  sshsync group builder "$(_prompt_command)"
 }
 
 function ssht() {
-  gum format "# SSH Command on Testnet Server"
-  echo "\n"
-  # Get all variables after the command and make into a string
-  sshsync group testnet "$(gum input --header "Enter SSH command: ")"
+  _print_title "Testnet Server"
+  sshsync group testnet "$(_prompt_command)"
 }
 
 function sshg() {
-  gum format "# SSH Command on Gateway Server"
-  echo "\n"
-  # Get all variables after the command and make into a string
-  sshsync group gateway "$(gum input --header "Enter SSH command: ")"
+  _print_title "Gateway Server"
+  sshsync group gateway "$(_prompt_command)"
 }
 
 function sshr() {
-  gum format "# SSH Command on Tool Servers"
-  echo "\n"
-  # Get all variables after the command and make into a string
-  sshsync group tools "$(gum input --header "Enter SSH command: ")"
+  _print_title "Tool Servers"
+  sshsync group tools "$(_prompt_command)"
 }
 
