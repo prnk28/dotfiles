@@ -1,0 +1,6 @@
+#!/bin/zsh
+
+cmd="$@"
+cwd="$PWD"
+exec setsid uwsm app -- ghostty --class="TUI.float" --working-directory="$cwd" -e "$cmd"
+return 0

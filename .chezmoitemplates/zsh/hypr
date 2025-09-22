@@ -1,18 +1,24 @@
-
-function _claudespawn() {
+function _spawnFloat() {
+  local cmd="$@"
   local cwd="$PWD"
-  uwsm app -- alacritty --hold --class="TUI.tile" --config-file="$XDG_CONFIG_HOME/alacritty/claude.toml" --working-directory="$cwd" -e claude
+  exec setsid uwsm app -- alacritty --class="TUI.float" --config-file="$XDG_CONFIG_HOME/alacritty/float.toml" --working-directory="$cwd" -e "$cmd"
+  return 0
 }
 
+function _spawnTile() {
+  local cmd="$@"
+  local cwd="$PWD"
+  exec setsid uwsm app -- alacritty --class="TUI.tile" --config-file="$XDG_CONFIG_HOME/alacritty/tile.toml" --working-directory="$cwd" -e "$cmd"
+  return 0
+}
 
-alias /c="claude"
-
-alias /cr="claude --continue"
-
-alias /g="gemini"
-
-alias /m="mods"
-
-alias /o="opencode"
-
+alias /c="omarchy-launch-tui-tile claude"
+alias /cr="omarchy-launch-tui-tile claude --continue"
+alias /g="omarchy-launch-tui-tile gemini"
+alias /m="omarchy-launch-tui-tile mods"
+alias /o="omarchy-launch-tui-tile opencode"
+alias dd="omarchy-launch-tui-float lazydocker"
+alias e="omarchy-launch-tui-tile nvim"
+alias gg="omarchy-launch-tui-float lazygit"
+alias y="omarchy-launch-tui-float yazi"
 

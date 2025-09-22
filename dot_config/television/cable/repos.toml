@@ -1,14 +1,21 @@
 [metadata]
 name = "repos"
-requirements = ["fd", "git"]
-description = "A channel to select from git repositories on your local machine.\n\nThis channel uses `fd` to find directories that contain a `.git` subdirectory, and then allows you to preview the git log of the selected repository.\n"
+description = "A channel to select Github repos"
+requirements = ["gh", "ghq", "nvim"]
 
 [source]
-command = "fd -g .git -HL -t d -d 10 --prune ~ -E 'Library' -E 'Application Support' --exec dirname '{}'"
-display = "{split:/:-1}"
+command = "ghq list"
 
 [preview]
-command = "cd '{}'; git log -n 200 --pretty=medium --all --graph --color"
+command = "gh repo view '{}'"
+
+[ui]
+preview_panel = { "size" = 70, "scrollbar" = true }
 
 [keybindings]
 shortcut = "f2"
+enter = "actions:edit"
+
+[actions.edit]
+command = "cd $GHQ_ROOT/{} && nvim ."
+description = "Open Repo"

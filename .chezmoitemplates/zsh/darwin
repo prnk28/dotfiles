@@ -44,3 +44,7 @@ alias /o="opencode"
 alias /v="npx vibe-kanban"
 alias oc="opencode"
 
+alias gg="lazygit"
+alias y="yazi"
+alias dd="lazydocker"
+alias e="nvim"

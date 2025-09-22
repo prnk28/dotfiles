@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # gho - Interactive Git Repository Navigator with fzf
 # Usage: source gho (to change directory in current shell)
@@ -60,7 +60,7 @@ gho() {
             header_text="$header_text [Persistent Mode - Ctrl+C to exit]"
         fi
 
-        selected_repo=$( (echo ".local/share/chezmoi" && (ghq list | rg 'sonr-io' --text) | fzf \
+        selected_repo=$( (echo ".local/share/chezmoi" && (ghq list | rg 'sonr')) | fzf \
             --header "$header_text" \
             --preview "if [[ '{}' == '.local/share/chezmoi' ]]; then cd \$HOME/.local/share/chezmoi; else cd \$(ghq root)/{}; fi && echo -e '\033[1;34mRecent commits:\033[0m' && git log --graph --pretty=format:'%C(yellow)%h%C(reset) - %C(blue)%an%C(reset), %C(green)%ar%C(reset) : %s' --abbrev-commit -8 && echo -e '\n\n\033[1;32mBranch info:\033[0m' && git branch -v 2>/dev/null || echo 'No git repository'" \
             --preview-window="right:60%" \

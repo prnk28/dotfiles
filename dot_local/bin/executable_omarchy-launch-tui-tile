@@ -1,0 +1,6 @@
+#!/bin/zsh
+
+cmd="$@"
+cwd="$PWD"
+exec setsid uwsm app -- alacritty --class="TUI.tile" --config-file="$XDG_CONFIG_HOME/alacritty/tile.toml" --working-directory="$cwd" -e "$cmd"
+return 0

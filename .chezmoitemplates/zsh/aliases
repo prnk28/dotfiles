@@ -3,7 +3,6 @@
 # Core Commands
 # ============================================
 # Editor
-alias e="nvim"
 alias vi="nvim"
 alias vim="nvim"
 alias e.usr="cd /usr/local/bin && sudo nvim"
@@ -38,7 +37,7 @@ function c() {
   fi
 }
 alias j="c"
-
+alias cb="cd -"
 
 {{ if eq .chezmoi.os "darwin" -}}
 alias copy="pbcopy"
@@ -76,7 +75,6 @@ alias gt='tree -a --prune -I "api|chains|interchaintest|.devcontainer|.github|.a
 # ============================================
 # Git & Version Control
 # ============================================
-alias gg="lazygit"
 alias gpu="git push --set-upstream origin HEAD"
 alias gsb="git switch -"
 alias gdf="git diff"
@@ -106,7 +104,6 @@ alias t="dstask"
 alias ti="dstask-import"
 
 # Docker
-alias dd="lazydocker"
 alias dkrmi="docker_rm_image"
 alias dkc="docker_storm_container"
 
@@ -129,7 +126,6 @@ alias txkill="tmux kill-server && tmux || tmux"
 # Applications & Utilities
 # ============================================
 # File management
-alias y="yazi"
 
 # Networking
 alias crl="curlie"

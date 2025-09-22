@@ -1,15 +1,16 @@
 [general]
 live_config_reload = true
+working_directory = "/home/prad/code/github.com/sonr-io/sonr"
 
 [terminal.shell]
 program = "/bin/zsh"
-args = ["-l", "-c", "gh dash"]
+args = ["-l"]
 
 [window]
-blur = true
+blur = false
 dynamic_padding = true
 decorations = "Buttonless"
-opacity = 0.9
+opacity = 0.8
 option_as_alt = "Both"
 
 [font]
@@ -30,6 +31,7 @@ style = "ExtraLight Italic"
 [font.normal]
 family = "VictorMono Nerd Font Mono"
 style = "ExtraLight"
+
 
 [mouse]
 hide_when_typing = true
