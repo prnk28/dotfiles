@@ -54,9 +54,15 @@ defaults:
   refetchIntervalMinutes: 2
 keybindings:
   prs:
+    - key: R
+      command: xdg-open "https://github.com/{{.RepoName}}/actions"
     - key: S
       command: "nvim-pr {{.RepoPath}} {{.PrNumber}}"
+    - key: o
+      command: xdg-open "https://github.com/{{.RepoName}/pulls/{{.PrNumber}}"
   issues:
+    - key: R
+      command: xdg-open "https://github.com/{{.RepoName}}/actions"
     - key: N
       command: >
         task -t ~/.config/gh-dash/Taskfile.yml new-issue REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
@@ -64,7 +70,7 @@ keybindings:
       command: >
         task -t ~/.config/gh-dash/Taskfile.yml edit-issue ISSUE_NUMBER={{.IssueNumber}} REPO_NAME={{.RepoName}} REPO_PATH={{.RepoPath}}
     - key: o
-      command: omarchy-launch-webapp "https://github.com/{{.RepoName}}/issues/{{.IssueNumber}}"
+      command: xdg-open "https://github.com/{{.RepoName}}/issues/{{.IssueNumber}}"
     - key: S
       command: "nvim {{.RepoPath}} -c 'Octo issue edit {{.IssueNumber}}'"
   branches: []
