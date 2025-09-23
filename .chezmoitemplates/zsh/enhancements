@@ -45,14 +45,14 @@ zle -N _ghc_widget
 bindkey '^K' _ghc_widget  # Ctrl+K
 
 # Zsh bottom prompt configuration
-if [[ -n "$ZSH_VERSION" ]]; then
-  # Function to move prompt to bottom
-  function move_prompt_to_bottom() {
-    local rows=$(tput lines)
-    echo -ne "\033[${rows};0H"
-  }
-
-  # Add to precmd functions to run before each prompt
-  autoload -Uz add-zsh-hook
-  add-zsh-hook precmd move_prompt_to_bottom
-fi
+# if [[ -n "$ZSH_VERSION" ]]; then
+#   # Function to move prompt to bottom
+#   function move_prompt_to_bottom() {
+#     local rows=$(tput lines)
+#     echo -ne "\033[${rows};0H"
+#   }
+#
+#   # Add to precmd functions to run before each prompt
+#   autoload -Uz add-zsh-hook
+#   add-zsh-hook precmd move_prompt_to_bottom
+# fi

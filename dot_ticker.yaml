@@ -1,0 +1,36 @@
+# ~/.ticker.yaml
+show-summary: true
+show-tags: true
+show-fundamentals: true
+show-separator: true
+show-holdings: true
+interval: 5
+currency: USD
+currency-summary-only: false
+watchlist:
+  - NET
+  - TEAM
+  - ESTC
+  - BTC-USD # Bitcoin price via Yahoo
+  - SOL.X # Solana price via Coinbase
+  - BIT-30MAY25-CDE.CB # Bitcoin futures contract price via Coinbase
+lots:
+  - symbol: "ABNB"
+    quantity: 35.0
+    unit_cost: 146.00
+  - symbol: "ARKW"
+    quantity: 20.0
+    unit_cost: 152.25
+  - symbol: "ARKW"
+    quantity: 20.0
+    unit_cost: 145.35
+    fixed_cost: 7.00 # e.g. brokerage commission fee
+groups:
+  - name: crypto
+    watchlist:
+      - SHIB-USD
+      - VGX-USD
+    holdings:
+      - symbol: SOL1-USD
+        quantity: 17
+        unit_cost: 159.10
