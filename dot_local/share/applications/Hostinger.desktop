@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Name=Hostinger
-Comment=Hostinger VPS
-Exec=omarchy-launch-webapp https://hpanel.hostinger.com/vps
-Terminal=false
-Type=Application
-Icon=/home/prad/.local/share/applications/icons/Hostinger.png
-StartupNotify=true

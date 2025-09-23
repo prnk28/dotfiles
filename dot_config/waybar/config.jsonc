@@ -5,7 +5,11 @@
 	"spacing": 0,
 	"height": 26,
 	"modules-left": ["custom/omarchy"],
-	"modules-center": ["custom/screenrecording-indicator", "hyprland/workspaces"],
+	"modules-center": [
+		"custom/screenrecording-indicator",
+		"hyprland/workspaces",
+		"hyprland/submap"
+	],
 	"modules-right": [
 		"bluetooth",
 		"network",
@@ -34,6 +38,11 @@
 			"2": [],
 			"3": []
 		}
+	},
+	"hyprland/submap": {
+		"format": "{}",
+		"max-length": 30,
+		"tooltip": false
 	},
 	"custom/omarchy": {
 		"format": "<span font='sonr'> </span>",

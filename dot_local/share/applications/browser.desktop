@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Browser
+Comment=Chromium Web Browser
+Exec=omarchy-launch-webapp 
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Chromium.png
+StartupNotify=true

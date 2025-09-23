@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Name=Cloudflare R2
-Comment=Cloudflare R2
-Exec=omarchy-launch-webapp https://dash.cloudflare.com/eb37925850388bca807b7fab964c12bb/r2/overview
-Terminal=false
-Type=Application
-Icon=/home/prad/.local/share/applications/icons/CloudflareR2.png
-StartupNotify=true
