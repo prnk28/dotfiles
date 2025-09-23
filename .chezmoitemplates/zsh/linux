@@ -32,3 +32,5 @@ if command -v tmux &> /dev/null && [ -z "$TMUX" ] && [ -z "$INSIDE_EMACS" ] && [
     esac
   fi
 fi
+
+export PATH="/var/lib/osxcross/bin:$PATH"
