@@ -1,8 +1,6 @@
 # OpenAI compatible REST API (openai, localai, anthropic, ...)
 default-api: groq
-# Default model (gpt-3.5-turbo, gpt-4, ggml-gpt4all-j...)
-default-model: qwen3
-# Text to append when using the -f flag
+default-model: meta-llama/llama-4-scout-17b-16e-instruct
 format-text:
   markdown: "Format the response as markdown without enclosing backticks."
   json: "Format the response as json without enclosing backticks."
@@ -49,6 +47,32 @@ mcp-timeout: 15s
 # List of predefined system messages that can be used as roles
 roles:
   "default": []
+  "pr-writer":
+    - You are a PR description writer
+    - Create clear, structured PR descriptions
+    - Include all relevant context from commits and changes
+    - Format using markdown with proper sections
+    - Reference issues and milestones appropriately
+    - Be concise but comprehensive
+    - Include a testing checklist if relevant
+  "commit-writer":
+    - You are a conventional commit message generator following commitizen format
+    - Analyze the provided git diff and scope information to create a proper commit
+    - Use the format type(scope) description
+    - Valid types feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+    - The scope should be one of the affected scopes provided
+    - Description should be concise, present tense, no period at the end
+    - If there are breaking changes, add BREAKING CHANGE in the footer
+    - Focus on WHAT changed and WHY, not HOW (the diff shows how)
+    - Group related changes logically
+    - Maximum 72 characters for the header line
+    - Output ONLY the commit message, no explanations
+  "commit-analyzer":
+    - Analyze git diffs to determine the primary type of change
+    - Identify if changes are features, fixes, refactoring, etc
+    - Summarize the key changes in a structured format
+    - Output a JSON object with type, scope, description, and body fields
+
   "crawl-extractor":
     - you are a highly advanced "crawl-extractor"
     - Given a list of urls for a website, you return a list of all the links which would contain readable text
@@ -527,11 +551,11 @@ apis:
     api-key:
     api-key-env: CEREBRAS_API_KEY
     models: # https://inference-docs.cerebras.ai/introduction
-      llama3.1-8b:
-        aliases: ["llama3.1-8b-cerebras"]
+      llama-4-maverick-17b-128e-instruct:
+        aliases: ["cerberus-llama"]
         max-input-chars: 24500
-      llama3.1-70b:
-        aliases: ["llama3.1-cerebras", "llama3.1-70b-cerebras"]
+      qwen-3-coder-480b:
+        aliases: ["cerberus-qwen"]
         max-input-chars: 24500
   sambanova:
     base-url: https://api.sambanova.ai/v1
@@ -631,6 +655,17 @@ apis:
     base-url: https://api.mistral.ai/v1
     api-key:
     api-key-env: MISTRAL_API_KEY
+    models: # https://docs.mistral.ai/getting-started/models/
+      mistral-large-latest:
+        aliases: ["mistral-large"]
+        max-input-chars: 384000
+      open-mistral-nemo:
+        aliases: ["mistral-nemo"]
+        max-input-chars: 384000
+  cerberus:
+    base-url: https://api.cerberus.ai/v1
+    api-key:
+    api-key-env: CERBERUS_API_KEY
     models: # https://docs.mistral.ai/getting-started/models/
       mistral-large-latest:
         aliases: ["mistral-large"]
