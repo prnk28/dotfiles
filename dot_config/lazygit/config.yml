@@ -448,9 +448,9 @@ customCommands:
     context: "files"
     prompts:
       - type: "menuFromCommand"
-        title: "ai Commits"
+        title: "AI Commit Messages"
         key: "Msg"
-        command: "bunx @m7medvision/lazycommit@1.3.12"
+        command: "~/.local/bin/mods-commit | jq -r '.commitMessages[]' | nl -nln -w2 -s'. '"
         filter: '^(?P<number>\d+)\.\s(?P<message>.+)$'
         valueFormat: "{{ .message }}"
         labelFormat: "{{ .number }}: {{ .message | green }}"

@@ -1,0 +1,117 @@
+Project Path: {{ absolute_code_path }}
+
+Please generate 10 high-quality git commit messages for the provided `git diff`. Analyze the diff to understand the changes and their impact.
+
+Source Tree:
+```
+{{ source_tree }}
+```
+
+{{#if git_diff}}
+Diff:
+```
+{{git_diff}}
+```
+{{/if}}
+
+**Format Requirements:**
+
+Each commit message MUST follow the conventional commits format with scope:
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+**Available Types:**
+- `feat`: New feature or capability
+- `fix`: Bug fix
+- `docs`: Documentation only changes
+- `style`: Code style changes (formatting, missing semicolons, etc)
+- `refactor`: Code change that neither fixes a bug nor adds a feature
+- `perf`: Performance improvements
+- `test`: Adding or modifying tests
+- `build`: Changes to build system or dependencies
+- `ci`: Changes to CI/CD configuration
+- `chore`: Other changes that don't modify src or test files
+
+**Scope Mapping (based on file paths):**
+- `core`: Core blockchain (cmd/snrd/**, app/**)
+- `hway`: Highway service (cmd/hway/**, bridge/**)
+- `motr`: Motor WASM (cmd/motr/**)
+- `vault`: Vault system (cmd/vault/**)
+- `dex`: DEX module (x/dex/**, proto/dex/**)
+- `did`: DID module (x/did/**, proto/did/**)
+- `dwn`: DWN module (x/dwn/**, proto/dwn/**)
+- `svc`: Service module (x/svc/**, proto/svc/**)
+- `client`: Client library (client/**)
+- `crypto`: Cryptography (crypto/**)
+- `pkg-es`: ES package (packages/es/**)
+- `pkg-sdk`: SDK package (packages/sdk/**)
+- `pkg-ui`: UI components (packages/ui/**)
+- `web-auth`: Auth app (web/auth/**)
+- `web-dash`: Dashboard (web/dash/**)
+- `docs`: Documentation (docs/**)
+- `devops`: CI/CD and infra (.github/**, scripts/**)
+
+**Commit Message Guidelines:**
+
+1. **Subject Line (required):**
+   - Use imperative mood ("add" not "added" or "adds")
+   - Max 50 characters
+   - No period at the end
+   - Capitalize first letter after colon
+
+2. **Scope Selection:**
+   - Choose the most specific scope that matches the primary change
+   - If changes span multiple modules, use the most impactful one
+   - For breaking changes, add `!` after scope: `feat(core)!: remove deprecated API`
+
+3. **Description Focus:**
+   - Explain the impact/purpose, not just what changed
+   - Be specific about the problem solved or value added
+   - Avoid generic terms like "update" or "fix" without context
+
+4. **Examples:**
+   - `feat(did): implement WebAuthn passkey recovery flow`
+   - `fix(vault): prevent memory leak in IPFS chunking algorithm`
+   - `perf(hway): optimize Redis pipeline for batch operations`
+   - `refactor(core): extract consensus params to shared config`
+   - `build(devops): parallelize module testing in CI pipeline`
+   - `fix(pkg-ui)!: rename Button 'type' prop to 'variant'`
+
+**Output Format:**
+
+Analyze the diff to determine:
+1. Which files are changed and map them to appropriate scope(s)
+2. The nature of the changes (bug fix, new feature, refactor, etc.)
+3. The business/technical impact of the changes
+
+Then provide 10 diverse commit messages that capture different aspects and interpretations of the changes. Focus on variety - each message should highlight a different perspective or emphasis.
+
+```json
+{
+  "analysis": {
+    "affectedScopes": ["list", "of", "scopes"],
+    "primaryScope": "most-impactful-scope",
+    "changeType": "primary type of change",
+    "impact": "brief description of what this change accomplishes"
+  },
+  "commitMessages": [
+    "type(scope): concise description of change",
+    "type(scope): another perspective on the change",
+    "type(scope): emphasizing different aspect",
+    "type(scope): focusing on user impact",
+    "type(scope): highlighting technical improvement",
+    "type(scope): addressing specific issue",
+    "type(scope): describing architectural change",
+    "type(scope): noting performance impact",
+    "type(scope): emphasizing security/stability",
+    "type(scope): capturing business value"
+  ]
+}
+```
+
+Remember: Only one message will be used, so provide diverse options that capture different valid interpretations of the changes. Push yourself to synthesize the changes to a higher level rather than just describing the code modifications.

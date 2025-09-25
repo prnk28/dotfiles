@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Generate a git commit message using code2prompt and mods
+# Uses a temporary directory for the prompt file
+
+set -euo pipefail
+
+# Create temporary directory
+tmpdir=$(mktemp -d)
+
+# Ensure cleanup on exit
+trap "rm -rf $tmpdir" EXIT
+
+# Generate commit prompt
+code2prompt -O "$tmpdir/commit_prompt.md" -d -t .github/prompts/write-git-commit.hbs .
+
+# Pipe to mods for commit message generation
+cat "$tmpdir/commit_prompt.md" | mods -R commit-writer
