@@ -1,0 +1,64 @@
+Please suggest 10 commit messages, given the following diff:
+
+```diff
+{{diff}}
+```
+
+Criteria:
+
+1. Format: Each commit message must follow the conventional commits format with scope: <type>(<scope>): <description>
+ • Types: feat, fix, docs, style, refactor, test, perf, build, ci, chore
+ • Scopes: Use one of the following based on changed files:
+  • core - Core blockchain changes (cmd/snrd/, app/)
+  • hway - Highway service changes (cmd/hway/, bridge/)
+  • motr - Motor WASM plugin changes (cmd/motr/**)
+  • vault - Vault system changes (cmd/vault/**)
+  • dex - DEX module changes (x/dex/, proto/dex/)
+  • did - DID module changes (x/did/, proto/did/)
+  • dwn - DWN module changes (x/dwn/, proto/dwn/)
+  • svc - Service module changes (x/svc/, proto/svc/)
+  • client - Client library changes
+  • crypto - Cryptography changes
+  • pkg-es - ES package changes (packages/es/**)
+  • pkg-sdk - SDK package changes (packages/sdk/**)
+  • pkg-ui - UI components (packages/ui/**)
+  • web-auth - Auth app changes (web/auth/**)
+  • web-dash - Dashboard app changes (web/dash/**)
+  • docs - Documentation changes
+  • devops - CI/CD and infrastructure (.github/, scripts/)
+
+2. Scope Selection: Choose the most specific scope that matches the primary focus of the changes. If changes span multiple scopes, use the most
+impactful one.
+3. Breaking Changes: For breaking changes, add ! after the scope: <type>(<scope>)!: <description>
+4. Enumeration: List the commit messages from 1 to 10.
+5. Clarity and Conciseness: Each message should clearly convey the change's impact, not just describe what was modified.
+
+Commit Message Examples:
+
+• fix(core): resolve consensus timeout during high load
+• feat(did): add WebAuthn biometric authentication support
+• refactor(hway): extract Redis connection pooling to shared utility
+• perf(vault): optimize IPFS chunk size for large file uploads
+• build(devops): update CI pipeline for parallel module testing
+• docs(dwn): clarify data retention policies in API reference
+• test(svc): add integration tests for domain verification flow
+• fix(pkg-ui)!: rename Button prop 'type' to 'variant' (breaking)
+
+Instructions:
+
+• Analyze the diff to understand which files/directories are affected
+• Map the file paths to the appropriate scope(s) from the list above
+• Consider the business impact and user-facing effects of the changes
+• Ensure variety in your suggestions - cover different interpretations of the changes
+• Focus on the "why" and "what effect" rather than just "what changed"
+• For breaking changes that affect APIs or interfaces, include the ! marker
+• Remember that only one message will be used, so provide diverse options that capture different aspects
+
+Write your 10 commit messages below in JSON list format:
+
+{
+  "commitMessages": [
+    "type(scope): description",
+    "type(scope): description"
+  ]
+}
