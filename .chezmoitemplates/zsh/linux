@@ -34,3 +34,5 @@ if command -v tmux &> /dev/null && [ -z "$TMUX" ] && [ -z "$INSIDE_EMACS" ] && [
 fi
 
 export PATH="/var/lib/osxcross/bin:$PATH"
+
+export GITHUB_TOKEN="$(gh auth token)"
