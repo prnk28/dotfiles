@@ -19,6 +19,15 @@ if command -v go &> /dev/null; then
         "github.com/x-motemen/ghq@latest"                # Git repository manager
         "github.com/euforic/todos@latest"
         "github.com/nametake/golangci-lint-langserver@latest"
+        "github.com/m7medvision/lazycommit@latest"       # AI-powered commit messages for lazygit
+        "github.com/mgechev/revive@latest"               # Fast Go linter
+        "golang.org/x/tools/gopls@latest"                # Go language server
+        "golang.org/x/tools/cmd/goimports@latest"        # Go imports formatter
+        "github.com/go-delve/delve/cmd/dlv@latest"       # Go debugger
+        "honnef.co/go/tools/cmd/staticcheck@latest"      # Go static analyzer
+        "github.com/fatih/gomodifytags@latest"           # Go struct tag modifier
+        "github.com/josharian/impl@latest"               # Go interface implementation generator
+        "mvdan.cc/gofumpt@latest"                        # Stricter gofmt
     )
     
     # Conditional tools - only install if not available via package manager
@@ -47,6 +56,13 @@ if command -v go &> /dev/null; then
     done
     
     echo "Go tools installed successfully"
+
+    # Create symlinks for Go tools in ~/.local/bin for better PATH compatibility
+    mkdir -p {{ .chezmoi.homeDir }}/.local/bin
+    if [ -f {{ .chezmoi.homeDir }}/.go/bin/lazycommit ]; then
+        ln -sf {{ .chezmoi.homeDir }}/.go/bin/lazycommit {{ .chezmoi.homeDir }}/.local/bin/lazycommit
+        echo "Created lazycommit symlink in ~/.local/bin"
+    fi
 else
     echo "Go is not installed. Skipping Go tools installation."
 fi

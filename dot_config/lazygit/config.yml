@@ -448,12 +448,12 @@ customCommands:
     context: "files"
     prompts:
       - type: "menuFromCommand"
-        title: "AI Commit Messages"
+        title: "ai Commits"
         key: "Msg"
-        command: "bunx @m7medvision/lazycommit@latest"
-        filter: '^(?P<number>\d+)\.\s(?P<message>.+)$'
-        valueFormat: "{{ .message }}"
-        labelFormat: "{{ .number }}: {{ .message | green }}"
+        command: "/home/prad/.go/bin/lazycommit commit"
+        filter: '^(?P<raw>.+)$'
+        valueFormat: "{{ .raw }}"
+        labelFormat: "{{ .raw | green }}"
   - key: "o"
     description: "start ai pull request"
     command: "gh pr create --fill -w"
