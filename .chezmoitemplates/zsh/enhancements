@@ -56,3 +56,4 @@ bindkey '^K' _ghc_widget  # Ctrl+K
 #   autoload -Uz add-zsh-hook
 #   add-zsh-hook precmd move_prompt_to_bottom
 # fi
+export DEVBOX_NO_PROMPT=1
