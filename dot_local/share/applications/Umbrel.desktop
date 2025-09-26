@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Umbrel
+Comment=Open UmbrelOS Instance
+Exec=omarchy-launch-webapp http://umbrel.local
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Umbrel.png
+StartupNotify=true

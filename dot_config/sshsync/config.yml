@@ -2,18 +2,9 @@ groups:
   bos:
   - bos-kvm-8
   - bos-kvm-4
-  - bos-kvm-2
   phx:
   - phx-kvm-8
   - phx-kvm-2
-  - phx-kvm-1
-  testnet:
-  - bos-kvm-8
-  gateway:
-  - phx-kvm-8
-  builder:
-  - bos-kvm-4
-  tools:
-  - bos-kvm-2
-  - phx-kvm-2
-  - phx-kvm-1
+  infra:
+  - gateway-bos
+  - testnet-phx
