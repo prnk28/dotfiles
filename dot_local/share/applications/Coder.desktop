@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Coder
+Comment=Open Coder Workspace
+Exec=omarchy-launch-webapp http://localhost:7080/workspaces
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Coder.png
+StartupNotify=true
