@@ -9,11 +9,11 @@ args = ["-l"]
 blur = true
 dynamic_padding = true
 decorations = "Buttonless"
-opacity = 0.9
+opacity = 0.69
 option_as_alt = "Both"
 
 [font]
-size = 10
+size = 10.5
 
 [font.bold]
 family = "VictorMono Nerd Font Mono"
