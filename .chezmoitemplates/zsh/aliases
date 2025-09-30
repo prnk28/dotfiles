@@ -207,3 +207,6 @@ alias mxs="manx search"
 alias mxd="manx doc"
 alias mxp="manx snippet"
 alias mxg="manx get"
+
+# Gittype
+alias gtt="gittype"
