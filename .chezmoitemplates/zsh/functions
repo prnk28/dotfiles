@@ -244,7 +244,7 @@ function ghn() {
   fi
   gh repo create $ORG_NAME/$REPO_NAME --private
   ghg $ORG_NAME/$REPO_NAME
-  cd {{ .chezmoi.homeDir }}/Developer/github.com/$ORG_NAME/$REPO_NAME
+  cd {{ .chezmoi.homeDir }}/code/github.com/$ORG_NAME/$REPO_NAME
 }
 
 function gop() {

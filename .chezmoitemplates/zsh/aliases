@@ -210,3 +210,7 @@ alias mxg="manx get"
 
 # Gittype
 alias gtt="gittype"
+
+# Claude
+alias claude-init="rclone copy -P r2:claude .claude"
+alias claude-sync="rclone sync -P .claude r2:claude"
