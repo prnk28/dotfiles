@@ -3,6 +3,16 @@
 # A tool to assist with writing git commit messages using code2prompt
 # Usage: gcai [path-to-repo-or-gitdir]
 
+# Source user's environment to get API keys and PATH
+if [ -f "$HOME/.zshrc" ]; then
+  source "$HOME/.zshrc" 2>/dev/null
+elif [ -f "$HOME/.bashrc" ]; then
+  source "$HOME/.bashrc" 2>/dev/null
+fi
+
+# Ensure PATH includes common locations for tools
+export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:$PATH"
+
 # Handle repository path argument
 if [ $# -gt 0 ]; then
   repo_path="$1"
@@ -79,7 +89,17 @@ function runCode2Prompt() {
 }
 
 function preview() {
-  cat "$tmpdir"/commit_prompt.md | mods -R commit-writer 2>/dev/null | awk '/^```json$/{f=1;next} /^```$/{f=0} f'
+  # Debug: Check if mods config exists and has API key
+  if [ -f "$HOME/.config/mods/mods.yml" ]; then
+    echo "Debug: Found mods config" >&2
+  else
+    echo "Debug: No mods config at $HOME/.config/mods/mods.yml" >&2
+  fi
+
+  # Ensure HOME is set for mods to find config
+  export HOME="${HOME:-$(eval echo ~)}"
+
+  cat "$tmpdir"/commit_prompt.md | HOME="$HOME" mods -R commit-writer 2>/dev/null | awk '/^```json$/{f=1;next} /^```$/{f=0} f'
 }
 
 function selectCommit() {
@@ -88,6 +108,10 @@ function selectCommit() {
 
   if [ -z "$suggestions" ]; then
     echo "No commit suggestions generated"
+    # Debug output to understand what's happening
+    echo "Debug: Checking commit_prompt.md content:" >&2
+    echo "File exists: $([ -f "$tmpdir/commit_prompt.md" ] && echo "yes" || echo "no")" >&2
+    echo "File size: $(wc -c <"$tmpdir/commit_prompt.md" 2>/dev/null || echo "0") bytes" >&2
     return 1
   fi
 

@@ -1,0 +1,39 @@
+#!/usr/bin/env zsh
+# gcai-menu - Git Commit Assistant Menu for Lazygit
+
+# Load zsh environment properly
+source "$HOME/.zshrc" 2>/dev/null
+
+# Ensure PATH includes all necessary locations
+export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:$HOME/.local/share/devbox/global/default/.devbox/nix/profile/default/bin:$PATH"
+
+# Get repo root
+repo_root=$(git rev-parse --show-toplevel 2>/dev/null)
+if [[ -z "$repo_root" ]]; then
+  echo "Not in a git repository" >&2
+  exit 1
+fi
+
+cd "$repo_root" || exit 1
+
+tmpdir="$HOME/.cache/gcai"
+mkdir -p "$tmpdir"
+
+# Check for changes
+if git diff --quiet && git diff --cached --quiet; then
+  exit 1
+fi
+
+# Generate commit prompt
+code2prompt -O "$tmpdir/commit_prompt.md" --git-diff-branch HEAD main -t ~/.local/share/code2prompt/write-git-commit.hbs . >/dev/null 2>&1
+
+# Generate suggestions using mods
+json_output=$(cat "$tmpdir/commit_prompt.md" 2>/dev/null | mods -R commit-writer 2>/dev/null | awk '/^```json$/{f=1;next} /^```$/{f=0} f')
+
+if [[ -z "$json_output" ]]; then
+  echo "Error: Failed to generate suggestions" >&2
+  exit 1
+fi
+
+# Output commit messages
+echo "$json_output" | jq -r '.commitMessages[]'

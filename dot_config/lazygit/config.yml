@@ -443,10 +443,14 @@ customCommands:
     context: "files"
     output: log
   - key: "C"
-    description: "pick AI commit"
-    command: '/home/prad/.local/bin/gcai'
+    description: "AI commit message"
     context: "files"
-    output: terminal
+    prompts:
+      - type: "menuFromCommand"
+        title: "Select AI generated commit message:"
+        command: "zsh -c '/home/prad/.local/bin/gcai-menu'"
+        filter: '.*'
+    command: "zsh -c '/home/prad/.local/bin/gcai-lazygit \"{{ .PromptResponses.0 }}\"'"
   - key: "o"
     description: "start ai pull request"
     command: "gh pr create --fill -w"

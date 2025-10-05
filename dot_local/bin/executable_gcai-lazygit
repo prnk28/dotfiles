@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+# gcai-lazygit - Commit with AI message for lazygit
+
+# If a commit message is provided as argument, commit with it
+if [[ $# -gt 0 ]]; then
+  commit_message="$*"
+  git add -A
+  git commit -m "$commit_message"
+  exit $?
+fi
+
+# Otherwise, just run gcai-menu to generate suggestions
+exec /home/prad/.local/bin/gcai-menu
