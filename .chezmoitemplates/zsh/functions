@@ -190,6 +190,18 @@ function open_repo() {
 zle -N open_repo-widget open_repo
 bindkey '^O' open_repo-widget
 
+# ghc widget and key binding
+claude_widget() {
+  if git rev-parse --is-inside-work-tree &>/dev/null; then
+    BUFFER="claude -r --dangerously-skip-permissions"
+  else
+    BUFFER="open_repo && claude -r --dangerously-skip-permissions"
+  fi
+  zle accept-line
+}
+zle -N claude_widget
+bindkey '^K' claude_widget
+
 # ============================================
 # Docker Functions
 # ============================================

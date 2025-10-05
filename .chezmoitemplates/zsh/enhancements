@@ -14,36 +14,6 @@ ZSH_AUTOSUGGEST_STRATEGY=(hishtory)
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#666666"
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 
-# Smart tab function
-_smart_tab() {
-    if [[ -z "${LBUFFER// }" ]]; then
-        zle _hishtory_widget
-    else
-        zle expand-or-complete
-    fi
-}
-
-zle -N _smart_tab
-bindkey '^I' _smart_tab
-
-# gho widget and key binding
-_gho_widget() {
-    BUFFER="gho"
-    zle accept-line
-}
-
-zle -N _gho_widget
-bindkey '^_' _gho_widget  # Ctrl+/ (terminal sends Ctrl+_ for Ctrl+/)
-
-# ghc widget and key binding
-_ghc_widget() {
-    BUFFER="ghc"
-    zle accept-line
-}
-
-zle -N _ghc_widget
-bindkey '^K' _ghc_widget  # Ctrl+K
-
 # Zsh bottom prompt configuration
 # if [[ -n "$ZSH_VERSION" ]]; then
 #   # Function to move prompt to bottom
