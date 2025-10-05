@@ -118,3 +118,8 @@ action = "None"
 key = "K"
 mods = "Alt"
 action = "None"
+
+[[keyboard.bindings]]
+key = "Tab"
+mods = "Super"
+chars = "\u001a" # This sends Ctrl+Z which is the standard suspend signal

@@ -176,7 +176,7 @@ function open_lazycommit() {
 }
 
 zle -N open_lazycommit-widget open_lazycommit
-bindkey '^K' open_lazycommit-widget
+bindkey '^G' open_lazycommit-widget
 
 function open_repo() {
   local selected=$(ghq list | fzf --delimiter='/' --nth=-1)
