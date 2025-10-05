@@ -445,12 +445,8 @@ customCommands:
   - key: "C"
     description: "AI commit message"
     context: "files"
-    prompts:
-      - type: "menuFromCommand"
-        title: "Select AI generated commit message:"
-        command: "zsh -c '/home/prad/.local/bin/gcai-menu'"
-        filter: '.*'
-    command: "zsh -c '/home/prad/.local/bin/gcai-lazygit \"{{ .PromptResponses.0 }}\"'"
+    command: "OPENAI_API_KEY=${OPENAI_API_KEY} /home/prad/.local/bin/gcai"
+    output: terminal
   - key: "o"
     description: "start ai pull request"
     command: "gh pr create --fill -w"
