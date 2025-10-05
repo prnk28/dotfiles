@@ -3,7 +3,7 @@ default-api: groq
 default-model: meta-llama/llama-4-scout-17b-16e-instruct
 format-text:
   markdown: "Format the response as markdown without enclosing backticks."
-  json: "Format the response as json without enclosing backticks."
+  json: "Format the response as json without enclosing backticks. Do not enclose the response in backticks."
   bash: "Format the response as bash without enclosing backticks."
 # MCP Servers configurations
 mcp-servers:
@@ -121,6 +121,11 @@ roles:
               "type(scope): description"
             ]
           }
+    - NEVER explain anything
+    - NEVER print your thoughts
+    - NEVER include markdown code blocks
+    - NEVER print any other text
+    - ONLY return the JSON list format
   "commit-analyzer":
     - Analyze git diffs to determine the primary type of change
     - Identify if changes are features, fixes, refactoring, etc

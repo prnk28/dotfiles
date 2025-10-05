@@ -249,7 +249,7 @@ os:
   # contain "{{filename}}", but doesn't support "{{line}}".
   open: ""
   # Command for opening a link. Should contain "{{link}}".
-  openLink: ""
+  openLink: 'bash -C /home/prad/.local/share/omarchy/bin/omarchy-launch-webapp {{link}}'
   # EditCommand is the command for editing a file.
   # Deprecated: use Edit instead. Note that semantics are different:
   # EditCommand is just the command itself, whereas Edit contains a
@@ -262,10 +262,10 @@ os:
   # Deprecated: use OpenLink instead.
   # CopyToClipboardCmd is the command for copying to clipboard.
   # See https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md#custom-command-for-copying-to-and-pasting-from-clipboard
-  copyToClipboardCmd: ""
+  copyToClipboardCmd: "wl-copy"
   # ReadFromClipboardCmd is the command for reading the clipboard.
   # See https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md#custom-command-for-copying-to-and-pasting-from-clipboard
-  readFromClipboardCmd: ""
+  readFromClipboardCmd: "wl-paste"
 # If true, don't display introductory popups upon opening Lazygit.
 disableStartupPopups: true
 # What to do when opening Lazygit outside of a git repo.
@@ -444,16 +444,9 @@ customCommands:
     output: log
   - key: "C"
     description: "pick AI commit"
-    command: 'git commit -m "{{.Form.Msg}}" && git push origin HEAD'
+    command: '/home/prad/.local/bin/gcai'
     context: "files"
-    prompts:
-      - type: "menuFromCommand"
-        title: "ai Commits"
-        key: "Msg"
-        command: "/home/prad/.go/bin/lazycommit commit"
-        filter: '^(?P<raw>.+)$'
-        valueFormat: "{{ .raw }}"
-        labelFormat: "{{ .raw | green }}"
+    output: terminal
   - key: "o"
     description: "start ai pull request"
     command: "gh pr create --fill -w"

@@ -1,0 +1,207 @@
+#!/bin/bash
+# gcai - Git Commit Assistant
+# A tool to assist with writing git commit messages using code2prompt
+# Usage: gcai [path-to-repo-or-gitdir]
+
+# Handle repository path argument
+if [ $# -gt 0 ]; then
+  repo_path="$1"
+
+  # Check if the path is a .git directory
+  if [[ "$repo_path" == */.git ]] || [[ "$repo_path" == *.git ]]; then
+    # Get the working tree directory from the git dir
+    repo_path="${repo_path%/.git}"
+  fi
+
+  # Check if the path exists
+  if [ ! -d "$repo_path" ]; then
+    echo "Error: Path '$repo_path' does not exist"
+    exit 1
+  fi
+
+  # Change to the repository directory
+  cd "$repo_path" || exit 1
+else
+  # No argument provided, use current directory
+  repo_path="."
+fi
+
+# Now get the root of the repository
+repo_root=$(git rev-parse --show-toplevel 2>/dev/null)
+if [ -z "$repo_root" ]; then
+  echo "Not in a git repository: $(pwd)"
+  exit 1
+fi
+
+# Ensure we're in the repository root for consistent behavior
+cd "$repo_root" || exit 1
+
+tmpdir=$(mktemp -d)
+
+# Cleanup on exit
+trap "rm -rf $tmpdir" EXIT
+
+function init() {
+  # Check for git repository
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "Not in a git repository: $(pwd)"
+    return 1
+  fi
+
+  # Exit if there are no changes
+  if git diff --quiet && git diff --cached --quiet; then
+    echo "No changes to commit in $(basename "$repo_root")"
+    return 1
+  fi
+
+  # Check if code2prompt is installed
+  if ! command -v code2prompt >/dev/null 2>&1; then
+    echo "code2prompt is not installed"
+    return 1
+  fi
+
+  # Check if mods is installed
+  if ! command -v mods >/dev/null 2>&1; then
+    echo "mods is not installed"
+    return 1
+  fi
+
+  # Check if gum is installed
+  if ! command -v gum >/dev/null 2>&1; then
+    echo "gum is not installed"
+    return 1
+  fi
+}
+
+function runCode2Prompt() {
+  echo "Analyzing changes in $(basename "$repo_root")..."
+  code2prompt -O "$tmpdir"/commit_prompt.md --git-diff-branch HEAD main -t ~/.local/share/code2prompt/write-git-commit.hbs . >/dev/null 2>&1
+}
+
+function preview() {
+  cat "$tmpdir"/commit_prompt.md | mods -R commit-writer 2>/dev/null | awk '/^```json$/{f=1;next} /^```$/{f=0} f'
+}
+
+function selectCommit() {
+  # Use jq to pull commitMessages from suggestions
+  local suggestions=$(preview | jq -r '.commitMessages[]')
+
+  if [ -z "$suggestions" ]; then
+    echo "No commit suggestions generated"
+    return 1
+  fi
+
+  # Let user select or type custom message
+  echo "$suggestions" | fzf \
+    --height 60% \
+    --reverse \
+    --prompt "Select commit message (or Ctrl-C to cancel): " \
+    --header "Press Enter to select, or type to filter" \
+    --preview-window hidden
+}
+
+function stageChanges() {
+  # Check if there are unstaged changes
+  if ! git diff --quiet; then
+    echo ""
+    echo "$(gum style --foreground 11 'Staging all changes...')"
+    git add -A
+    echo "$(gum style --foreground 10 '✓ All changes staged')"
+  else
+    echo ""
+    echo "$(gum style --foreground 10 '✓ All changes already staged')"
+  fi
+}
+
+function commitChanges() {
+  local commit_message="$1"
+
+  if [ -z "$commit_message" ]; then
+    echo "No commit message selected"
+    return 1
+  fi
+
+  echo ""
+  echo "Selected commit message:"
+  echo "  $(gum style --foreground 212 "$commit_message")"
+
+  # Automatically stage all changes
+  stageChanges
+
+  # Show what will be committed
+  echo ""
+  echo "Changes to be committed:"
+  git status --short --branch
+  echo ""
+
+  if gum confirm "Proceed with commit?"; then
+    git commit -m "$commit_message"
+    if [ $? -eq 0 ]; then
+      echo ""
+      echo "$(gum style --foreground 10 '✓ Successfully committed')"
+
+      # Check if we have a remote to push to
+      if git remote get-url origin >/dev/null 2>&1; then
+        echo ""
+        pushChanges
+      fi
+    else
+      echo "$(gum style --foreground 9 '✗ Commit failed')"
+      return 1
+    fi
+  else
+    echo "Commit cancelled"
+    return 1
+  fi
+}
+
+function pushChanges() {
+  # Get current branch name
+  local current_branch=$(git branch --show-current)
+
+  # Check if the branch exists on remote
+  local push_message="Push to origin/$current_branch?"
+  if ! git ls-remote --exit-code --heads origin "$current_branch" >/dev/null 2>&1; then
+    push_message="Push to origin/$current_branch? (will create new remote branch)"
+  fi
+
+  if gum confirm "$push_message"; then
+    echo "Pushing to origin/$current_branch..."
+
+    # Push with or without setting upstream based on whether branch exists
+    if ! git ls-remote --exit-code --heads origin "$current_branch" >/dev/null 2>&1; then
+      git push --set-upstream origin "$current_branch"
+    else
+      git push
+    fi
+
+    if [ $? -eq 0 ]; then
+      echo "$(gum style --foreground 10 '✓ Successfully pushed to origin/'"$current_branch")"
+    else
+      echo "$(gum style --foreground 9 '✗ Push failed')"
+      return 1
+    fi
+  else
+    echo "Push skipped"
+  fi
+}
+
+function main() {
+  if ! init; then
+    return 1
+  fi
+
+  runCode2Prompt
+
+  echo "Generating commit suggestions..."
+  local selected_message=$(selectCommit)
+
+  if [ -z "$selected_message" ]; then
+    echo "No message selected"
+    return 1
+  fi
+
+  commitChanges "$selected_message"
+}
+
+main
