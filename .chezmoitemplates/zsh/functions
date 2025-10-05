@@ -372,6 +372,7 @@ bindkey '^F' find_files-widget
 
 function open_lazycommit() {
   /home/prad/.local/bin/gcai
+  return
 }
 
 zle -N open_lazycommit-widget open_lazycommit
