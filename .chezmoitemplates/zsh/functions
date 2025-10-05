@@ -2,29 +2,6 @@
 # ============================================
 # Keybindings & ZLE Widgets
 # ============================================
-function smart_fg_or_nvim() {
-  if [[ $(jobs | wc -l) -gt 0 ]]; then
-    fg
-  else
-    nvim $(tv)
-  fi
-}
-zle -N smart_fg_or_nvim
-bindkey '^Z' smart_fg_or_nvim
-
-dxr() {
-  # Capture the selected script in a local variable
-  local script
-  script=$(fd "devbox.json" -x jq -r '.shell.scripts | keys[]' {} 2>/dev/null | fzf --header "Select Devbox Script" --tmux)
-
-  # Check if the variable is non-empty before executing the command
-  if [ -n "$script" ]; then
-    devbox run "$script"
-  fi
-}
-zle -N dxr-widget dxr
-bindkey '^A' dxr-widget
-
 function mdcp() {
   local url="$1"
   if [ -z "$url" ]; then
@@ -33,198 +10,13 @@ function mdcp() {
   fi
   markitdown "$url" | copy
 }
-
-fdcd() {
-  local dir
-  dir=$(
-    cd &&
-      fd -0 --type d --ignore-file ~/.config/fd/ignore --hidden |
-      fzf --read0
-  ) && cd ~/$dir
-}
-
-# Function to change directory to a git worktree selected with fzf
-function gws() {
-  # Use `local` to keep variables from polluting the global shell environment.
-  local selected_line
-  local worktree_path
-
-  # Get the full line selected from fzf.
-  # The `|| return` part ensures that if fzf is cancelled (returns a non-zero exit code),
-  # the function exits gracefully.
-  selected_line=$(git worktree list | fzf --height 30% --reverse) || return
-
-  # Use awk to extract the path by removing the last two columns (commit and branch).
-  # This correctly handles paths that contain spaces.
-  worktree_path=$(printf "%s" "$selected_line" | awk '{$NF=""; $(NF-1)=""; sub(/ *$/, ""); print}')
-  
-  # Change to the selected directory.
-  # The `cd` command is now running in your main shell, not a subshell.
-  cd "$worktree_path"
-}
-
-function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
-}
-zle -N y-widget y
-bindkey '^.' y-widget
-
-# ============================================
-# Directory Navigation
-# ============================================
-function c.() {
-	cd "$(tv ghq)"
-}
-
-function e.() {
-  cd "$(tv ghq)"
-  nvim
-}
-
-function open_repo() {
-  cd $(tv ghq)
-  clear
-}
-zle -N open_repo-widget open_repo
-bindkey '^O' open_repo-widget
-
-# ============================================
-# TV (Television) Functions
-# ============================================
-function t.() {
-  # Get all channels (both builtin and custom)
-  BUILTIN_CHANNELS=$(tv list-channels | grep -A 100 "Builtin channels:" | grep -B 100 "Custom channels:" | grep -v "Builtin channels:" | grep -v "Custom channels:" | awk '{print $1}' | tr -d ' ')
-  CUSTOM_CHANNELS=$(tv list-channels | grep -A 100 "Custom channels:" | awk '{print $1}' | tr -d ' ')
-  
-  # Combine all channels and sort alphabetically
-  ALL_CHANNELS=$(echo "$BUILTIN_CHANNELS\n$CUSTOM_CHANNELS" | grep -v '^$' | sort)
-  
-  # Let user select a channel using gum
-  CHANNEL=$(echo "$ALL_CHANNELS" | gum filter)
-  
-  if [ -z "$CHANNEL" ]; then
-    gum log --level error "No channel selected. Exiting."
-    return 1
-  fi
-  
-  # Handle different channels
-  case "$CHANNEL" in
-    # Bookmarks - open in browser
-    "bmm")
-      {{ if eq .chezmoi.os "darwin" -}}
-      open $(tv bmm)
-      {{ else -}}
-      xdg-open $(tv bmm)
-      {{ end -}}
-      ;;
-    
-    # Project directories - change to directory
-    "ghq" | "git-repos" | "dirs")
-      cd "$(tv $CHANNEL)"
-      ;;
-    
-    # Environment variables - display with pager and copy selected to clipboard
-    "env")
-      ENV_VAR=$(tv env | gum filter)
-      if [ -n "$ENV_VAR" ]; then
-        {{ if eq .chezmoi.os "darwin" -}}
-        echo "$ENV_VAR" | awk -F= '{print $2}' | tr -d '\n' | pbcopy
-        gum log --level info "Copied value to clipboard: $(pbpaste)"
-        {{ else -}}
-        echo "$ENV_VAR" | awk -F= '{print $2}' | tr -d '\n' | xclip -selection clipboard
-        gum log --level info "Copied value to clipboard"
-        {{ end -}}
-      fi
-      ;;
-    
-    # Text content - display with gum pager
-    "text" | "md" | "git-log" | "git-reflog" | "git-diff" | "fish-history" | "zsh-history" | "bash-history")
-      tv "$CHANNEL" | gum pager
-      ;;
-    
-    # Task management
-    "task")
-      tv task | xargs task
-      ;;
-    
-    # Projects - open in nvim
-    "js" | "swift" | "go" | "proto" | "templ" | "css" | "pkl" | "my-dotfiles")
-      nvim $(tv "$CHANNEL")
-      ;;
-    
-    # Default - open in nvim
-    *)
-      gum pager $(tv "$CHANNEL")
-      ;;
-  esac
-}
-
-function tv_channels() {
-  tv list-channels | sed -n '/Custom channels:/,$p' | grep -v "Custom channels:" | sed 's/^[[:space:]]*//' | grep -v "^$" | sort
-}
-
-# TV Channel Selector - ZLE widget
-function tv-channel-select() {
-    local selected_channel
-    
-    # Get channel list and select with fzf
-    selected_channel=$(tv channels | fzf --height=40% --reverse --prompt="Select TV Channel: ")
-    
-    # If a channel was selected
-    if [[ -n "$selected_channel" ]]; then
-        # Extract channel name without parentheses and type
-        local channel_name=$(echo "$selected_channel" | sed 's/ (.*)//')
-        
-        # Clear current line and insert tv command
-        BUFFER="tv --channel $channel_name"
-        zle accept-line
-    fi
-    
-    # Redraw prompt
-    zle reset-prompt
-}
-zle -N tv-channel-select
-bindkey '^P' tv-channel-select
-
-# ============================================
-# Bookmark Management (BMM)
-# ============================================
-function bdel() {
-  bmm delete $(tv bmm) --yes
-}
-
-function b.() {
-  {{ if eq .chezmoi.os "darwin" -}}
-  open $(tv bmm)
-  {{ else -}}
-  xdg-open $(tv bmm)
-  {{ end -}}
-}
-
 # ============================================
 # Git & GitHub Functions
 # ============================================
-function gog() {
-  gum spin --title "Fetching $1..." -- ghq get git.sonr.io/$1
-  gum spin --title "Adding $1..." -- zoxide add $GHQ_ROOT/git.sonr.io/$1
-}
 
 function ghg() {
   gum spin --title "Fetching $1..." -- ghq get $1
   gum spin --title "Adding $1..." -- zoxide add $GHQ_ROOT/github.com/$1
-}
-
-function gogu() {
-    # List all repositories under onsonr.dev and update each one
-    for repo in $(ghq list | grep "^git.sonr.io/"); do
-        gum spin --spinner dot --title "Fetching $repo..." -- ghq get -u $repo
-        gum log --level info "[Fetched] $repo ✅"
-    done
 }
 
 function ghgu() {
@@ -335,49 +127,68 @@ function rga() {
 # ============================================
 # Development Tools
 # ============================================
-function trc() {
-  ORG_NAME=$(gum choose --header "Select parent org:" "apps" "core" "env" "libs" "ops" "pkg" "sink" "vm")
-  if [ -z "$ORG_NAME" ]; then
-    gum log --level error "Please choose a valid organization."
-    return 1
+dxr() {
+  # Capture the selected script in a local variable
+  local script
+  script=$(fd "devbox.json" -x jq -r '.shell.scripts | keys[]' {} 2>/dev/null | fzf --header "Select Devbox Script" --tmux)
+
+  # Check if the variable is non-empty before executing the command
+  if [ -n "$script" ]; then
+    devbox run "$script"
   fi
+}
+zle -N dxr-widget dxr
+bindkey '^B' dxr-widget
 
-  REPO_NAME=$(gum input --header "Enter a name for your new repo")
-  if [ -z "$REPO_NAME" ]; then
-    gum log --level error "Please enter a valid name for the repo and organization."
-    return 1
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+zle -N y-widget y
+bindkey '^F' y-widget
+
+function edit_files() {
+  if [[ $(jobs | wc -l) -gt 0 ]]; then
+    fg
+  else
+  git ls-files | \
+    grep -v -E '\.(pb|twirp)\.go$|_templ\.go$|\.pb\.gw\.go$|_gen\.go$|\.gen\.go$|mock_.*\.go$' | \
+    xargs -I {} stat -c "%Y %n" {} 2>/dev/null | \
+    sort -rn | \
+    cut -d' ' -f2- | \
+    fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' \
+        --preview-window=right:60% \
+        --bind 'ctrl-/:toggle-preview' \
+        --bind 'enter:execute(${EDITOR:-nvim} {})' \
+        --header 'ENTER to edit | CTRL-/ to toggle preview'
   fi
-
-  tea repo create --name "$REPO_NAME" --owner "$ORG_NAME"
 }
 
-function inf() {
-  INFISICAL_API_URL="https://secrets.gitsonr.io/api"
-  infisical $1
-}
-
-function run_make() {
-  tv make | xargs make
-}
-
-function find_files() {
-  FILE_TYPE=$(gum choose "go" "js" "py" "md" "docker")
-  if [ -z "$FILE_TYPE" ]; then
-    return
-  fi
-  nvim $(tv $FILE_TYPE)
-}
-zle -N find_files-widget find_files
-bindkey '^F' find_files-widget
+zle -N edit_files-widget edit_files
+bindkey '^E' edit_files-widget
 
 function open_lazycommit() {
   /home/prad/.local/bin/gcai
-  return
 }
 
 zle -N open_lazycommit-widget open_lazycommit
-bindkey '^G' open_lazycommit-widget
+bindkey '^K' open_lazycommit-widget
 
+function open_repo() {
+  local selected=$(ghq list | fzf --delimiter='/' --nth=-1)
+  if [[ -n "$selected" ]]; then
+    cd "$GHQ_ROOT/$selected"
+    clear
+  fi
+  zle && zle reset-prompt  # Force prompt redraw
+}
+
+zle -N open_repo-widget open_repo
+bindkey '^O' open_repo-widget
 
 # ============================================
 # Docker Functions
