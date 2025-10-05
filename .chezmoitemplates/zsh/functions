@@ -370,6 +370,14 @@ function find_files() {
 zle -N find_files-widget find_files
 bindkey '^F' find_files-widget
 
+function open_lazycommit() {
+  /home/prad/.local/bin/gcai
+}
+
+zle -N open_lazycommit-widget open_lazycommit
+bindkey '^G' open_lazycommit-widget
+
+
 # ============================================
 # Docker Functions
 # ============================================
