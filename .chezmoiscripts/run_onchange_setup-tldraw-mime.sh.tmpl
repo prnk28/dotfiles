@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Setup tldraw MIME type and desktop file associations
+
+{{ if eq .chezmoi.os "linux" -}}
+
+set -e
+
+echo "Setting up tldraw MIME type and desktop file associations..."
+
+# Update MIME database
+if command -v update-mime-database &> /dev/null; then
+    echo "Updating MIME database..."
+    update-mime-database {{ .chezmoi.homeDir }}/.local/share/mime
+fi
+
+# Update desktop database
+if command -v update-desktop-database &> /dev/null; then
+    echo "Updating desktop database..."
+    update-desktop-database {{ .chezmoi.homeDir }}/.local/share/applications
+fi
+
+# Set tldraw-edit as default application for .tldr files
+if command -v xdg-mime &> /dev/null; then
+    echo "Setting tldraw-edit as default application for .tldr files..."
+    xdg-mime default tldraw-edit.desktop application/x-tldr
+fi
+
+echo "✓ tldraw MIME type and desktop file setup complete"
+
+{{ end -}}

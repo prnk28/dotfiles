@@ -60,7 +60,7 @@
 	"cpu": {
 		"interval": 5,
 		"format": "󰍛",
-		"on-click": "$TERMINAL -e btop"
+		"on-click": "omarchy-launch-tui-float btop"
 	},
 	"clock": {
 		"format": "{:L%a %I:%M %p}",
@@ -105,7 +105,7 @@
 		"format-disabled": "󰂲",
 		"format-connected": "",
 		"tooltip-format": "Devices connected: {num_connections}",
-		"on-click": "blueberry"
+		"on-click": "omarchy-launch-tui-float bluetui"
 	},
 	"pulseaudio": {
 		"format": "{icon}",
