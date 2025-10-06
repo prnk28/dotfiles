@@ -5,7 +5,6 @@
 # Editor
 alias vi="nvim"
 alias vim="nvim"
-alias e.usr="cd /usr/local/bin && sudo nvim"
 alias vtd="open http://prads-macbook-pro-2.moray-bleak.ts.net:4020"
 alias gdi="ghid"
 alias cdl="cd ~/.local/share"
@@ -214,3 +213,4 @@ alias gtt="gittype"
 # Claude
 alias claude-init="rclone copy -P r2:claude .claude"
 alias claude-sync="rclone sync -P .claude r2:claude"
+alias e=edit_files

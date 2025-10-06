@@ -168,6 +168,7 @@ function edit_files() {
   fi
 }
 
+alias e=edit_files
 zle -N edit_files-widget edit_files
 bindkey '^E' edit_files-widget
 
@@ -177,6 +178,23 @@ function open_lazycommit() {
 
 zle -N open_lazycommit-widget open_lazycommit
 bindkey '^G' open_lazycommit-widget
+alias gc=open_lazycommit
+
+function open_github-issues() {
+  /home/prad/.local/bin/github issues
+}
+
+zle -N open_github-issues-widget open_github-issues
+bindkey '^I' open_github-issues-widget
+alias ghi=open_github-issues
+
+function open_github-prs() {
+  /home/prad/.local/bin/github prs
+}
+
+zle -N open_github-prs-widget open_github-prs
+bindkey '^P' open_github-prs-widget
+alias ghp=open_github-prs
 
 function open_repo() {
   local selected=$(ghq list | fzf --delimiter='/' --nth=-1)
@@ -189,6 +207,7 @@ function open_repo() {
 
 zle -N open_repo-widget open_repo
 bindkey '^O' open_repo-widget
+alias o=open_repo
 
 # ghc widget and key binding
 claude_widget() {
@@ -201,6 +220,7 @@ claude_widget() {
 }
 zle -N claude_widget
 bindkey '^K' claude_widget
+alias /c=claude_widget
 
 # ============================================
 # Docker Functions

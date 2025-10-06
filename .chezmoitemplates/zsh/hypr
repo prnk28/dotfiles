@@ -10,23 +10,14 @@ function _spawnTile() {
   exec setsid uwsm app -- alacritty --class="TUI.tile" --config-file="$XDG_CONFIG_HOME/alacritty/tile.toml" --working-directory="$cwd" -e "$cmd"
 }
 
-alias /c="_spawnTile claude"
 alias /cr="_spawnTile claude --continue"
 alias /g="_spawnTile gemini"
 alias /m="_spawnTile mods"
 alias /o="_spawnTile omarchy"
 alias dd="_spawnFloat lazydocker"
-alias e="_spawnTile nvim"
 alias gg="_spawnFloat lazygit"
 alias y="_spawnFloat yazi"
 
-alias /c="claude"
-alias /cr="claude --continue"
-alias /g="gemini"
-alias /m="mods"
-alias /o="omarchy"
-alias dd="lazydocker"
-alias e="nvim"
-alias gg="lazygit"
-alias y="yazi"
+alias dd="omarchy-launch-tui-float lazydocker"
+alias gg="omarchy-launch-tui-float lazygit"
 

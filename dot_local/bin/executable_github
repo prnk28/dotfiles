@@ -1,0 +1,109 @@
+#!/bin/zsh
+
+# github - GitHub CLI wrapper
+# https://github.com/cli/cli
+
+# See `gh help formatting` for details on customizing the output
+function _gh_issue_list() {
+  gh issue list --json number,title --template '{{range .}}{{.number}}: {{.title}}{{"\n"}}{{end}}'
+}
+
+local issuePreviewTemplate='''
+# {{ .title }}
+> Issue #{{ .number }} was last modified {{ timeago .updatedAt }}
+
+**Labels**
+{{range .labels}}* {{.name}}
+{{end}}
+
+{{.body}}
+'''
+
+local pullPreviewTemplate='''
+# {{printf "#%v" .number}} {{.title}}
+
+{{.body}}
+
+{{tablerow "ASSIGNEE" "NAME"}}{{range .assignees}}{{tablerow .login .name}}{{end}}{{tablerender}}
+{{tablerow "REVIEWER" "STATE" "COMMENT"}}{{range .reviews}}{{tablerow .author.login .state .body}}{{end}}
+'''
+
+function _gh_pr_list() {
+  gh pr list --json number,title,state --template '{{range .}}{{.number}}: {{.title}}{{"\n"}}{{end}}'
+}
+
+function list-issues() {
+  local fzf_bind="enter:execute(nvim -c 'Octo issue edit {1}'),space:execute(gh issue view {1} --web)"
+  local fzf_previewWindow=top:85%:wrap
+  local fzf_height=100
+  local fzf_withNth=2..
+  local fzf_delimiter=':'
+
+  _gh_issue_list | fzf \
+    --preview="gh issue view {1} --json number,title,body,labels,updatedAt --template '$issuePreviewTemplate' | gum format" \
+    --bind=$fzf_bind \
+    --delimiter=$fzf_delimiter \
+    --with-nth=$fzf_withNth \
+    --height=$fzf_height \
+    --preview-window=$fzf_previewWindow
+}
+
+function list-prs() {
+  local fzf_bind="enter:execute(nvim -c 'Octo pr edit {1}'),space:execute(gh pr view {1} --web)"
+  local fzf_previewWindow=top:80%:wrap
+  local fzf_height=100%
+  local fzf_delimiter=":"
+
+  _gh_pr_list | fzf \
+    --preview="gh pr view {1} --json number,title,body,assignees,reviews,state --template '$pullPreviewTemplate' | gum format" \
+    --bind=$fzf_bind \
+    --delimiter=$fzf_delimiter \
+    --height=$fzf_height \
+    --preview-window=$fzf_previewWindow
+}
+
+function list-runs() {
+  local selected
+  selected=$(gh run list --json number,name,headBranch,startedAt,conclusion,status,url,databaseId --template \
+    '{{range .}}{{printf "%.0f" .databaseId}}:{{.url}}:{{printf "#%v" .number}} {{.name}} on {{.headBranch}} [{{.conclusion}}] ({{timeago .startedAt}}){{"\n"}}{{end}}' |
+    fzf --delimiter ':' \
+      --with-nth 3.. \
+      --preview 'gh run view {1}' \
+      --preview-window=right:60%:wrap \
+      --bind 'enter:accept' \
+      --bind 'ctrl-o:execute(open {2})' \
+      --bind 'ctrl-r:execute(gh run rerun {1})' \
+      --bind 'ctrl-w:execute(gh run watch {1})' \
+      --bind 'ctrl-l:execute(gh run view {1} --log)' \
+      --height 100% \
+      --header 'Enter: select | Ctrl-O: open | Ctrl-R: rerun | Ctrl-W: watch | Ctrl-L: logs)'
+
+  if [[ -n "$selected" ]]; then
+    url=$(echo "$selected" | cut -d ':' -f2)
+    open "$url"
+  fi
+}
+
+function main() {
+  local template='{{range .}}#{{color "bold"}} {{.number}} {{color "reset"}}{{.title}}{{"\n"}}{{end}}'
+  case "$1" in
+  issues)
+    list-issues
+    ;;
+  prs)
+    list-prs
+    ;;
+  actions)
+    list-runs
+    ;;
+  *)
+    echo "Usage: $0 <command>"
+    echo "Commands:"
+    echo "  issues"
+    echo "  prs"
+    echo "  actions"
+    ;;
+  esac
+}
+
+main "$@"
