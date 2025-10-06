@@ -97,11 +97,27 @@ alias vim="nvim"
 # =====================
 # | 1.4 | Keybindings |
 # =====================
-# Hishtory Ctrl+R is already bound by config.zsh
-# Additional useful keybindings
+# Custom keybindings (overriding standard zsh bindings):
+#   ^A - open github actions (github template) [overrides beginning-of-line]
+#   ^E - edit files with fzf (github template) [overrides end-of-line]
+#   ^K - launch claude in repo (claude template) [overrides kill-line]
+#   ^R - hishtory TUI (hishtory/config.zsh, re-bound in dot_zshrc.tmpl)
+#
+# Additional custom keybindings:
+#   ^B - devbox run script selector (devbox template)
+#   ^G - lazygit/lazycommit (github template)
+#   ^N - down-line-or-search (this template)
+#   ^O - open repo with ghq (github template)
+#   ^P - open github PRs (github template)
+#   ^T - open github issues (github template)
+#
+# Preserved standard keybindings:
+#   ^U - kill-whole-line
+#   ^W - backward-kill-word
+#
+# History search keybindings:
 bindkey '^[[A' history-search-backward  # Up arrow
 bindkey '^[[B' history-search-forward   # Down arrow
-bindkey '^P' up-line-or-search          # Ctrl+P
 bindkey '^N' down-line-or-search        # Ctrl+N
 
 

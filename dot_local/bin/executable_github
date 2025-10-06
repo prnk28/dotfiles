@@ -40,7 +40,7 @@ function list-issues() {
   local fzf_delimiter=':'
 
   clear
-  gum style --align center --padding "0 1" --border double --border-foreground 255 "󰃤 Github Issues"
+  gum style --align center --padding "0 1" --foreground 51 --border double --border-foreground 51 "󰃤 Github Issues"
   _gh_issue_list | fzf \
     --preview="gh issue view {1} --json number,title,body,labels,updatedAt --template '$issuePreviewTemplate' | gum format" \
     --bind=$fzf_bind \
@@ -58,7 +58,7 @@ function list-prs() {
   local fzf_delimiter=":"
 
   clear
-  gum style --align center --padding "0 1" --border double --border-foreground 255 " Github PRs"
+  gum style --align center --padding "0 1" --foreground 201 --border double --border-foreground 201 " Github PRs"
   _gh_pr_list | fzf \
     --preview="gh pr view {1} --json number,title,body,assignees,reviews,state --template '$pullPreviewTemplate' | gum format" \
     --bind=$fzf_bind \
@@ -70,7 +70,7 @@ function list-prs() {
 
 function list-runs() {
   clear
-  gum style --align center --padding "0 1" --border double --border-foreground 255 " Github Actions"
+  gum style --align center --padding "0 1" --foreground 208 --border double --border-foreground 208 " Github Actions"
   gh run list --json number,name,headBranch,startedAt,conclusion,status,url,databaseId --template \
     '{{range .}}{{printf "%.0f" .databaseId}}:{{printf "#%v" .number}} {{.name}} on {{.headBranch}} [{{.conclusion}}] ({{timeago .startedAt}}){{"\n"}}{{end}}' |
     fzf --delimiter ':' \

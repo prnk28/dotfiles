@@ -33,6 +33,15 @@ export VISUAL=nvim
 export PATH="{{ .chezmoi.homeDir }}/.hishtory:$PATH"
 export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
 
+# Load zgen/plugins early (before custom keybindings are defined)
+if [ -f ~/.zgen/zgen.zsh ]; then
+  source ~/.zgen/zgen.zsh
+  if ! zgen saved; then
+    zgen load 'wfxr/forgit'
+    zgen save
+  fi
+fi
+
 # Load language/tool specific configurations
 {{ template "zsh/filesystem" . }}
 {{ template "zsh/golang" . }}
@@ -69,12 +78,9 @@ fi
 # Initialize devbox global environment
 eval "$(devbox global shellenv)"
 
-# Check if zgen exists
-if [ -f ~/.zgen/zgen.zsh ]; then
-  source ~/.zgen/zgen.zsh
-  if ! zgen saved; then
-    zgen oh-my-zsh
-    zgen load 'wfxr/forgit'
-    zgen save
+# Ensure hishtory Ctrl+R binding is active (re-bind after all templates load)
+if [[ -f "{{ .chezmoi.homeDir }}/.hishtory/config.zsh" ]] && command -v hishtory &> /dev/null; then
+  if [ "$(hishtory config-get enable-control-r)" = true ]; then
+    bindkey '^R' _hishtory_widget
   fi
 fi
