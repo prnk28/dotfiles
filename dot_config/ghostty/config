@@ -11,7 +11,7 @@ font-style-bold-italic = "Light Italic"
 shell-integration = zsh
 shell-integration-features = sudo
 confirm-close-surface = false
-font-size = 11
+font-size = 9
 
 # Environment variables
 window-decoration = false

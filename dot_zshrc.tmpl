@@ -60,6 +60,7 @@ export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
 {{ template "zsh/devbox" . }}
 {{ template "zsh/claude" . }}
 {{ template "zsh/opencode" . }}
+{{ template "zsh/bmm" . }}
 
 # Load Doppler secrets
 if [ -f {{ .chezmoi.homeDir }}/.config/doppler/env.sh ]; then
@@ -68,3 +69,13 @@ fi
 
 # Initialize devbox global environment
 eval "$(devbox global shellenv)"
+
+# Check if zgen exists
+if [ -f ~/.zgen/zgen.zsh ]; then
+  source ~/.zgen/zgen.zsh
+  if ! zgen saved; then
+    zgen oh-my-zsh
+    zgen load 'wfxr/forgit'
+    zgen save
+  fi
+fi

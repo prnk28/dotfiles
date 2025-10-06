@@ -1,0 +1,297 @@
+#!/usr/bin/env zsh
+# =====================
+# | 1.0 |  Functions  |
+# =====================
+
+# Main bookmark browser function with fzf
+function bmm-list() {
+  local reload_cmd='bmm list -f json | jq -r ".[] | \"\(.uri)|\(.title // .uri)|\(.tags // [] | join(\",\"))\""'
+  
+  eval "$reload_cmd" | \
+  fzf --delimiter '|' \
+      --with-nth 2.. \
+      --preview 'echo -e "🔗 URL:\n{1}\n\n📝 Title:\n{2}\n\n🏷️  Tags:\n{3}"' \
+      --preview-window=right:50%:wrap \
+      --bind 'enter:become(open {1})' \
+      --bind 'ctrl-o:execute(open {1})' \
+      --bind 'ctrl-y:execute(echo -n {1} | pbcopy)+abort' \
+      --bind 'ctrl-d:execute(bmm delete {1})+reload('"$reload_cmd"')' \
+      --bind 'ctrl-a:execute(bmm-add </dev/tty)+reload('"$reload_cmd"')' \
+      --bind 'ctrl-e:execute(bmm-edit {1} {2} </dev/tty)+reload('"$reload_cmd"')' \
+      --bind 'ctrl-t:execute(bmm-tag {1} </dev/tty)+reload('"$reload_cmd"')' \
+      --bind 'ctrl-s:reload(echo "" | fzf --print-query | xargs -I {} bmm search {} -f json | jq -r ".[] | \"\(.uri)|\(.title // .uri)|\(.tags // [] | join(\",\"))\")' \
+      --height 100% \
+      --header $'╭─ Bookmarks ─────────────────────────────────────────╮\n│ ⏎ Open  ^O Open  ^Y Copy  ^D Delete  ^A Add        │\n│ ^E Edit  ^T Tag  ^S Search                          │\n╰─────────────────────────────────────────────────────╯'
+}
+
+# Search bookmarks with live preview
+function bmm-search() {
+  local query="${1:-}"
+  
+  if [[ -n "$query" ]]; then
+    # Direct search with query
+    bmm search "$query" -f json | \
+    jq -r '.[] | "\(.uri)|\(.title // .uri)|\(.tags // [] | join(","))"' | \
+    fzf --delimiter '|' \
+        --with-nth 2.. \
+        --preview 'echo -e "🔗 URL:\n{1}\n\n📝 Title:\n{2}\n\n🏷️  Tags:\n{3}"' \
+        --preview-window=right:50%:wrap \
+        --bind 'enter:become(open {1})' \
+        --bind 'ctrl-y:execute(echo -n {1} | pbcopy)+abort' \
+        --height 100% \
+        --header "Search results for: $query"
+  else
+    # Interactive search mode
+    echo "" | fzf --print-query \
+      --delimiter '|' \
+      --disabled \
+      --preview 'test -n {q} && bmm search {q} -f json | jq -r ".[0] | \"Title: \" + (.title // .uri) + \"\nURL: \" + .uri + \"\nTags: \" + ((.tags // []) | join(\", \"))" || echo "Start typing to search..."' \
+      --preview-window=right:50%:wrap \
+      --bind 'change:reload(test -n {q} && bmm search {q} -f json | jq -r ".[] | \"\(.uri)|\(.title // .uri)|\(.tags // [] | join(\",\"))\"" || echo "")' \
+      --bind 'enter:become(open {1})' \
+      --bind 'ctrl-y:execute(echo -n {1} | pbcopy)+abort' \
+      --with-nth 2.. \
+      --height 100% \
+      --header 'Type to search bookmarks | Enter: open | Ctrl-Y: copy URL'
+  fi
+}
+
+# Add a new bookmark with auto-detection
+function bmm-add() {
+  local clipboard=$(pbpaste 2>/dev/null || echo "")
+  local default_url=""
+  local default_title=""
+  
+  # Check if clipboard contains a URL
+  if [[ $clipboard =~ ^https?://.* ]]; then
+    default_url=$clipboard
+    # Try to fetch title from the page
+    default_title=$(curl -sL "$default_url" 2>/dev/null | \
+      grep -oP '(?<=<title>).*?(?=</title>)' | \
+      head -1 | \
+      sed 's/^ *//;s/ *$//' || echo "")
+  fi
+  
+  echo "📌 Add New Bookmark"
+  echo "──────────────────"
+  
+  local url=$(gum input --value "$default_url" --placeholder "https://example.com" --header "Enter URL:" --width 80)
+  
+  if [[ -z "$url" ]]; then
+    echo "❌ No URL provided, cancelled."
+    return 1
+  fi
+  
+  local title=$(gum input --value "$default_title" --placeholder "Website Title" --header "Enter Title (optional):" --width 80)
+  local tags=$(gum input --placeholder "tag1, tag2, tag3" --header "Enter Tags (comma-separated, optional):" --width 80)
+  
+  # Build bmm save command
+  local save_cmd="bmm save '$url'"
+  [[ -n "$title" ]] && save_cmd="$save_cmd --title '$title'"
+  
+  if [[ -n "$tags" ]]; then
+    # Split tags and add them individually
+    IFS=',' read -ra tag_array <<< "$tags"
+    for tag in "${tag_array[@]}"; do
+      tag=$(echo "$tag" | xargs) # trim whitespace
+      [[ -n "$tag" ]] && save_cmd="$save_cmd --tags '$tag'"
+    done
+  fi
+  
+  if eval "$save_cmd"; then
+    echo "✅ Bookmark saved successfully!"
+  else
+    echo "❌ Failed to save bookmark"
+  fi
+  
+  sleep 1
+}
+
+# Edit an existing bookmark
+function bmm-edit() {
+  local url="$1"
+  local current_title="$2"
+  
+  # Fetch current bookmark details
+  local bookmark_json=$(bmm list -f json | jq --arg url "$url" '.[] | select(.uri == $url)')
+  local current_tags=$(echo "$bookmark_json" | jq -r '.tags // [] | join(", ")')
+  
+  echo "✏️  Edit Bookmark"
+  echo "──────────────────"
+  echo "URL: $url"
+  echo ""
+  
+  local new_title=$(gum input --value "$current_title" --header "Edit Title:" --width 80)
+  local new_tags=$(gum input --value "$current_tags" --placeholder "tag1, tag2, tag3" --header "Edit Tags (comma-separated):" --width 80)
+  
+  # Build update command
+  local update_cmd="bmm save '$url'"
+  [[ -n "$new_title" ]] && update_cmd="$update_cmd --title '$new_title'"
+  
+  # Clear existing tags first by saving without tags, then add new ones
+  eval "bmm save '$url'" 2>/dev/null
+  
+  if [[ -n "$new_tags" ]]; then
+    IFS=',' read -ra tag_array <<< "$new_tags"
+    for tag in "${tag_array[@]}"; do
+      tag=$(echo "$tag" | xargs)
+      [[ -n "$tag" ]] && update_cmd="$update_cmd --tags '$tag'"
+    done
+  fi
+  
+  if eval "$update_cmd"; then
+    echo "✅ Bookmark updated!"
+  else
+    echo "❌ Failed to update bookmark"
+  fi
+  
+  sleep 1
+}
+
+# Add/edit tags for a bookmark
+function bmm-tag() {
+  local url="$1"
+  
+  # Get current bookmark details
+  local bookmark_json=$(bmm list -f json | jq --arg url "$url" '.[] | select(.uri == $url)')
+  local current_title=$(echo "$bookmark_json" | jq -r '.title // .uri')
+  local current_tags=$(echo "$bookmark_json" | jq -r '.tags // [] | join(", ")')
+  
+  echo "🏷️  Edit Tags"
+  echo "──────────────────"
+  echo "Title: $current_title"
+  echo "URL: $url"
+  echo "Current tags: ${current_tags:-none}"
+  echo ""
+  
+  local new_tags=$(gum input --value "$current_tags" --placeholder "tag1, tag2, tag3" --header "Edit Tags (comma-separated):" --width 80)
+  
+  # First save without tags to clear them
+  bmm save "$url" 2>/dev/null
+  
+  # Build update command with new tags
+  local update_cmd="bmm save '$url'"
+  
+  if [[ -n "$new_tags" ]]; then
+    IFS=',' read -ra tag_array <<< "$new_tags"
+    for tag in "${tag_array[@]}"; do
+      tag=$(echo "$tag" | xargs)
+      [[ -n "$tag" ]] && update_cmd="$update_cmd --tags '$tag'"
+    done
+  fi
+  
+  if eval "$update_cmd"; then
+    echo "✅ Tags updated!"
+  else
+    echo "❌ Failed to update tags"
+  fi
+  
+  sleep 1
+}
+
+# Browse bookmarks by tag
+function bmm-by-tag() {
+  # First, let user select a tag
+  local selected_tag=$(bmm tags list 2>/dev/null | \
+    fzf --preview "bmm list --tags {} -f json 2>/dev/null | jq -r '.[] | .title // .uri' | head -20" \
+        --preview-window=right:50%:wrap \
+        --header "Select a tag to browse bookmarks")
+  
+  if [[ -n "$selected_tag" ]]; then
+    # Show bookmarks with selected tag
+    bmm list --tags "$selected_tag" -f json | \
+    jq -r '.[] | "\(.uri)|\(.title // .uri)|\(.tags // [] | join(","))"' | \
+    fzf --delimiter '|' \
+        --with-nth 2.. \
+        --preview 'echo -e "🔗 URL:\n{1}\n\n📝 Title:\n{2}\n\n🏷️  Tags:\n{3}"' \
+        --preview-window=right:50%:wrap \
+        --bind 'enter:become(open {1})' \
+        --bind 'ctrl-y:execute(echo -n {1} | pbcopy)+abort' \
+        --height 100% \
+        --header "Bookmarks tagged with: $selected_tag | Enter: open | Ctrl-Y: copy"
+  fi
+}
+
+# Quick bookmark from clipboard (original function)
+function bookmark() {
+  clipboard=$(pbpaste 2>/dev/null || echo "")
+  default_value=""
+  default_title=""
+  placeholder="https://example.com"
+  
+  if [[ $clipboard =~ ^https?://.* ]]; then
+    default_value=$clipboard
+    # Better title extraction
+    default_title=$(curl -sL "$default_value" 2>/dev/null | \
+      grep -oP '(?<=<title>).*?(?=</title>)' | \
+      head -1 | \
+      sed 's/^ *//;s/ *$//' || echo "")
+  fi
+  
+  promptUrl=$(gum input --value "$default_value" --placeholder "$placeholder" --header "Enter URL:")
+  
+  if [[ -z "$promptUrl" ]]; then
+    echo "❌ No URL provided"
+    zle && zle reset-prompt
+    return 1
+  fi
+  
+  promptTitle=$(gum input --value "$default_title" --placeholder "Enter title" --header "Enter Title:")
+  
+  bmm save "$promptUrl" --title "$promptTitle"
+  echo "✅ Saved to Bookmarks!"
+  zle && zle reset-prompt  # Force prompt redraw
+}
+
+# =====================
+# | 1.1 | ZLE Widgets |
+# =====================
+
+# ZLE widget for bookmark list
+function _bmm-list-widget() {
+  bmm-list < /dev/tty
+  zle reset-prompt
+}
+zle -N _bmm-list-widget
+
+# ZLE widget for bookmark search
+function _bmm-search-widget() {
+  bmm-search < /dev/tty
+  zle reset-prompt
+}
+zle -N _bmm-search-widget
+
+# ZLE widget for quick bookmark
+function _bookmark-widget() {
+  bookmark < /dev/tty
+  zle reset-prompt
+}
+zle -N _bookmark-widget
+
+# ZLE widget for bookmark by tag
+function _bmm-by-tag-widget() {
+  bmm-by-tag < /dev/tty
+  zle reset-prompt
+}
+zle -N _bmm-by-tag-widget
+
+# =====================
+# | 1.2 | Keybindings |
+# =====================
+
+# Bind keys to bookmark functions
+bindkey '^b^l' _bmm-list-widget      # Ctrl-B Ctrl-L for list
+bindkey '^b^s' _bmm-search-widget    # Ctrl-B Ctrl-S for search
+bindkey '^b^a' _bookmark-widget      # Ctrl-B Ctrl-A for add
+bindkey '^b^t' _bmm-by-tag-widget    # Ctrl-B Ctrl-T for tags
+
+# =====================
+# | 1.3 |   Aliases   |
+# =====================
+
+# Bookmark management aliases
+alias bm='bmm-list'
+alias bms='bmm-search'
+alias bma='bookmark'
+alias bmt='bmm-by-tag'
+alias bme='bmm-edit'

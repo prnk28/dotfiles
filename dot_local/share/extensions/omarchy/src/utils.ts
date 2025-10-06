@@ -53,7 +53,7 @@ export async function runTerminalCommand(
 	// For commands that open in alacritty, always close Vicinae and focus the new window
 	// Use the appropriate window class
 	const focusedCmd = cmd.includes("alacritty")
-		? cmd.replace("alacritty", `alacritty --class=${windowClass}`)
+		? cmd.replace("alacritty", `ghostty`)
 		: cmd;
 
 	return runCommand(focusedCmd, title, true);

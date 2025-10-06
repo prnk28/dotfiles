@@ -131,7 +131,7 @@ zle -N edit_files-widget edit_files
 bindkey '^E' edit_files-widget
 
 zle -N open_github-issues-widget open_github-issues
-bindkey '^I' open_github-issues-widget
+bindkey '^T' open_github-issues-widget
 
 zle -N open_github-prs-widget open_github-prs
 bindkey '^P' open_github-prs-widget

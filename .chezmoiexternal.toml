@@ -3,3 +3,8 @@
 type = "git-repo"
 url = "https://github.com/prnk28/nvim.git"
 refreshPeriod = "1m"
+
+[".zgen"]
+type = "git-repo"
+url = "https://github.com/tarjoilija/zgen.git"
+refreshPeriod = "12h"
