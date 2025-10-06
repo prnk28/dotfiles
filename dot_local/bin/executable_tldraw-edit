@@ -175,6 +175,7 @@ cat >"$TMP_HTML" <<'HTMLEOF'
                             clearTimeout(saveTimeout)
                             saveTimeout = setTimeout(() => {
                                 saveToFile()
+                                exportAllPagesSvg()
                             }, 1000)
                         })
                     }
@@ -187,17 +188,17 @@ cat >"$TMP_HTML" <<'HTMLEOF'
 
         async function saveToFile() {
             if (!editor) return
-            
+
             try {
                 updateStatus('Saving...', 'normal')
                 const currentSnapshot = editor.store.getSnapshot()
-                
+
                 const response = await fetch('/save', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(currentSnapshot)
                 })
-                
+
                 if (response.ok) {
                     updateStatus('Saved ✓', 'saved')
                     setTimeout(() => updateStatus('Ready'), 2000)
@@ -207,6 +208,44 @@ cat >"$TMP_HTML" <<'HTMLEOF'
             } catch (e) {
                 console.error('Save failed:', e)
                 updateStatus('Save failed ✗', 'error')
+            }
+        }
+
+        async function exportAllPagesSvg() {
+            if (!editor) return
+
+            try {
+                const pages = editor.getPages()
+                console.log(`Exporting ${pages.length} pages as SVG...`)
+
+                for (const page of pages) {
+                    // Switch to the page
+                    editor.setCurrentPage(page.id)
+
+                    // Get all shapes on this page
+                    const shapes = editor.getCurrentPageShapes()
+                    if (shapes.length === 0) continue
+
+                    // Get the SVG
+                    const svg = await editor.getSvg(shapes.map(s => s.id))
+                    if (!svg) continue
+
+                    const svgString = new XMLSerializer().serializeToString(svg)
+
+                    // Send to server
+                    await fetch('/export-svg', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            pageName: page.name || `page-${page.index}`,
+                            svg: svgString
+                        })
+                    })
+                }
+
+                console.log('SVG export complete')
+            } catch (e) {
+                console.error('SVG export failed:', e)
             }
         }
 
@@ -226,10 +265,21 @@ HTMLEOF
 cat >"$TMP_SERVER" <<SERVEREOF
 const http = require('http');
 const fs = require('fs');
+const path = require('path');
 
 const tldrFile = '$TLDR_FILE';
 const htmlFile = '$TMP_HTML';
 const port = $PORT;
+
+// Create SVG export directory
+const tldrDir = path.dirname(tldrFile);
+const tldrBasename = path.basename(tldrFile, '.tldr');
+const svgExportDir = path.join(tldrDir, tldrBasename);
+
+if (!fs.existsSync(svgExportDir)) {
+    fs.mkdirSync(svgExportDir, { recursive: true });
+    console.log('Created SVG export directory:', svgExportDir);
+}
 
 const server = http.createServer((req, res) => {
     // Enable CORS
@@ -274,6 +324,26 @@ const server = http.createServer((req, res) => {
                 res.end(JSON.stringify({ success: true }));
             } catch (e) {
                 console.error('Save error:', e);
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: e.message }));
+            }
+        });
+    } else if (req.url === '/export-svg' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => { body += chunk.toString(); });
+        req.on('end', () => {
+            try {
+                const data = JSON.parse(body);
+                const svgFilename = \`\${data.pageName.replace(/[^a-z0-9_-]/gi, '_')}.svg\`;
+                const svgPath = path.join(svgExportDir, svgFilename);
+
+                fs.writeFileSync(svgPath, data.svg);
+                console.log('Exported SVG:', svgFilename);
+
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, path: svgPath }));
+            } catch (e) {
+                console.error('SVG export error:', e);
                 res.writeHead(500, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ error: e.message }));
             }
