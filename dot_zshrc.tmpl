@@ -31,47 +31,40 @@ export VISUAL=nvim
 
 # Add hishtory to PATH early (before it's used by other configurations)
 export PATH="{{ .chezmoi.homeDir }}/.hishtory:$PATH"
-
-# Add local bin to PATH
 export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
 
 # Load language/tool specific configurations
+{{ template "zsh/filesystem" . }}
 {{ template "zsh/golang" . }}
-{{ template "zsh/chat" . }}
 {{ template "zsh/rust" . }}
 {{ template "zsh/node" . }}
 {{ template "zsh/python" . }}
+{{ template "zsh/markdown" . }}
 {{ template "zsh/docker" . }}
 
-# Initialize interactive tools
-{{ template "zsh/tools" . }}
-
-# Shell enhancements
-{{ template "zsh/enhancements" . }}
+{{ template "zsh/shell" . }}
 
 # Shared working directory tracking
-[[ -f "$HOME/.config/zsh/shared-cwd.zsh" ]] && source "$HOME/.config/zsh/shared-cwd.zsh"
-
 # Platform specific configurations
 {{ if eq .chezmoi.os "darwin" -}}
 {{ template "zsh/darwin" . }}
+{{ template "zsh/tmux" . }}
 {{ else if eq .chezmoi.os "linux" -}}
 {{ template "zsh/linux" . }}
-{{ template "zsh/hypr" . }}
+{{ template "zsh/compose" . }}
 {{ template "zsh/ssh" . }}
 {{ end -}}
 
 # User specific aliases
-{{ template "zsh/aliases" . }}
-{{ template "zsh/functions" . }}
+{{ template "zsh/github" . }}
+{{ template "zsh/devbox" . }}
+{{ template "zsh/claude" . }}
+{{ template "zsh/opencode" . }}
 
 # Load Doppler secrets
 if [ -f {{ .chezmoi.homeDir }}/.config/doppler/env.sh ]; then
     source {{ .chezmoi.homeDir }}/.config/doppler/env.sh
 fi
-
-# Source custom functions
-[[ -f {{ .chezmoi.homeDir }}/.local/bin/gho ]] && source {{ .chezmoi.homeDir }}/.local/bin/gho
 
 # Initialize devbox global environment
 eval "$(devbox global shellenv)"

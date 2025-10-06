@@ -1,5 +1,9 @@
+#/usr/bin/env zsh
 
-# Linux specific configurations
+# =====================
+# | 1.0 |  Path/Vars  |
+# =====================
+export GHQ_ROOT="{{ .chezmoi.homeDir }}/code"
 [[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && \
   source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 [[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && \
@@ -11,28 +15,19 @@
 
 export LD_LIBRARY_PATH="{{ .chezmoi.homeDir }}/.local/lib:$LD_LIBRARY_PATH"
 
-# Auto-start tmux on Linux
-if command -v tmux &> /dev/null && [ -z "$TMUX" ] && [ -z "$INSIDE_EMACS" ] && [ -z "$VSCODE_INJECTION" ]; then
-  # Check if this is an interactive shell and not a login shell from SSH
-  if [[ $- == *i* ]] && [[ -z "$SSH_TTY" || "$SHLVL" -eq 1 ]]; then
-    # Don't auto-start tmux in certain terminals or environments
-    case "$TERM_PROGRAM" in
-      "vscode"|"cursor"|"code") ;;
-      *)
-        # Try to attach to existing session or create new one
-        if tmux has-session 2>/dev/null; then
-          # Attach to first available session
-          exec tmux attach-session
-        else
-          # Create new session with current directory name
-          session_name=$(basename "$PWD" | tr '.' '_')
-          exec tmux new-session -s "$session_name"
-        fi
-        ;;
-    esac
-  fi
-fi
-
+export PATH="{{ .chezmoi.homeDir }}/.go/bin:{{ .chezmoi.homeDir }}/.go/current/bin:$GOBIN:$PATH"
 export PATH="/var/lib/osxcross/bin:$PATH"
-
 export GITHUB_TOKEN="$(gh auth token)"
+export PNPM_HOME="{{ .chezmoi.homeDir }}/.local/share/pnpm"
+export PNPM_HOME="/home/prad/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+alias copy="wl-copy"
+alias paste="wl-paste"

@@ -1,0 +1,169 @@
+#/usr/bin/env zsh
+
+# =====================
+# | 1.0 |  Path/Vars  |
+# =====================
+
+# =====================
+# | 1.1 |  Functions  |
+# =====================
+function mdcp() {
+  local url="$1"
+  if [ -z "$url" ]; then
+    gum log --level error "Please provide a URL"
+    return 1
+  fi
+  markitdown "$url" | copy
+}
+
+function mdghdl() {
+  # Check if a repository URL or name is provided
+  if [ -z "$1" ]; then
+    gum log --level error "Please provide a GitHub repository URL or name"
+    return 1
+  fi
+
+  # Extract repository name from the input
+  local repo=$(echo "$1" | sed 's/.*\///')
+  
+  # Create destination directory
+  local dest_dir="{{ .chezmoi.homeDir }}/Downloads/$repo-docs"
+  mkdir -p "$dest_dir"
+  gum log --level info "Created destination directory" path "$dest_dir"
+  
+  # Create and navigate to temporary directory
+  local temp_dir=$(mktemp -d)
+  cd "$temp_dir" || { 
+    gum log --level error "Failed to navigate to temporary directory"
+    return 1
+  }
+  gum log --level debug "Created temporary directory" path "$temp_dir"
+  
+  # Clone the repository
+  gum log --level info "Cloning repository" repo "$1"
+  gum spin --spinner dot --title "Cloning $1..." -- gh repo clone "$1" || { 
+    gum log --level error "Failed to clone repository" repo "$1"
+    rm -rf "$temp_dir"
+    return 1
+  }
+  
+  # Navigate to the cloned repository
+  cd "$repo" || { 
+    gum log --level error "Failed to navigate to repository directory" repo "$repo"
+    rm -rf "$temp_dir"
+    return 1
+  }
+  
+  # Copy markdown files to destination
+  gum log --level info "Copying documentation files to destination"
+  if command -v fd >/dev/null 2>&1; then
+    gum spin --spinner dot --title "Copying markdown files..." -- \
+      fd -e md -x cp -v {} "$dest_dir"
+  else
+    gum spin --spinner dot --title "Copying markdown files..." -- \
+      find . -name "*.md" -exec cp -v {} "$dest_dir" \;
+  fi
+  
+  # Clean up and navigate to destination
+  cd "{{ .chezmoi.homeDir }}" || return 1
+  gum spin --spinner dot --title "Cleaning up..." -- rm -rf "$temp_dir"
+  gum log --level info "Documentation downloaded successfully" path "$dest_dir"
+  cd "$dest_dir" || return 1
+  gum log --level info "Current directory" path "$PWD"
+}
+
+function pdf2md() {
+  FILE=$(gum file --file)
+  OUTPUT=$(gum input --header "Output file name (without extension): ")
+  if [ -z "$OUTPUT" ]; then
+    OUTPUT=$(basename "$FILE" .pdf)
+  fi
+  # check for file input
+  if [ -f "$FILE" ]; then
+   gum spin "Generating markdown" -- uvx 'markitdown[all]' "$FILE" -o "$OUTPUT.md"
+   cat "$OUTPUT.md" | gum pager
+  fi
+}
+
+function md2html() {
+  # Use gum for directory selection but handle errors better
+  local input_dir
+  input_dir=$(gum file --directory --header "Select the directory containing the markdown files") || {
+    echo "Operation canceled."
+    return 1
+  }
+  
+  # Check if directory selection was canceled
+  if [[ -z "$input_dir" ]]; then
+    echo "Operation canceled."
+    return 1
+  fi
+ 
+  # Check if input directory exists
+  if [[ ! -d "$input_dir" ]]; then
+    echo "Error: Directory '$input_dir' does not exist."
+    return 1
+  fi
+
+   # Use gum for output file name with default
+  local default_name="output.html"
+  local output_file
+  output_file=$(gum input --placeholder "$default_name" --header "Enter output HTML filename (or press Enter for $default_name)") || {
+    echo "Operation canceled."
+    return 1
+  }
+  output_file="${output_file:-$default_name}" 
+ 
+  # Find markdown files
+  echo "Finding markdown files..."
+  local md_files=()
+  while IFS= read -r line; do
+    md_files+=("$line")
+  done < <(find "$input_dir" -name "*.md" -o -name "*.markdown")
+  
+  # Check if any markdown files were found
+  if [[ ${#md_files[@]} -eq 0 ]]; then
+    echo "Error: No markdown files found in '$input_dir'."
+    return 1
+  fi
+  
+  echo "Found ${#md_files[@]} markdown files. Generating HTML..."
+  
+  # Generate HTML
+  pandoc "${md_files[@]}" \
+    -f markdown \
+    -t html \
+    -o "$output_file" \
+    --highlight-style=tango \
+    --self-contained \
+    --metadata title="Markdown Compilation"
+  
+  if [[ $? -eq 0 ]]; then
+    echo "✓ HTML successfully created: $output_file"
+    
+    # Ask if user wants to open the HTML
+    echo "Do you want to open the HTML now? (y/n)"
+    read -r response
+    if [[ "$response" =~ ^[Yy]$ ]]; then
+      {{ if eq .chezmoi.os "darwin" -}}
+      open "$output_file"
+      {{ else if eq .chezmoi.os "linux" -}}
+      xdg-open "$output_file" &> /dev/null
+      {{ end -}}
+    fi
+    
+    echo "You can convert this HTML to PDF using your browser's print function."
+    return 0
+  else
+    echo "✗ Error: Failed to create HTML."
+    return 1
+  fi
+}
+
+# =====================
+# | 1.2 |   Aliases   |
+# =====================
+
+# =====================
+# | 1.3 | Keybindings |
+# =====================

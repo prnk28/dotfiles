@@ -1,22 +1,26 @@
-# Node.js configuration
-export BUN_INSTALL="{{ .chezmoi.homeDir }}/.bun"
+#/usr/bin/env zsh
+
+# =====================
+# | 1.0 |  Path/Vars  |
+# =====================
 export PATH="$BUN_INSTALL/bin:$PATH"
 [[ -s "$BUN_INSTALL/_bun" ]] && source "$BUN_INSTALL/_bun"
-
-{{ if eq .chezmoi.os "darwin" -}}
-export PNPM_HOME="{{ .chezmoi.homeDir }}/Library/pnpm"
-{{ else -}}
-export PNPM_HOME="{{ .chezmoi.homeDir }}/.local/share/pnpm"
-export PNPM_HOME="/home/prad/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-
-export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-{{ end -}}
-
 export PATH="{{ .chezmoi.homeDir }}/.deno/bin:$PATH"
 [[ -s "{{ .chezmoi.homeDir }}/.deno/env" ]] && source "{{ .chezmoi.homeDir }}/.deno/env"
+# =====================
+# | 1.1 |  Functions  |
+# =====================
+
+# =====================
+# | 1.2 |   Aliases   |
+# =====================
+alias p="pnpm"
+alias nrb="npm run build"
+alias nrs="npm run start"
+alias nrd="npm run dev"
+alias nrt="npm run test"
+
+# =====================
+# | 1.3 | Keybindings |
+# =====================
+

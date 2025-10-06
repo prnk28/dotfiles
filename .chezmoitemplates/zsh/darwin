@@ -1,4 +1,24 @@
+#/usr/bin/env zsh
 
+# =====================
+# | 1.0 |  Path/Vars  |
+# =====================
+export GHQ_ROOT="{{ .chezmoi.homeDir }}/Developer"
+export NVM_DIR="{{ .chezmoi.homeDir }}/.nvm"
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
+  export PATH=/opt/homebrew/opt/ruby/bin:$PATH
+  export PATH=`gem environment gemdir`/bin:$PATH
+fi
+
+export PATH="/usr/local/opt/libpq/bin:$PATH"
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+
+export PNPM_HOME="{{ .chezmoi.homeDir }}/Library/pnpm"
+export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
+export PATH="/usr/local/go/bin:$GOBIN:$PATH"
 # macOS specific configurations
 {{ if eq .chezmoi.arch "arm64" -}}
 # Apple Silicon
@@ -34,7 +54,13 @@ if [[ "$-" == *i* ]] && [[ -z "$TMUX" ]] && [ -x "$(command -v tt)" ]; then
   tt attach-session -t main || tt new-session -s main
 fi
 
+# =====================
+# | 1.1 |  Functions  |
+# =====================
 
+# =====================
+# | 1.2 |   Aliases   |
+# =====================
 alias /a="aider"
 alias /c="claude"
 alias /cr="claude --continue"
@@ -48,3 +74,13 @@ alias gg="lazygit"
 alias y="yazi"
 alias dd="lazydocker"
 alias e="nvim"
+alias copy="pbcopy"
+alias paste="pbpaste"
+alias chrome="/Applications/Google Chrome Dev.app/Contents/MacOS/Google Chrome Dev"
+# =====================
+# | 1.3 | Keybindings |
+# =====================
+
+
+
+

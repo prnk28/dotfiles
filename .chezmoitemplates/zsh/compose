@@ -1,0 +1,159 @@
+# Docker Compose Services Management Functions
+# Service-specific convenience functions that wrap the global taskfile services commands
+
+# Service URLs mapping
+declare -A SERVICE_URLS=(
+  ["openwebui"]="http://localhost:3000"
+  ["flame"]="http://localhost:5005"
+  ["owlistic"]="http://localhost:8080"
+  ["graphiti-mcp"]="http://localhost:8000"
+  ["n8n"]="http://localhost:5678"
+  ["twenty"]="http://localhost:3000"
+  ["plane"]="http://localhost:8082"
+)
+
+# Helper function to display service URL
+function _display_service_url() {
+  local service=$1
+  local url=${SERVICE_URLS[$service]}
+  if [[ -n "$url" ]]; then
+    echo "  → Access $service at: $url"
+  fi
+}
+
+# Convenience functions for OpenWebUI
+function openwebui-start() {
+  task -g services:start:openwebui
+  _display_service_url "openwebui"
+}
+
+function openwebui-stop() {
+  task -g services:stop:openwebui
+}
+
+function openwebui-restart() {
+  task -g services:restart:openwebui
+  _display_service_url "openwebui"
+}
+
+function openwebui-logs() {
+  task -g services:logs:openwebui -- "$@"
+}
+
+function openwebui-mcps() {
+  task -g services:mcps:openwebui
+}
+
+# Convenience functions for Flame
+function flame-start() {
+  task -g services:start:flame
+  _display_service_url "flame"
+}
+
+function flame-stop() {
+  task -g services:stop:flame
+}
+
+function flame-restart() {
+  task -g services:restart:flame
+  _display_service_url "flame"
+}
+
+function flame-logs() {
+  task -g services:logs:flame -- "$@"
+}
+
+# Convenience functions for Owlistic
+function owlistic-start() {
+  task -g services:start:owlistic
+  _display_service_url "owlistic"
+}
+
+function owlistic-stop() {
+  task -g services:stop:owlistic
+}
+
+function owlistic-restart() {
+  task -g services:restart:owlistic
+  _display_service_url "owlistic"
+}
+
+function owlistic-logs() {
+  task -g services:logs:owlistic -- "$@"
+}
+
+# Convenience functions for Graphiti MCP
+function graphiti-mcp-start() {
+  task -g services:start:graphiti-mcp
+  _display_service_url "graphiti-mcp"
+}
+
+function graphiti-mcp-stop() {
+  task -g services:stop:graphiti-mcp
+}
+
+function graphiti-mcp-restart() {
+  task -g services:restart:graphiti-mcp
+  _display_service_url "graphiti-mcp"
+}
+
+function graphiti-mcp-logs() {
+  task -g services:logs:graphiti-mcp -- "$@"
+}
+
+# Convenience functions for n8n
+function n8n-start() {
+  task -g services:start:n8n
+  _display_service_url "n8n"
+}
+
+function n8n-stop() {
+  task -g services:stop:n8n
+}
+
+function n8n-restart() {
+  task -g services:restart:n8n
+  _display_service_url "n8n"
+}
+
+function n8n-logs() {
+  task -g services:logs:n8n -- "$@"
+}
+
+# Convenience functions for Twenty CRM
+function twenty-start() {
+  task -g services:start:twenty
+  _display_service_url "twenty"
+}
+
+function twenty-stop() {
+  task -g services:stop:twenty
+}
+
+function twenty-restart() {
+  task -g services:restart:twenty
+  _display_service_url "twenty"
+}
+
+function twenty-logs() {
+  task -g services:logs:twenty -- "$@"
+}
+
+# Convenience functions for Plane
+function plane-start() {
+  task -g services:start:plane
+  _display_service_url "plane"
+}
+
+function plane-stop() {
+  task -g services:stop:plane
+}
+
+function plane-restart() {
+  task -g services:restart:plane
+  _display_service_url "plane"
+}
+
+function plane-logs() {
+  task -g services:logs:plane -- "$@"
+}

@@ -1,0 +1,96 @@
+#/usr/bin/env zsh
+
+# =====================
+# | 1.0 |  Path/Vars  |
+# =====================
+[[ -f "{{ .chezmoi.homeDir }}/.hishtory/config.zsh" ]] && source "{{ .chezmoi.homeDir }}/.hishtory/config.zsh"
+ZSH_AUTOSUGGEST_STRATEGY=(hishtory)
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#666666"
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+
+export LG_CONFIG_FILE="{{ .chezmoi.homeDir }}/.config/lazygit/config.yml"
+# =====================
+# | 1.1 |  Functions  |
+# =====================
+_zsh_autosuggest_strategy_hishtory() {
+    local prefix="$1"
+    typeset -g suggestion
+    
+    suggestion=$(hishtory query "$prefix" 2>/dev/null | \
+                 awk '{$1=$2=$3=$4=""; print $0}' | \
+                 sed 's/^[[:space:]]*//' | \
+                 grep -v "^$prefix$" | \
+                 head -1)
+}
+
+command -v zoxide &> /dev/null && eval "$(zoxide init zsh)"
+command -v starship &> /dev/null && eval "$(starship init zsh)"
+
+function today_format_date() {
+    # Get year
+    local year=$(date +%Y)
+    # Get week number (01-53)
+    local week=$(date +%V)
+    # Get day of week (1-7 where Monday is 1)
+    local day=$(date +%u)
+
+    # Combine and echo
+    echo "${year}.${week}.${day}"
+}
+
+function today() {
+    if [[ -n "$1" ]]; then
+        # If date provided, parse it
+        date -j -f "%Y-%m-%d" "$1" "+%Y.%V.%u" 2>/dev/null || echo "Usage: today [YYYY-MM-DD]"
+    else
+        # Current date
+        date "+%Y.%V.%u"
+    fi
+}
+
+function q() {
+  if [[ -n "$TMUX" ]]; then
+    # Check if current tmux window is a popup
+    if tmux display-message -p '#{window_popup_flag}' | grep -q 1; then
+      tmux detach-client
+    else
+      exit
+    fi
+  else
+    exit
+  fi
+}
+
+function c() {
+  if [[ -z $1 ]]; then
+    clear
+  else
+    z "$1"
+  fi
+}
+
+# =====================
+# | 1.2 |   Aliases   |
+# =====================
+alias cm="chezmoi"
+alias cmc="chezmoi cd"
+alias cma="chezmoi add"
+alias cme="chezmoi edit"
+alias cm.="chezmoi apply"
+alias !!="chezmoi apply && exec zsh && tmux source {{ .chezmoi.homeDir }}/.tmux.conf && clear"
+alias tdy="today_format_date"
+alias x="clear"
+alias update="refresh-global && source {{ .chezmoi.homeDir }}/.zshrc && exec zsh && tmux source {{ .chezmoi.homeDir }}/.tmux.conf && chezmoi apply && clear"
+alias change="cd $ENV_DIR && nvim"
+alias vi="nvim"
+alias vim="nvim"
+
+# =====================
+# | 1.3 | Keybindings |
+# =====================
+
+
+
+
+
+

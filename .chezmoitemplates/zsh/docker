@@ -1,159 +1,66 @@
-# Docker Compose Services Management Functions
-# Service-specific convenience functions that wrap the global taskfile services commands
+#/usr/bin/env zsh
 
-# Service URLs mapping
-declare -A SERVICE_URLS=(
-  ["openwebui"]="http://localhost:3000"
-  ["flame"]="http://localhost:5005"
-  ["owlistic"]="http://localhost:8080"
-  ["graphiti-mcp"]="http://localhost:8000"
-  ["n8n"]="http://localhost:5678"
-  ["twenty"]="http://localhost:3000"
-  ["plane"]="http://localhost:8082"
-)
+# =====================
+# | 1.0 |  Path/Vars  |
+# =====================
 
-# Helper function to display service URL
-function _display_service_url() {
-  local service=$1
-  local url=${SERVICE_URLS[$service]}
-  if [[ -n "$url" ]]; then
-    echo "  → Access $service at: $url"
+# =====================
+# | 1.1 |  Functions  |
+# =====================
+function docker-nuke() {
+  echo "🚨 WARNING: This will stop and remove all non-essential Docker containers, volumes, and images 🚨"
+  echo "Press Ctrl+C to abort or Enter to continue..."
+  read
+
+  echo "🛑 Stopping all non-essential containers..."
+  docker ps -a --format '{{ "{{.Names}}" }}' | grep -v 'k8s\|buildkit' | xargs -r docker stop
+
+  echo "🗑️ Removing all non-essential containers..."
+  docker ps -a --format '{{ "{{.Names}}" }}' | grep -v 'k8s\|buildkit' | xargs -r docker rm
+
+  echo "🧹 Removing all unused networks..."
+  docker network prune -f
+
+  echo "💾 Removing all volumes..."
+  docker volume rm $(docker volume ls -q) 2>/dev/null || echo "No volumes to remove."
+
+  echo "🖼️ Removing all images..."
+  docker rmi $(docker images -q) -f 2>/dev/null || echo "No images to remove."
+
+  echo "🧼 Performing system prune to clean up any remaining resources..."
+  docker system prune -af --volumes
+
+  echo "✅ Docker environment has been nuked! Only Kubernetes and BuilderKit related resources remain."
+}
+
+function docker-compose-up() {
+  local compose_file="$1"
+  
+  if [[ -z "$compose_file" ]]; then
+    echo "Error: No compose file provided"
+    return 1
+  fi
+  
+  if gum confirm "Run in detached mode?"; then
+    echo "Running in detached mode..."
+    docker compose -f "$compose_file" up -d
+  else
+    echo "Running in attached mode..."
+    docker compose -f "$compose_file" up
   fi
 }
+# =====================
+# | 1.2 |   Aliases   |
+# =====================
+alias dd="lazydocker"
+alias dkrmi="docker_rm_image"
+alias dkc="docker_storm_container"
+alias dcu="docker compose up"
+alias dcps="docker compose ps"
+alias dcl="docker compose logs"
+alias dcd="docker compose down"
+alias dcn="docker-nuke"
 
-# Convenience functions for OpenWebUI
-function openwebui-start() {
-  task -g services:start:openwebui
-  _display_service_url "openwebui"
-}
-
-function openwebui-stop() {
-  task -g services:stop:openwebui
-}
-
-function openwebui-restart() {
-  task -g services:restart:openwebui
-  _display_service_url "openwebui"
-}
-
-function openwebui-logs() {
-  task -g services:logs:openwebui -- "$@"
-}
-
-function openwebui-mcps() {
-  task -g services:mcps:openwebui
-}
-
-# Convenience functions for Flame
-function flame-start() {
-  task -g services:start:flame
-  _display_service_url "flame"
-}
-
-function flame-stop() {
-  task -g services:stop:flame
-}
-
-function flame-restart() {
-  task -g services:restart:flame
-  _display_service_url "flame"
-}
-
-function flame-logs() {
-  task -g services:logs:flame -- "$@"
-}
-
-# Convenience functions for Owlistic
-function owlistic-start() {
-  task -g services:start:owlistic
-  _display_service_url "owlistic"
-}
-
-function owlistic-stop() {
-  task -g services:stop:owlistic
-}
-
-function owlistic-restart() {
-  task -g services:restart:owlistic
-  _display_service_url "owlistic"
-}
-
-function owlistic-logs() {
-  task -g services:logs:owlistic -- "$@"
-}
-
-# Convenience functions for Graphiti MCP
-function graphiti-mcp-start() {
-  task -g services:start:graphiti-mcp
-  _display_service_url "graphiti-mcp"
-}
-
-function graphiti-mcp-stop() {
-  task -g services:stop:graphiti-mcp
-}
-
-function graphiti-mcp-restart() {
-  task -g services:restart:graphiti-mcp
-  _display_service_url "graphiti-mcp"
-}
-
-function graphiti-mcp-logs() {
-  task -g services:logs:graphiti-mcp -- "$@"
-}
-
-# Convenience functions for n8n
-function n8n-start() {
-  task -g services:start:n8n
-  _display_service_url "n8n"
-}
-
-function n8n-stop() {
-  task -g services:stop:n8n
-}
-
-function n8n-restart() {
-  task -g services:restart:n8n
-  _display_service_url "n8n"
-}
-
-function n8n-logs() {
-  task -g services:logs:n8n -- "$@"
-}
-
-# Convenience functions for Twenty CRM
-function twenty-start() {
-  task -g services:start:twenty
-  _display_service_url "twenty"
-}
-
-function twenty-stop() {
-  task -g services:stop:twenty
-}
-
-function twenty-restart() {
-  task -g services:restart:twenty
-  _display_service_url "twenty"
-}
-
-function twenty-logs() {
-  task -g services:logs:twenty -- "$@"
-}
-
-# Convenience functions for Plane
-function plane-start() {
-  task -g services:start:plane
-  _display_service_url "plane"
-}
-
-function plane-stop() {
-  task -g services:stop:plane
-}
-
-function plane-restart() {
-  task -g services:restart:plane
-  _display_service_url "plane"
-}
-
-function plane-logs() {
-  task -g services:logs:plane -- "$@"
-}
+# =====================
+# | 1.3 | Keybindings |
+# =====================

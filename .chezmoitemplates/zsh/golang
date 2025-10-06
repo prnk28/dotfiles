@@ -1,13 +1,49 @@
-# Go configuration
+#/usr/bin/env zsh
+
+# =====================
+# | 1.0 |  Path/Vars  |
+# =====================
 export GOPATH="{{ .chezmoi.homeDir }}/.go"
 export GOBIN="$GOPATH/bin"
 export GOROOT="$GOPATH/current"
 export GOPROXY='https://github.com,https://proxy.golang.org,direct'
 
-{{ if eq .chezmoi.os "linux" -}}
-# goup installs itself to ~/.go/bin and Go binaries to ~/.go/current/bin
-export PATH="{{ .chezmoi.homeDir }}/.go/bin:{{ .chezmoi.homeDir }}/.go/current/bin:$GOBIN:$PATH"
-{{ else -}}
-# Traditional Go setup for macOS
-export PATH="/usr/local/go/bin:$GOBIN:$PATH"
-{{ end -}}
+# =====================
+# | 1.1 |  Functions  |
+# =====================
+function go-nuke() {
+  echo "🚨 WARNING: This will clean your Go module cache and {{ .chezmoi.homeDir }}/go directory 🚨"
+  echo "Press Ctrl+C to abort or Enter to continue..."
+  read
+
+  echo "🧹 Cleaning Go module cache..."
+  go clean -modcache
+
+  echo "🧼 Cleaning Go build cache..."
+  go clean -cache
+
+  echo "🗑️ Cleaning Go test cache..."
+  go clean -testcache
+
+  echo "📦 Removing downloaded modules in {{ .chezmoi.homeDir }}/go/pkg/mod..."
+  rm -rf {{ .chezmoi.homeDir }}/go/pkg/mod/* 2>/dev/null || echo "No modules to remove."
+
+  echo "🔨 Removing compiled binaries in {{ .chezmoi.homeDir }}/go/bin..."
+  rm -rf {{ .chezmoi.homeDir }}/go/bin/* 2>/dev/null || echo "No binaries to remove."
+
+  echo "🧪 Removing test results..."
+  find {{ .chezmoi.homeDir }}/go -name "*.test" -type f -delete
+
+  echo "🗄️ Removing temporary build files..."
+  find {{ .chezmoi.homeDir }}/go -name "*.o" -type f -delete
+  find {{ .chezmoi.homeDir }}/go -name "*.a" -type f -delete
+  find {{ .chezmoi.homeDir }}/go -name "*.so" -type f -delete
+
+  echo "✅ Go environment has been nuked! Your {{ .chezmoi.homeDir }}/go directory is clean."
+  echo "👉 Note: Your source code in {{ .chezmoi.homeDir }}/go/src remains untouched."
+}
+
+# =====================
+# | 1.2 |   Aliases   |
+# =====================
+

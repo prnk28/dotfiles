@@ -1,0 +1,1 @@
+{{ .Title }} {{ .Number }} {{ .State }} {{ .URL }}

@@ -3,8 +3,7 @@
 # =====================
 # | 1.0 |  Path/Vars  |
 # =====================
-export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
-export PATH="{{ .chezmoi.homeDir }}/.egit/.venv/bin:$PATH"
+
 # =====================
 # | 1.1 |  Functions  |
 # =====================
@@ -12,8 +11,8 @@ export PATH="{{ .chezmoi.homeDir }}/.egit/.venv/bin:$PATH"
 # =====================
 # | 1.2 |   Aliases   |
 # =====================
+alias oc="opencode"
 
 # =====================
 # | 1.3 | Keybindings |
 # =====================
-# Virtual environment for specific tools

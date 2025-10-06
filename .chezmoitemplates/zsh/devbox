@@ -1,0 +1,53 @@
+#/usr/bin/env zsh
+
+# =====================
+# | 1.0 |  Path/Vars  |
+# =====================
+export DEVBOX_NO_PROMPT=1
+
+# =====================
+# | 1.1 |  Functions  |
+# =====================
+function devbox-run() {
+  # Capture the selected script in a local variable
+  local script
+  script=$(fd "devbox.json" -x jq -r '.shell.scripts | keys[]' {} 2>/dev/null | fzf --header "Select Devbox Script" --tmux)
+
+  # Check if the variable is non-empty before executing the command
+  if [ -n "$script" ]; then
+    devbox run "$script"
+  fi
+}
+
+# =====================
+# | 1.2 |   Aliases   |
+# =====================
+alias dx="devbox"
+alias dxa="devbox add"
+alias dxg="devbox global"
+alias dxi="devbox install"
+alias dxl="devbox list"
+alias dxr="devbox-run"
+alias dxs="devbox services"
+alias dxx="devbox shell"
+alias dxga="devbox global add"
+alias dxgi="devbox global install"
+alias dxgl="devbox global list"
+alias dxsa="devbox services attach"
+alias dxsk="devbox services stop"
+alias dxsl="devbox services ls"
+alias dxsr="devbox services restart"
+alias dxss="devbox services start"
+alias dxsu="devbox services up"
+alias dxgsa="devbox global services attach"
+alias dxgsk="devbox global services stop"
+alias dxgsl="devbox global services ls"
+alias dxgsr="devbox global services restart"
+alias dxgss="devbox global services start"
+alias dxgsu="devbox global services up"
+
+# =====================
+# | 1.3 | Keybindings |
+# =====================
+zle -N dxr-widget dxr
+bindkey '^B' dxr-widget
