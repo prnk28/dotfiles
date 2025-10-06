@@ -196,6 +196,14 @@ zle -N open_github-prs-widget open_github-prs
 bindkey '^P' open_github-prs-widget
 alias ghp=open_github-prs
 
+function open_github-actions() {
+  /home/prad/.local/bin/github actions
+}
+
+zle -N open_github-actions-widget open_github-actions
+bindkey '^A' open_github-actions-widget
+alias gha=open_github-actions
+
 function open_repo() {
   local selected=$(ghq list | fzf --delimiter='/' --nth=-1)
   if [[ -n "$selected" ]]; then
