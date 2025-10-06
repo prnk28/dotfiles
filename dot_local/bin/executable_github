@@ -35,7 +35,7 @@ function _gh_pr_list() {
 function list-issues() {
   local fzf_bind="enter:execute(nvim -c 'Octo issue edit {1}'),space:execute(gh issue view {1} --web)"
   local fzf_previewWindow=top:85%:wrap
-  local fzf_height=100
+  local fzf_height=92%
   local fzf_withNth=2..
   local fzf_delimiter=':'
 
@@ -54,7 +54,7 @@ function list-issues() {
 function list-prs() {
   local fzf_bind="enter:execute(nvim -c 'Octo pr edit {1}'),space:execute(gh pr view {1} --web)"
   local fzf_previewWindow=top:80%:wrap
-  local fzf_height=100%
+  local fzf_height=92%
   local fzf_delimiter=":"
 
   clear
@@ -76,7 +76,7 @@ function list-runs() {
     fzf --delimiter ':' \
       --with-nth 2.. \
       --preview 'gh run view {1}' \
-      --preview-window=bottom:50%:wrap \
+      --preview-window=top:50%:wrap \
       --bind 'enter:execute(gh run view {1} --web)' \
       --bind 'ctrl-r:execute(gh run rerun {1})' \
       --bind 'ctrl-w:execute(gh run watch {1})' \
