@@ -30,3 +30,7 @@ export NVM_DIR="$HOME/.config/nvm"
 
 alias copy="wl-copy"
 alias paste="wl-paste"
+
+update-mime-database ~/.local/share/mime
+update-desktop-database ~/.local/share/applications
+xdg-mime default tldraw-edit.desktop application/x-tldr

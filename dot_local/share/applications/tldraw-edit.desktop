@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=tldraw Editor
+Comment=Edit tldraw files in the browser
+Exec=tldraw-edit %f
+Icon=/home/prad/.local/share/applications/icons/TLDraw.png
+Terminal=false
+Categories=Graphics;2DGraphics;VectorGraphics;
+MimeType=application/x-tldr;
+NoDisplay=false

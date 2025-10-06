@@ -103,6 +103,7 @@ function open_repo() {
     cd "$GHQ_ROOT/$selected"
     clear
   fi
+  clear
   zle && zle reset-prompt # Force prompt redraw
   clear
 }

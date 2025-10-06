@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-tldr">
+    <comment>tldraw drawing file</comment>
+    <glob pattern="*.tldr"/>
+    <sub-class-of type="application/json"/>
+    <icon name="accessories-text-editor"/>
+  </mime-type>
+</mime-info>
