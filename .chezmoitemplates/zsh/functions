@@ -147,6 +147,7 @@ function y() {
 		builtin cd -- "$cwd"
 	fi
 	rm -f -- "$tmp"
+  zle && zle reset-prompt  # Force prompt redraw
 }
 zle -N y-widget y
 bindkey '^F' y-widget
@@ -166,6 +167,7 @@ function edit_files() {
         --bind 'enter:execute(${EDITOR:-nvim} {})' \
         --header 'ENTER to edit | CTRL-/ to toggle preview'
   fi
+  zle && zle reset-prompt  # Force prompt redraw
 }
 
 alias e=edit_files
@@ -174,6 +176,7 @@ bindkey '^E' edit_files-widget
 
 function open_lazycommit() {
   /home/prad/.local/bin/gcai
+  zle && zle reset-prompt  # Force prompt redraw
 }
 
 zle -N open_lazycommit-widget open_lazycommit
@@ -182,6 +185,7 @@ alias gc=open_lazycommit
 
 function open_github-issues() {
   /home/prad/.local/bin/github issues
+  zle && zle reset-prompt  # Force prompt redraw
 }
 
 zle -N open_github-issues-widget open_github-issues
@@ -190,6 +194,7 @@ alias ghi=open_github-issues
 
 function open_github-prs() {
   /home/prad/.local/bin/github prs
+  zle && zle reset-prompt  # Force prompt redraw
 }
 
 zle -N open_github-prs-widget open_github-prs
@@ -198,6 +203,7 @@ alias ghp=open_github-prs
 
 function open_github-actions() {
   /home/prad/.local/bin/github actions
+  zle && zle reset-prompt  # Force prompt redraw
 }
 
 zle -N open_github-actions-widget open_github-actions
