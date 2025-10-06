@@ -13,10 +13,10 @@ function ghg() {
 }
 
 function ghgu() {
-    for repo in $(ghq list | grep "^github.com/"); do
-        gum spin --spinner dot --title "Fetching $repo..." -- ghq get -u $repo
-        gum log --level info "[Fetched] $repo ✅"
-    done
+  for repo in $(ghq list | grep "^github.com/"); do
+    gum spin --spinner dot --title "Fetching $repo..." -- ghq get -u $repo
+    gum log --level info "[Fetched] $repo ✅"
+  done
 }
 
 function ghn() {
@@ -56,49 +56,56 @@ function edit_files() {
   if [[ $(jobs | wc -l) -gt 0 ]]; then
     fg
   else
-  git ls-files | \
-    grep -v -E '\.(pb|twirp)\.go$|_templ\.go$|\.pb\.gw\.go$|_gen\.go$|\.gen\.go$|mock_.*\.go$' | \
-    xargs -I {} stat -c "%Y %n" {} 2>/dev/null | \
-    sort -rn | \
-    cut -d' ' -f2- | \
-    fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' \
+    clear
+    gum style --align center --padding "0 1" --border double --foreground 117 --border-foreground 117 " Edit Files"
+    git ls-files |
+      grep -v -E '\.(pb|twirp)\.go$|_templ\.go$|\.pb\.gw\.go$|_gen\.go$|\.gen\.go$|mock_.*\.go$' |
+      xargs -I {} stat -c "%Y %n" {} 2>/dev/null |
+      sort -rn |
+      cut -d' ' -f2- |
+      fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' \
         --preview-window=right:60% \
         --bind 'ctrl-/:toggle-preview' \
         --bind 'enter:execute(${EDITOR:-nvim} {})' \
-        --header 'ENTER to edit | CTRL-/ to toggle preview'
+        --header 'ENTER to edit | CTRL-/ to toggle preview' \
+        --height=92%
+    clear
   fi
-  zle && zle reset-prompt  # Force prompt redraw
+  zle && zle reset-prompt # Force prompt redraw
+  clear
 }
 
 function open_lazycommit() {
   /home/prad/.local/bin/gcai
-  zle && zle reset-prompt  # Force prompt redraw
+  zle && zle reset-prompt # Force prompt redraw
 }
 
 function open_github-issues() {
   /home/prad/.local/bin/github issues
-  zle && zle reset-prompt  # Force prompt redraw
+  zle && zle reset-prompt # Force prompt redraw
 }
 
 function open_github-prs() {
   /home/prad/.local/bin/github prs
-  zle && zle reset-prompt  # Force prompt redraw
+  zle && zle reset-prompt # Force prompt redraw
 }
 
 function open_github-actions() {
   /home/prad/.local/bin/github actions
-  zle && zle reset-prompt  # Force prompt redraw
+  zle && zle reset-prompt # Force prompt redraw
 }
 
 function open_repo() {
-  local selected=$(ghq list | fzf --delimiter='/' --nth=-1)
+  clear
+  gum style --align center --padding "0 1" --border double --foreground 215 --border-foreground 215 " Open Repository"
+  local selected=$(ghq list | fzf --delimiter='/' --nth=-1 --height=92%)
   if [[ -n "$selected" ]]; then
     cd "$GHQ_ROOT/$selected"
     clear
   fi
-  zle && zle reset-prompt  # Force prompt redraw
+  zle && zle reset-prompt # Force prompt redraw
+  clear
 }
-
 
 # =====================
 # | 1.2 |   Aliases   |
