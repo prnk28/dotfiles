@@ -1,3 +1,5 @@
+#!/usr/bin/env zsh
+
 # Docker Compose Services Management Functions
 # Service-specific convenience functions that wrap the global taskfile services commands
 

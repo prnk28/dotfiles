@@ -44,7 +44,6 @@ export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
 
 {{ template "zsh/shell" . }}
 
-# Shared working directory tracking
 # Platform specific configurations
 {{ if eq .chezmoi.os "darwin" -}}
 {{ template "zsh/darwin" . }}

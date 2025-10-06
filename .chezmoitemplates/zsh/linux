@@ -1,9 +1,9 @@
-#/usr/bin/env zsh
+#!/usr/bin/env zsh
 
 # =====================
 # | 1.0 |  Path/Vars  |
 # =====================
-export GHQ_ROOT="{{ .chezmoi.homeDir }}/code"
+export GHQ_ROOT="{{ .chezmoi.homeDir }}/Developer/codebase"
 [[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && \
   source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 [[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && \
@@ -19,7 +19,6 @@ export PATH="{{ .chezmoi.homeDir }}/.go/bin:{{ .chezmoi.homeDir }}/.go/current/b
 export PATH="/var/lib/osxcross/bin:$PATH"
 export GITHUB_TOKEN="$(gh auth token)"
 export PNPM_HOME="{{ .chezmoi.homeDir }}/.local/share/pnpm"
-export PNPM_HOME="/home/prad/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;

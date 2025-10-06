@@ -1,27 +1,36 @@
-#/usr/bin/env zsh
+#!/usr/bin/env zsh
 
 # =====================
 # | 1.0 |  Path/Vars  |
 # =====================
+export LG_CONFIG_FILE="{{ .chezmoi.homeDir }}/.config/lazygit/config.yml"
+
+# =====================
+# | 1.1 | Hishtory    |
+# =====================
+# Load hishtory integration first
 [[ -f "{{ .chezmoi.homeDir }}/.hishtory/config.zsh" ]] && source "{{ .chezmoi.homeDir }}/.hishtory/config.zsh"
-ZSH_AUTOSUGGEST_STRATEGY=(hishtory)
+
+# Configure zsh-autosuggestions with hishtory strategy
+ZSH_AUTOSUGGEST_STRATEGY=(hishtory history completion)
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#666666"
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+ZSH_AUTOSUGGEST_USE_ASYNC=true
 
-export LG_CONFIG_FILE="{{ .chezmoi.homeDir }}/.config/lazygit/config.yml"
-# =====================
-# | 1.1 |  Functions  |
-# =====================
+# Custom autosuggest strategy for hishtory
 _zsh_autosuggest_strategy_hishtory() {
     local prefix="$1"
     typeset -g suggestion
-    
-    suggestion=$(hishtory query "$prefix" 2>/dev/null | \
-                 awk '{$1=$2=$3=$4=""; print $0}' | \
-                 sed 's/^[[:space:]]*//' | \
-                 grep -v "^$prefix$" | \
-                 head -1)
+
+    if [[ -n "$prefix" ]]; then
+        suggestion=$(hishtory query "$prefix" 2>/dev/null | \
+                     awk 'NR==1 {$1=$2=$3=$4=""; sub(/^[[:space:]]+/, ""); print}')
+    fi
 }
+
+# =====================
+# | 1.2 |  Functions  |
+# =====================
 
 command -v zoxide &> /dev/null && eval "$(zoxide init zsh)"
 command -v starship &> /dev/null && eval "$(starship init zsh)"
@@ -70,7 +79,7 @@ function c() {
 }
 
 # =====================
-# | 1.2 |   Aliases   |
+# | 1.3 |   Aliases   |
 # =====================
 alias cm="chezmoi"
 alias cmc="chezmoi cd"
@@ -86,8 +95,14 @@ alias vi="nvim"
 alias vim="nvim"
 
 # =====================
-# | 1.3 | Keybindings |
+# | 1.4 | Keybindings |
 # =====================
+# Hishtory Ctrl+R is already bound by config.zsh
+# Additional useful keybindings
+bindkey '^[[A' history-search-backward  # Up arrow
+bindkey '^[[B' history-search-forward   # Down arrow
+bindkey '^P' up-line-or-search          # Ctrl+P
+bindkey '^N' down-line-or-search        # Ctrl+N
 
 
 
