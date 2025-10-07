@@ -46,6 +46,45 @@ add_command "chezmoi update" "cmu" "Update dotfiles from remote and apply change
 add_command "chezmoi apply" "cm." "Apply dotfiles changes to system"
 add_command "chezmoi edit" "cme" "Edit a dotfile in chezmoi source state"
 
+# Filesystem commands
+add_command "yy" "y" "Open Yazi file manager with automatic cd to selection"
+add_command "cd ~/.local/share" "cdl" "Change to local share directory"
+add_command "cd -" "cb" "Change to previous directory"
+add_command "cd .." ".." "Go up one directory"
+add_command "chezmoi cd" "cd." "Change to chezmoi source directory"
+
+# Git/GitHub aliases
+add_command "lazygit" "gg" "Launch lazygit TUI"
+add_command "gh dash" "ghd" "Open GitHub dashboard"
+add_command "git push --set-upstream origin HEAD" "gpu" "Push current branch and set upstream"
+add_command "git switch -" "gsb" "Switch to previous git branch"
+add_command "git diff" "gdf" "Show git diff"
+add_command "ghq list" "ghl" "List all ghq repositories"
+add_command "edit_files" "e" "Edit files in git repo with fzf selector"
+add_command "open_repo" "o" "Open repository from ghq with fzf selector"
+add_command "open_lazycommit" "gc" "Open lazycommit for AI-generated commit messages"
+
+# Docker Compose services
+add_command "task -g services:start:openwebui" "openwebui-start" "Start OpenWebUI service"
+add_command "task -g services:stop:openwebui" "openwebui-stop" "Stop OpenWebUI service"
+add_command "task -g services:restart:openwebui" "openwebui-restart" "Restart OpenWebUI service"
+add_command "task -g services:start:flame" "flame-start" "Start Flame dashboard service"
+add_command "task -g services:stop:flame" "flame-stop" "Stop Flame dashboard service"
+add_command "task -g services:start:n8n" "n8n-start" "Start n8n workflow automation service"
+add_command "task -g services:stop:n8n" "n8n-stop" "Stop n8n workflow automation service"
+
+# SSH commands
+add_command "sshc" "sshc" "Run command on all SSH servers"
+add_command "sshs" "sshs" "Select and connect to SSH server with fzf"
+add_command "sshb" "sshb" "Run command on build servers"
+add_command "ssht" "ssht" "Run command on testnet servers"
+add_command "sshg" "sshg" "Run command on gateway servers"
+
+# Shell utilities
+add_command "today" "tdy" "Get current date in YYYY.WW.D format"
+add_command "q" "q" "Smart quit (detaches from tmux popup or exits)"
+add_command "c" "c" "Clear screen or cd to directory with zoxide"
+
 # System update
 add_command "refresh-global && source ~/.zshrc && exec zsh" "reload" "Reload zsh configuration and refresh global environment"
 

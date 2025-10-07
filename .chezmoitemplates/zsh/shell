@@ -126,7 +126,8 @@ alias vim="nvim"
 #   ^V - devbox run script selector (devbox template) [overrides quoted-insert]
 #
 # Additional custom keybindings:
-#   ^G - lazygit/lazycommit (github template)
+#   ^G - lazygit TUI (github template)
+#   ^H - gh dash (github template)
 #   ^O - open repo with ghq (github template)
 #   ^P - open github PRs (github template)
 #   ^T - open tldraw file selector (filesystem template)

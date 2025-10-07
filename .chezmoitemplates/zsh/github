@@ -132,8 +132,13 @@ alias ghi=open_github-issues
 # | 1.3 | Keybindings |
 # =====================
 
-zle -N open_lazycommit-widget open_lazycommit
-bindkey '^G' open_lazycommit-widget
+function open_lazygit() {
+  lazygit
+  zle && zle reset-prompt  # Force prompt redraw
+}
+
+zle -N open_lazygit-widget open_lazygit
+bindkey '^G' open_lazygit-widget
 
 zle -N edit_files-widget edit_files
 bindkey '^E' edit_files-widget
@@ -149,3 +154,11 @@ bindkey '^A' open_github-actions-widget
 
 zle -N open_repo-widget open_repo
 bindkey '^O' open_repo-widget
+
+function open_gh-dash() {
+  gh dash
+  zle && zle reset-prompt  # Force prompt redraw
+}
+
+zle -N open_gh-dash-widget open_gh-dash
+bindkey '^H' open_gh-dash-widget
