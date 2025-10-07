@@ -108,4 +108,4 @@ alias claude-sync="rclone sync -P .claude r2:claude"
 # | 1.3 | Keybindings |
 # =====================
 zle -N claude_widget
-bindkey '^K' claude_widget
+bindkey '^Q' claude_widget  # ^K used by intelli-shell search

@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# Setup intelli-shell with custom commands
+
+set -e
+
+# Only run if intelli-shell is installed
+if ! command -v intelli-shell &> /dev/null; then
+    echo "intelli-shell not found, skipping setup"
+    exit 0
+fi
+
+echo "Setting up intelli-shell custom commands..."
+
+# Function to add command if not already exists
+add_command() {
+    local cmd="$1"
+    local alias="$2"
+    local description="$3"
+
+    # Add the command (intelli-shell handles duplicates)
+    intelli-shell new "$cmd" --alias "$alias" --description "$description" 2>/dev/null || true
+}
+
+# Claude commands
+add_command "claude -r --dangerously-skip-permissions" "claude" "Launch Claude Code in current repo with full permissions"
+add_command "claude --dangerously-skip-permissions" "/c" "Launch Claude Code with full permissions (new session)"
+add_command "claude --dangerously-skip-permissions --continue" "/cc" "Continue Claude Code session"
+add_command "claude --dangerously-skip-permissions --resume" "/cr" "Resume Claude Code session"
+add_command "opencode" "/o" "Open code in default editor"
+add_command "rclone copy -P r2:claude .claude" "claude-init" "Initialize Claude data from R2 storage"
+add_command "rclone sync -P .claude r2:claude" "claude-sync" "Sync Claude data to R2 storage"
+
+# GitHub commands
+add_command "github issues" "ghi" "Open GitHub issues selector with fzf"
+add_command "github prs" "ghp" "Open GitHub PRs selector with fzf"
+add_command "github actions" "gha" "Open GitHub Actions runs selector with fzf"
+
+# Devbox command
+add_command "devbox-run" "dxr" "Select and run a devbox script with fzf"
+
+# TLDraw command
+add_command "tdrw" "td" "Open TLDraw file selector with fzf"
+
+# Chezmoi commands
+add_command "chezmoi update" "cmu" "Update dotfiles from remote and apply changes"
+add_command "chezmoi apply" "cm." "Apply dotfiles changes to system"
+add_command "chezmoi edit" "cme" "Edit a dotfile in chezmoi source state"
+
+# System update
+add_command "refresh-global && source ~/.zshrc && exec zsh" "reload" "Reload zsh configuration and refresh global environment"
+
+echo "✓ intelli-shell custom commands configured"

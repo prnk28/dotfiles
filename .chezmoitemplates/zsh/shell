@@ -29,7 +29,21 @@ _zsh_autosuggest_strategy_hishtory() {
 }
 
 # =====================
-# | 1.2 |  Functions  |
+# | 1.2 | Intelli-Shell |
+# =====================
+# Configure intelli-shell keybindings before loading
+export INTELLI_SEARCH_HOTKEY="^K"  # Ctrl+K for search
+export INTELLI_BOOKMARK_HOTKEY="^B"  # Ctrl+B for bookmark
+export INTELLI_VARIABLE_HOTKEY="^L"  # Ctrl+L for variable replacement
+export INTELLI_FIX_HOTKEY="^X"  # Ctrl+X for fix
+
+# Load intelli-shell ZLE integration
+if command -v intelli-shell &> /dev/null; then
+    source <(intelli-shell init zsh)
+fi
+
+# =====================
+# | 1.3 |  Functions  |
 # =====================
 
 command -v zoxide &> /dev/null && eval "$(zoxide init zsh)"
@@ -79,7 +93,7 @@ function c() {
 }
 
 # =====================
-# | 1.3 |   Aliases   |
+# | 1.4 |   Aliases   |
 # =====================
 alias cm="chezmoi"
 alias cmc="chezmoi cd"
@@ -95,17 +109,23 @@ alias vi="nvim"
 alias vim="nvim"
 
 # =====================
-# | 1.4 | Keybindings |
+# | 1.5 | Keybindings |
 # =====================
+# Intelli-shell keybindings (loaded from init zsh):
+#   ^K - intelli-shell search [overrides kill-line]
+#   ^B - intelli-shell bookmark/save command
+#   ^L - intelli-shell variable replacement
+#   ^X - intelli-shell fix command
+#
 # Custom keybindings (overriding standard zsh bindings):
 #   ^A - open github actions (github template) [overrides beginning-of-line]
 #   ^E - edit files with fzf (github template) [overrides end-of-line]
-#   ^K - launch claude in repo (claude template) [overrides kill-line]
 #   ^N - open github issues (github template) [overrides down-line-or-search]
+#   ^Q - launch claude in repo (claude template) [overrides push-line]
 #   ^R - hishtory TUI (hishtory/config.zsh, re-bound in dot_zshrc.tmpl)
+#   ^V - devbox run script selector (devbox template) [overrides quoted-insert]
 #
 # Additional custom keybindings:
-#   ^B - devbox run script selector (devbox template)
 #   ^G - lazygit/lazycommit (github template)
 #   ^O - open repo with ghq (github template)
 #   ^P - open github PRs (github template)

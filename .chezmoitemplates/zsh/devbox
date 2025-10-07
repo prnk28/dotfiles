@@ -50,4 +50,4 @@ alias dxgsu="devbox global services up"
 # | 1.3 | Keybindings |
 # =====================
 zle -N devbox-run-widget devbox-run
-bindkey '^B' devbox-run-widget
+bindkey '^V' devbox-run-widget  # ^B used by intelli-shell bookmark
