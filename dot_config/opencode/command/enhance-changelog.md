@@ -1,5 +1,6 @@
 ---
 description: Copy CHANGELOG.md into mdx docs
+agent: docs
 ---
 
 - Read the contents of @docs/reference/changelog.mdx and find all referenced closed PRs.

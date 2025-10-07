@@ -1,6 +1,7 @@
 ---
 allowed-tools: Bash(gh issue:*), Bash(gh api:*), Bash(gh milestone:*), Bash(bun run:*), Bash(echo *)
 description: Write Go Specific Documentation
+agent: golang
 ---
 
 Write and update Go documentation comments for all Go source files in the directory path specified by $ARGUMENTS, following the latest Go documentation standards and our project conventions.

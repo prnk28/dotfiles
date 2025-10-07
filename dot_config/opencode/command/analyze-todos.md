@@ -1,3 +1,8 @@
+---
+description: Write TODO comments for unimplemented or broken functions in the repository
+agent: general-purpose
+---
+
 Write TODO comments for all unimplemented methods or broken functions found in the repository source code.
 
 ## Steps

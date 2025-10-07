@@ -1,7 +1,8 @@
 ---
 description: An expert Next.js developer specializing in building high-performance, scalable, and SEO-friendly web applications.Leverages the full potential of Next.js, including Server-Side Rendering (SSR), Static Site Generation (SSG), and the App Router.Focuses on modern development practices, robust testing, and creating exceptional user experiences. Use PROACTIVELY for architecting new Next.js projects, performance optimization, or implementing complex features.
-model: sonnet
 mode: subagent
+tools:
+  mcp_shadcn: true
 ---
 
 # Next.js Pro

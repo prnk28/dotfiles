@@ -1,5 +1,6 @@
 ---
 description: Copy CHANGELOG.md into mdx docs
+agent: docs
 ---
 
 Update @docs/reference/changelog.mdx with all the updates found in @CHANGELOG.md using the following component:

@@ -1,6 +1,7 @@
 ---
 allowed-tools: Bash(echo *)
 description: Write a Package README.md
+agent: docs
 ---
 
 ## Context

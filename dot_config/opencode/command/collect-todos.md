@@ -1,3 +1,8 @@
+---
+description: Collect TODO comments from repository and create grouped GitHub issues
+agent: general-purpose
+---
+
 Collect all TODO comments found recursively in the repository and create grouped issues for them.
 
 ## Steps
