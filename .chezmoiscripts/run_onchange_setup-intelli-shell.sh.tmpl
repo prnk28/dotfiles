@@ -73,12 +73,20 @@ add_command "task -g services:stop:flame" "flame-stop" "Stop Flame dashboard ser
 add_command "task -g services:start:n8n" "n8n-start" "Start n8n workflow automation service"
 add_command "task -g services:stop:n8n" "n8n-stop" "Stop n8n workflow automation service"
 
-# SSH commands
+# SSH commands - generic
 add_command "sshc" "sshc" "Run command on all SSH servers"
 add_command "sshs" "sshs" "Select and connect to SSH server with fzf"
 add_command "sshb" "sshb" "Run command on build servers"
 add_command "ssht" "ssht" "Run command on testnet servers"
 add_command "sshg" "sshg" "Run command on gateway servers"
+
+# SSH commands - specific hosts
+add_command "ssh bos-kvm-8" "ssh-bos8" "SSH to Boston KVM-8 server (72.60.121.60)"
+add_command "ssh bos-kvm-4" "ssh-bos4" "SSH to Boston KVM-4 server (100.87.170.34)"
+add_command "ssh phx-kvm-8" "ssh-phx8" "SSH to Phoenix KVM-8 server (193.203.164.150)"
+add_command "ssh phx-kvm-2" "ssh-phx2" "SSH to Phoenix KVM-2 server (100.127.253.117)"
+add_command "ssh gateway-bos" "ssh-gateway" "SSH to Boston Gateway server (100.65.108.79)"
+add_command "ssh testnet-phx" "ssh-testnet" "SSH to Phoenix Testnet server (100.87.11.72)"
 
 # Shell utilities
 add_command "today" "tdy" "Get current date in YYYY.WW.D format"

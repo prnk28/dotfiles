@@ -58,21 +58,29 @@ function edit_files() {
   else
     clear
     gum style --align center --padding "0 1" --border double --foreground 117 --border-foreground 117 " Edit Files"
-    git ls-files |
+
+    # Get the file list
+    local files=$(git ls-files 2>/dev/null |
       grep -v -E '\.(pb|twirp)\.go$|_templ\.go$|\.pb\.gw\.go$|_gen\.go$|\.gen\.go$|mock_.*\.go$' |
       xargs -I {} stat -c "%Y %n" {} 2>/dev/null |
       sort -rn |
-      cut -d' ' -f2- |
-      fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' \
+      cut -d' ' -f2-)
+
+    if [[ -z "$files" ]]; then
+      # No git files found, just open nvim in cwd
+      ${EDITOR:-nvim}
+    else
+      # Show fzf selector
+      echo "$files" | fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' \
         --preview-window=right:60% \
         --bind 'ctrl-/:toggle-preview' \
         --bind 'enter:execute(${EDITOR:-nvim} {})' \
         --header 'ENTER to edit | CTRL-/ to toggle preview' \
         --height=92%
+    fi
     clear
   fi
   zle && zle reset-prompt # Force prompt redraw
-  clear
 }
 
 function open_lazycommit() {
