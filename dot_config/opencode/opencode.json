@@ -1,5 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "theme": "cyberdream",
   "mcp": {
     "sequential-thinking": {
       "type": "local",
@@ -12,23 +13,8 @@
     },
     "context7": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@upstash/context7-mcp"
-      ],
+      "command": ["npx", "-y", "@upstash/context7-mcp"],
       "enabled": true
-    },
-    "cclsp": {
-      "type": "local",
-      "command": [
-        "npx",
-        "cclsp@latest"
-      ],
-      "enabled": true,
-      "environment": {
-        "CCLSP_CONFIG_PATH": "/Users/prad/.config/claude/cclsp.json"
-      }
     },
     "filesystem": {
       "type": "local",
@@ -36,12 +22,9 @@
         "npx",
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/Users/prad/Developer/github.com/sonr-io"
+        "/home/prad/Developer/codebase/github.com/sonr-io/sonr"
       ],
       "enabled": true,
-      "environment": {
-        "CCLSP_CONFIG_PATH": "/Users/prad/.config/claude/cclsp.json"
-      }
     }
   }
 }

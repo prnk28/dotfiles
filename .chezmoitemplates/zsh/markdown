@@ -3,6 +3,13 @@
 # =====================
 # | 1.0 |  Path/Vars  |
 # =====================
+{{ if eq .chezmoi.os "darwin" -}}
+alias copy="pbcopy"
+alias paste="pbpaste"
+{{ else if eq .chezmoi.os "linux" -}}
+alias copy="wl-copy"
+alias paste="wl-paste"
+{{ end -}}
 
 # =====================
 # | 1.1 |  Functions  |
@@ -25,35 +32,35 @@ function mdghdl() {
 
   # Extract repository name from the input
   local repo=$(echo "$1" | sed 's/.*\///')
-  
+
   # Create destination directory
   local dest_dir="{{ .chezmoi.homeDir }}/Downloads/$repo-docs"
   mkdir -p "$dest_dir"
   gum log --level info "Created destination directory" path "$dest_dir"
-  
+
   # Create and navigate to temporary directory
   local temp_dir=$(mktemp -d)
-  cd "$temp_dir" || { 
+  cd "$temp_dir" || {
     gum log --level error "Failed to navigate to temporary directory"
     return 1
   }
   gum log --level debug "Created temporary directory" path "$temp_dir"
-  
+
   # Clone the repository
   gum log --level info "Cloning repository" repo "$1"
-  gum spin --spinner dot --title "Cloning $1..." -- gh repo clone "$1" || { 
+  gum spin --spinner dot --title "Cloning $1..." -- gh repo clone "$1" || {
     gum log --level error "Failed to clone repository" repo "$1"
     rm -rf "$temp_dir"
     return 1
   }
-  
+
   # Navigate to the cloned repository
-  cd "$repo" || { 
+  cd "$repo" || {
     gum log --level error "Failed to navigate to repository directory" repo "$repo"
     rm -rf "$temp_dir"
     return 1
   }
-  
+
   # Copy markdown files to destination
   gum log --level info "Copying documentation files to destination"
   if command -v fd >/dev/null 2>&1; then
@@ -63,7 +70,7 @@ function mdghdl() {
     gum spin --spinner dot --title "Copying markdown files..." -- \
       find . -name "*.md" -exec cp -v {} "$dest_dir" \;
   fi
-  
+
   # Clean up and navigate to destination
   cd "{{ .chezmoi.homeDir }}" || return 1
   gum spin --spinner dot --title "Cleaning up..." -- rm -rf "$temp_dir"
@@ -80,8 +87,8 @@ function pdf2md() {
   fi
   # check for file input
   if [ -f "$FILE" ]; then
-   gum spin "Generating markdown" -- uvx 'markitdown[all]' "$FILE" -o "$OUTPUT.md"
-   cat "$OUTPUT.md" | gum pager
+    gum spin "Generating markdown" -- uvx 'markitdown[all]' "$FILE" -o "$OUTPUT.md"
+    cat "$OUTPUT.md" | gum pager
   fi
 }
 
@@ -92,43 +99,43 @@ function md2html() {
     echo "Operation canceled."
     return 1
   }
-  
+
   # Check if directory selection was canceled
   if [[ -z "$input_dir" ]]; then
     echo "Operation canceled."
     return 1
   fi
- 
+
   # Check if input directory exists
   if [[ ! -d "$input_dir" ]]; then
     echo "Error: Directory '$input_dir' does not exist."
     return 1
   fi
 
-   # Use gum for output file name with default
+  # Use gum for output file name with default
   local default_name="output.html"
   local output_file
   output_file=$(gum input --placeholder "$default_name" --header "Enter output HTML filename (or press Enter for $default_name)") || {
     echo "Operation canceled."
     return 1
   }
-  output_file="${output_file:-$default_name}" 
- 
+  output_file="${output_file:-$default_name}"
+
   # Find markdown files
   echo "Finding markdown files..."
   local md_files=()
   while IFS= read -r line; do
     md_files+=("$line")
   done < <(find "$input_dir" -name "*.md" -o -name "*.markdown")
-  
+
   # Check if any markdown files were found
   if [[ ${#md_files[@]} -eq 0 ]]; then
     echo "Error: No markdown files found in '$input_dir'."
     return 1
   fi
-  
+
   echo "Found ${#md_files[@]} markdown files. Generating HTML..."
-  
+
   # Generate HTML
   pandoc "${md_files[@]}" \
     -f markdown \
@@ -137,10 +144,10 @@ function md2html() {
     --highlight-style=tango \
     --self-contained \
     --metadata title="Markdown Compilation"
-  
+
   if [[ $? -eq 0 ]]; then
     echo "✓ HTML successfully created: $output_file"
-    
+
     # Ask if user wants to open the HTML
     echo "Do you want to open the HTML now? (y/n)"
     read -r response
@@ -148,10 +155,10 @@ function md2html() {
       {{ if eq .chezmoi.os "darwin" -}}
       open "$output_file"
       {{ else if eq .chezmoi.os "linux" -}}
-      xdg-open "$output_file" &> /dev/null
+      xdg-open "$output_file" &>/dev/null
       {{ end -}}
     fi
-    
+
     echo "You can convert this HTML to PDF using your browser's print function."
     return 0
   else
