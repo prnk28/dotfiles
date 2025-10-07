@@ -81,11 +81,17 @@ TMP_DIR=$(mktemp -d)
 TMP_HTML="$TMP_DIR/tldraw.html"
 TMP_SERVER="$TMP_DIR/server.js"
 
+# Generate unique service name based on file
+BASENAME=$(basename "$TLDR_FILE" .tldr)
+SERVICE_NAME="tldraw-edit-${BASENAME}-${PORT}"
+
 # Cleanup function
 cleanup() {
     echo ""
     echo "Shutting down tldraw editor..."
-    [ -n "$SERVER_PID" ] && kill $SERVER_PID 2>/dev/null
+    if systemctl --user is-active "$SERVICE_NAME" &>/dev/null; then
+        systemctl --user stop "$SERVICE_NAME"
+    fi
     rm -rf "$TMP_DIR"
     exit 0
 }
@@ -364,16 +370,21 @@ process.on('SIGTERM', () => {
 });
 SERVEREOF
 
-# Start the server
-node "$TMP_SERVER" &
-SERVER_PID=$!
+# Start the server using systemd-run
+echo "Server running at http://localhost:$PORT"
+systemd-run --user \
+    --unit="$SERVICE_NAME" \
+    --description="TLDraw Editor for $BASENAME" \
+    --collect \
+    node "$TMP_SERVER"
 
 # Wait for server to start
-sleep 1
+sleep 2
 
-# Check if server started successfully
-if ! kill -0 $SERVER_PID 2>/dev/null; then
+# Check if server is running
+if ! systemctl --user is-active "$SERVICE_NAME" &>/dev/null; then
     echo "Error: Failed to start server"
+    cleanup
     exit 1
 fi
 
@@ -382,5 +393,11 @@ URL="http://localhost:$PORT"
 echo "Opening browser at $URL"
 omarchy-launch-webapp "$URL"
 
-# Wait for server to be terminated
-wait $SERVER_PID
+# Keep script running and monitor server
+echo "Press Ctrl+C to stop the server"
+while systemctl --user is-active "$SERVICE_NAME" &>/dev/null; do
+    sleep 1
+done
+
+# Auto cleanup when server stops
+cleanup

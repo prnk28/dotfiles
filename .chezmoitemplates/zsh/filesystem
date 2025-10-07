@@ -15,7 +15,21 @@ function yy() {
 		builtin cd -- "$cwd"
 	fi
 	rm -f -- "$tmp"
-  zle && zle reset-prompt  # Force prompt redraw
+	zle && zle reset-prompt # Force prompt redraw
+}
+
+function tdrw() {
+	OLDPWD="$PWD"
+	cd "$HOME/Documents/TLDraw"
+	clear
+	gum style --align center --padding "0 1" --border double --foreground 213 --border-foreground 213 " TLDraw Files"
+	local selected=$(fd -e tldr -p | fzf --height=92%)
+	if [[ -n "$selected" ]]; then
+		tldraw-edit "$selected"
+	fi
+	cd "$OLDPWD"
+	clear
+	zle && zle reset-prompt # Force prompt redraw
 }
 
 # =====================
@@ -38,5 +52,5 @@ alias gt='tree -a --prune -I "api|chains|interchaintest|.devcontainer|.github|.a
 # =====================
 # | 1.3 | Keybindings |
 # =====================
-zle -N yy-widget yy
-bindkey '^F' yy-widget
+zle -N tdrw-widget tdrw
+bindkey '^T' tdrw-widget

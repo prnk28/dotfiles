@@ -1,4 +1,7 @@
 import { runTiledTerminal } from "./utils";
 export default async function () {
-	await runTiledTerminal("alacritty -e omarchy-update", "Updating Omarchy");
+	await runTiledTerminal(
+		`omarchy-launch-tui-float "chezmoi update && exec zsh"`,
+		"Updating Omarchy"
+	);
 }
