@@ -212,10 +212,9 @@ export const restart = tool({
   },
   async execute(args) {
     try {
-      const cmd = args.service
-        ? `devbox services restart ${args.service}`
-        : "devbox services restart";
-      const result = await $`${cmd}`;
+      const result = args.service
+        ? await $`devbox services restart ${args.service}`
+        : await $`devbox services restart`;
       const target = args.service || "all services";
       return `Restarted ${target} successfully\n\n${sanitizeOutput(result.stdout.toString())}`;
     } catch (error: any) {
