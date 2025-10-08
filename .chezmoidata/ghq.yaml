@@ -1,7 +1,5 @@
-repositories:
-  github:
-    - 'github.com/go-sonr/coins'
-    - 'github.com/go-sonr/crypto'
+git:
+  repositories:
     - 'github.com/rollchains/spawn'
     - 'github.com/sonr-io/coder'
     - 'github.com/sonr-io/contracts'
@@ -11,9 +9,3 @@ repositories:
     - 'github.com/sonr-io/npx-tools'
     - 'github.com/sonr-io/pkljar'
     - 'github.com/sonr-io/sonr'
-  gitlab: []
-  bitbucket: []
-  options:
-    parallel: true
-    update_existing: true
-    auto_cleanup: true

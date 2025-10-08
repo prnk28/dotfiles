@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# gvim - Starts nvim in ghostty using uwsm
+uwsm app -- ghostty -e nvim "$@"
+

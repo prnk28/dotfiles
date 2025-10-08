@@ -3,6 +3,8 @@
 # github - GitHub CLI wrapper
 # https://github.com/cli/cli
 
+PROMPTS=$HOME/.config/code2prompt
+
 # See `gh help formatting` for details on customizing the output
 function _gh_issue_list() {
   gh issue list --json number,title --template '{{range .}}{{.number}}: {{.title}}{{"\n"}}{{end}}'
@@ -86,6 +88,15 @@ function list-runs() {
   clear
 }
 
+function write-commit() {
+  clear
+  tmpdir=$(mktemp -d)
+  code2prompt -O "$tmpdir/pre-commit.md" -d -t $PROMPTS/write-commit.hbs .
+  cat "$tmpdir/pre-commit.md" | mods -R commit-writer -o "$tmpdir/commit.md"
+  git commit -F "$tmpdir/commit.md"
+  rm -rf "$tmpdir"
+}
+
 function main() {
   case "$1" in
   issues)
@@ -97,12 +108,16 @@ function main() {
   actions)
     list-runs
     ;;
+  commit)
+    write-commit
+    ;;
   *)
     echo "Usage: $0 <command>"
     echo "Commands:"
     echo "  issues"
     echo "  prs"
     echo "  actions"
+    echo "  commit"
     ;;
   esac
 }
