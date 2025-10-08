@@ -1,12 +1,7 @@
 import { tool } from "@opencode-ai/plugin";
-import { createOpencodeClient } from "@opencode-ai/sdk";
 import { $ } from "bun";
 
 const MAX_OUTPUT_LENGTH = 5000;
-
-const client = createOpencodeClient({
-  baseUrl: "http://localhost:4096",
-});
 
 function sanitizeOutput(output: string, isTest: boolean = false): string {
   // Strip ANSI codes
@@ -94,20 +89,8 @@ export const build = tool({
   async execute(args) {
     try {
       const result = await $`devbox run build:${args.command}`;
-      await client.tui.showToast({
-        body: {
-          message: `Build successful: ${args.command}`,
-          variant: "success",
-        },
-      });
       return `Build successful for ${args.command}\n\n${sanitizeOutput(result.stdout.toString())}`;
     } catch (error: any) {
-      await client.tui.showToast({
-        body: {
-          message: `Build failed: ${args.command}`,
-          variant: "error",
-        },
-      });
       return formatError(`build:${args.command}`, error);
     }
   },
@@ -127,20 +110,8 @@ export const test = tool({
     try {
       const result = await $`devbox run test:${args.command}`;
       const output = sanitizeOutput(result.stdout.toString(), true);
-      await client.tui.showToast({
-        body: {
-          message: `Tests passed: ${args.command}`,
-          variant: "success",
-        },
-      });
       return `Tests passed for ${args.command}\n\n${output}`;
     } catch (error: any) {
-      await client.tui.showToast({
-        body: {
-          message: `Tests failed: ${args.command}`,
-          variant: "error",
-        },
-      });
       return formatError(`test:${args.command}`, error, true);
     }
   },
@@ -159,20 +130,8 @@ export const snapshot = tool({
   async execute(args) {
     try {
       const result = await $`devbox run snapshot:${args.command}`;
-      await client.tui.showToast({
-        body: {
-          message: `Snapshot completed: ${args.command}`,
-          variant: "success",
-        },
-      });
       return `Snapshot operation completed for ${args.command}\n\n${sanitizeOutput(result.stdout.toString())}`;
     } catch (error: any) {
-      await client.tui.showToast({
-        body: {
-          message: `Snapshot failed: ${args.command}`,
-          variant: "error",
-        },
-      });
       return formatError(`snapshot:${args.command}`, error);
     }
   },
@@ -185,20 +144,8 @@ export const up = tool({
   async execute() {
     try {
       const result = await $`devbox services up -b`;
-      await client.tui.showToast({
-        body: {
-          message: "Services started successfully",
-          variant: "success",
-        },
-      });
       return `Devbox services started in background mode\n\n${sanitizeOutput(result.stdout.toString())}`;
     } catch (error: any) {
-      await client.tui.showToast({
-        body: {
-          message: "Failed to start services",
-          variant: "error",
-        },
-      });
       return formatError("services up -b", error);
     }
   },
@@ -211,20 +158,8 @@ export const down = tool({
   async execute() {
     try {
       const result = await $`devbox services down`;
-      await client.tui.showToast({
-        body: {
-          message: "Services stopped successfully",
-          variant: "success",
-        },
-      });
       return `Devbox services stopped successfully\n\n${sanitizeOutput(result.stdout.toString())}`;
     } catch (error: any) {
-      await client.tui.showToast({
-        body: {
-          message: "Failed to stop services",
-          variant: "error",
-        },
-      });
       return formatError("services down", error);
     }
   },
@@ -257,20 +192,8 @@ export const ls = tool({
   async execute() {
     try {
       const result = await $`devbox services ls`;
-      await client.tui.showToast({
-        body: {
-          message: "Service status retrieved",
-          variant: "success",
-        },
-      });
       return `Devbox services status:\n\n${sanitizeOutput(result.stdout.toString())}`;
     } catch (error: any) {
-      await client.tui.showToast({
-        body: {
-          message: "Failed to retrieve service status",
-          variant: "error",
-        },
-      });
       return formatError("services ls", error);
     }
   },
@@ -294,21 +217,9 @@ export const restart = tool({
         : "devbox services restart";
       const result = await $`${cmd}`;
       const target = args.service || "all services";
-      await client.tui.showToast({
-        body: {
-          message: `Restarted ${target}`,
-          variant: "success",
-        },
-      });
       return `Restarted ${target} successfully\n\n${sanitizeOutput(result.stdout.toString())}`;
     } catch (error: any) {
       const target = args.service || "all services";
-      await client.tui.showToast({
-        body: {
-          message: `Failed to restart ${target}`,
-          variant: "error",
-        },
-      });
       return formatError(`restart ${target}`, error);
     }
   },

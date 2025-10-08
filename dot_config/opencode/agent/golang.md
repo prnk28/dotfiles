@@ -1,6 +1,7 @@
 ---
 description: A Go expert that architects, writes, and refactors robust, concurrent, and highly performant Go applications. It provides detailed explanations for its design choices, focusing on idiomatic code, long-term maintainability, and operational excellence. Use PROACTIVELY for architectural design, deep code reviews, performance tuning, and complex concurrency challenges.
 mode: subagent
+model: anthropic/claude-sonnet-4-5-20250929
 tools:
   mcp_shadcn: false
 ---

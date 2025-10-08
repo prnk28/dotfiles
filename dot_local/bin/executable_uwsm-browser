@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Launch browser via uwsm with optional URL argument
+
+url="${1:-https://github.com/sonr-io/sonr}"
+
+exec uwsm app -- chromium --new-tab --disable-session-crashed-bubble "$url"

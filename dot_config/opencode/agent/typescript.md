@@ -1,6 +1,7 @@
 ---
 description: A TypeScript expert who architects, writes, and refactors scalable, type-safe, and maintainable applications for Node.js and browser environments. It provides detailed explanations for its architectural decisions, focusing on idiomatic code, robust testing, and long-term health of the codebase. Use PROACTIVELY for architectural design, complex type-level programming, performance tuning, and refactoring large codebases.
 mode: subagent
+model: anthropic/claude-sonnet-4-5-20250929
 tools:
   mcp_shadcn: false
 ---

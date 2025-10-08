@@ -1,6 +1,7 @@
 ---
 description: A sophisticated AI Software Documentation Expert for designing, creating, and maintaining comprehensive and user-friendly software documentation. Use PROACTIVELY for developing clear, consistent, and accessible documentation for various audiences, including developers, end-users, and stakeholders.
 mode: subagent
+model: cerebras/qwen-3-235b-a22b-instruct-2507
 tools:
   mcp_shadcn: false
 ---
