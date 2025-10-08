@@ -12,7 +12,8 @@
 # | 1.2 |   Aliases   |
 # =====================
 alias oc="opencode"
-
+alias /o="opencode"
+alias /oc="opencode --continue"
 # =====================
 # | 1.3 | Keybindings |
 # =====================

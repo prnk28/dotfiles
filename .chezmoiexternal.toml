@@ -3,6 +3,8 @@
 type = "git-repo"
 url = "https://github.com/prnk28/nvim.git"
 refreshPeriod = "1m"
+[".config/nvim".pull]
+    args = ["--force", "--rebase"]
 
 [".zgen"]
 type = "git-repo"

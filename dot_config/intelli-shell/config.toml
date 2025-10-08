@@ -1,0 +1,45 @@
+# Configuration for the default gist to use when importing or exporting (if no other is explicitly set)
+[gist]
+# The id of the gist, you can get it from the url after the username
+id = "426a59045896ecffd9df506a0c6e9243"
+token = ""
+
+# Configuration for the search command
+[search]
+# The delay (in ms) to wait and accumulate type events before triggering the query
+delay = 20
+# Specifies the default search mode to be used when initiating a search.
+# Possible values are:
+# - "auto": An internal algorithm is used to best match common human search patterns
+# - "fuzzy": Employs fuzzy matching to find commands that are similar to the input query
+# - "regex": Treats the input query as a regular expression, allowing for complex pattern matching
+# - "exact": The search will only return commands that precisely match the entire input query
+# - "relaxed": Attempts to find the maximum number of potentially relevant commands using broader matching criteria
+mode = "fuzzy"
+# Whether to search for user commands only by default when initiating a search (excluding tldr and workspace)
+user_only = true
+# Whether to directly execute the command if it matches an alias exactly, instead of just selecting
+exec_on_alias_match = true
+
+[theme]
+primary = "dim"
+secondary = "dim"
+accent = "#bd5eff"
+comment = "#17c2ff"
+error = "#ff6e5e"
+highlight = "#16181a"
+highlight_symbol = "» "
+highlight_primary = "#5eff6c"
+highlight_secondary = "#f1ff5e"
+highlight_accent = "#bd5eff"
+highlight_comment = "#17c2ff"
+
+[ai]
+# A global switch to enable or disable all AI-powered functionality
+enabled = true
+
+[ai.catalog.groq-llama]
+provider = "openai"
+model = "llama-3.1-8b-instant"
+url = "https://api.groq.com/openai/v1"
+api_key_env = "GROQ_API_KEY"

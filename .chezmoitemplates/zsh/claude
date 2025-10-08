@@ -100,7 +100,6 @@ claude_widget() {
 alias /c="claude --dangerously-skip-permissions"
 alias /cc="claude --dangerously-skip-permissions --continue"
 alias /cr="claude --dangerously-skip-permissions --resume"
-alias /o=opencode
 alias claude-init="rclone copy -P r2:claude .claude"
 alias claude-sync="rclone sync -P .claude r2:claude"
 
