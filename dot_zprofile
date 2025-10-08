@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+# Auto-start Niri compositor on TTY1
+# This replaces Hyprland with Niri as the default compositor
+if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
+    exec systemctl --user start --wait wayland-wm@niri.desktop.service
+fi

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Photos - Immich
+Comment=Open Immich Photos WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:2283/photos
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Immich.png
+StartupNotify=true

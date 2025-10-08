@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=OpenHands
+Comment=Open OpenHands WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:3993/
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/OpenHands.png
+StartupNotify=true

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Bitcoin Node
+Comment=Open Bitcoin Node WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:2100/
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/BitcoinNode.png
+StartupNotify=true

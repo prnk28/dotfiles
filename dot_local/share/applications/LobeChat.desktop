@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Just Chat · LobeChat
+Comment=Open LobeChat WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:7455/chat
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/LobeChat.png
+StartupNotify=true

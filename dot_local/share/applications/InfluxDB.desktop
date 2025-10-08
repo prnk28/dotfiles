@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=InfluxDB
+Comment=Open InfluxDB WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:8886/onboarding/0
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/InfluxDB.png
+StartupNotify=true

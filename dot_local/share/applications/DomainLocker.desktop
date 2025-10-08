@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Domain Locker
+Comment=Open Domain Locker WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:8839/
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/DomainLocker.png
+StartupNotify=true

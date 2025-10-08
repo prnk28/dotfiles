@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Swing Music
+Comment=Open Swing Music WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:1970/#/
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/SwingMusic.png
+StartupNotify=true

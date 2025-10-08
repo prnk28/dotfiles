@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Tailscale
+Comment=Open Tailscale WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:8240/
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Tailscale.png
+StartupNotify=true

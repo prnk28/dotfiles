@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Uptime Kuma
+Comment=Open Uptime Kuma WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:8385/dashboard
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/UptimeKuma.png
+StartupNotify=true

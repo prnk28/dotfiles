@@ -2,7 +2,7 @@
 Version=1.0
 Name=OpenWebUI
 Comment=OpenWebUI
-Exec=omarchy-launch-webapp http://umbrel.local:2876/
+Exec=omarchy-launch-webapp http://umbrel.local:2876/auth?redirect=%2F
 Terminal=false
 Type=Application
 Icon=/home/prad/.local/share/applications/icons/OpenWebUI.png

@@ -96,4 +96,84 @@ add_command "c" "c" "Clear screen or cd to directory with zoxide"
 # System update
 add_command "refresh-global && source ~/.zshrc && exec zsh" "reload" "Reload zsh configuration and refresh global environment"
 
+# Omarchy CMD utilities
+add_command "omarchy-cmd-apple-display-brightness" "o-brightness" "Adjust Apple display brightness"
+add_command "omarchy-cmd-audio-switch" "o-audio" "Switch audio output device"
+add_command "omarchy-cmd-close-all-windows" "o-close-all" "Close all windows"
+add_command "omarchy-cmd-screenrecord" "o-record" "Start screen recording"
+add_command "omarchy-cmd-screensaver" "o-saver" "Launch screensaver"
+add_command "omarchy-cmd-screenshot" "o-screenshot" "Take screenshot"
+add_command "omarchy-cmd-share" "o-share" "Share file/screen"
+add_command "omarchy-cmd-terminal-cwd" "o-term-cwd" "Open terminal in current directory"
+add_command "omarchy-cmd-tzupdate" "o-tz" "Update timezone"
+
+# Omarchy install commands
+add_command "omarchy-install-chromium-google-account" "o-chrome" "Install Chromium with Google account"
+add_command "omarchy-install-dev-env" "o-dev" "Install development environment"
+add_command "omarchy-install-docker-dbs" "o-docker-db" "Install Docker databases"
+add_command "omarchy-install-dropbox" "o-dropbox" "Install Dropbox"
+add_command "omarchy-install-steam" "o-steam" "Install Steam"
+add_command "omarchy-install-tailscale" "o-tailscale" "Install Tailscale VPN"
+add_command "omarchy-install-terminal" "o-terminal" "Install terminal emulator"
+
+# Omarchy launch commands
+add_command "omarchy-launch-about" "o-about" "Show Omarchy about screen"
+add_command "omarchy-launch-browser" "o-browser" "Launch default browser"
+add_command "omarchy-launch-editor" "o-editor" "Launch default editor"
+add_command "omarchy-launch-tui-float" "o-tui-float" "Launch floating TUI terminal"
+add_command "omarchy-launch-tui-tile" "o-tui-tile" "Launch tiled TUI terminal"
+add_command "omarchy-launch-webapp" "o-webapp" "Launch web application"
+add_command "omarchy-launch-wifi" "o-wifi" "Launch WiFi manager"
+add_command "omarchy-lock-screen" "o-lock" "Lock screen"
+add_command "omarchy-menu" "o-menu" "Open Omarchy menu"
+add_command "omarchy-menu-keybindings" "o-keys" "Show keybindings menu"
+
+# Omarchy package management
+add_command "omarchy-pkg-install" "o-pkg-add" "Install package"
+add_command "omarchy-pkg-remove" "o-pkg-rm" "Remove package"
+add_command "omarchy-pkg-aur-install" "o-aur-add" "Install AUR package"
+add_command "omarchy-pkg-missing" "o-pkg-missing" "List missing packages"
+add_command "omarchy-pkg-present" "o-pkg-list" "List installed packages"
+
+# Omarchy refresh/restart commands
+add_command "omarchy-refresh-config" "o-refresh" "Refresh Omarchy configuration"
+add_command "omarchy-refresh-waybar" "o-refresh-bar" "Refresh Waybar"
+add_command "omarchy-restart-waybar" "o-restart-bar" "Restart Waybar"
+add_command "omarchy-restart-bluetooth" "o-bt" "Restart Bluetooth"
+add_command "omarchy-restart-pipewire" "o-audio-restart" "Restart Pipewire audio"
+add_command "omarchy-restart-wifi" "o-wifi-restart" "Restart WiFi"
+
+# Omarchy theme management
+add_command "omarchy-theme-current" "o-theme" "Show current theme"
+add_command "omarchy-theme-set" "o-theme-set" "Set theme"
+add_command "omarchy-theme-next" "o-theme-next" "Switch to next theme"
+add_command "omarchy-theme-list" "o-theme-ls" "List available themes"
+add_command "omarchy-theme-bg-next" "o-bg-next" "Cycle to next background"
+
+# Omarchy toggle commands
+add_command "omarchy-toggle-idle" "o-idle" "Toggle idle inhibitor"
+add_command "omarchy-toggle-nightlight" "o-night" "Toggle nightlight"
+add_command "omarchy-toggle-screensaver" "o-saver-toggle" "Toggle screensaver"
+add_command "omarchy-toggle-waybar" "o-bar" "Toggle Waybar visibility"
+
+# Omarchy update commands
+add_command "omarchy-update" "o-update" "Update Omarchy system"
+add_command "omarchy-update-available" "o-update-check" "Check for updates"
+add_command "omarchy-update-perform" "o-update-run" "Perform system update"
+add_command "omarchy-update-system-pkgs" "o-sys-update" "Update system packages"
+
+# Omarchy webapp commands
+add_command "omarchy-webapp-install" "o-webapp-add" "Install web application"
+add_command "omarchy-webapp-remove" "o-webapp-rm" "Remove web application"
+
+# Omarchy utilities
+add_command "omarchy-battery-monitor" "o-battery" "Monitor battery status"
+add_command "omarchy-drive-select" "o-drive" "Select and manage drive"
+add_command "omarchy-font-set" "o-font" "Set system font"
+add_command "omarchy-font-list" "o-font-ls" "List available fonts"
+add_command "omarchy-setup-fingerprint" "o-fingerprint" "Setup fingerprint authentication"
+add_command "omarchy-snapshot" "o-snapshot" "Create system snapshot"
+add_command "omarchy-state" "o-state" "Show Omarchy state"
+add_command "omarchy-version" "o-version" "Show Omarchy version"
+
 echo "✓ intelli-shell custom commands configured"

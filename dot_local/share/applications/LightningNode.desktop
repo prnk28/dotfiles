@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Lightning Node — Umbrel
+Comment=Open Lightning Node WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:2101/
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/LightningNode.png
+StartupNotify=true

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Memos
+Comment=Open Memos WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:5230/auth/signup
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Memos.png
+StartupNotify=true

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=umbrel.local:11434
+Comment=Open Umbrel 11434 WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:11434/
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Umbrel11434.png
+StartupNotify=true

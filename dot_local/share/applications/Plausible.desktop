@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Plausible · Simple, privacy-friendly alternative to Google Analytics
+Comment=Open Plausible WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:9092/register
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Plausible.png
+StartupNotify=true

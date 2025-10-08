@@ -54,3 +54,5 @@ alias gt='tree -a --prune -I "api|chains|interchaintest|.devcontainer|.github|.a
 # =====================
 zle -N tdrw-widget tdrw
 bindkey '^T' tdrw-widget
+zle -N yy-widget yy
+bindkey '^F' yy-widget

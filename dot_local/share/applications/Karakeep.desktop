@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Karakeep
+Comment=Open Karakeep WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:8620/signin
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Karakeep.png
+StartupNotify=true

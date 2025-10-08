@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Linkwarden
+Comment=Open Linkwarden WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:8233/dashboard
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Linkwarden.png
+StartupNotify=true

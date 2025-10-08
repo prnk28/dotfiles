@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Habitica - Gamify Your Life
+Comment=Open Habitica WebApp
+Exec=omarchy-launch-webapp http://umbrel.local:3944/static/home
+Terminal=false
+Type=Application
+Icon=/home/prad/.local/share/applications/icons/Habitica.png
+StartupNotify=true
