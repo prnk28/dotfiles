@@ -7,6 +7,7 @@ Makefile
 .aider.chat.history.md
 .aider.input.history
 devbox.lock
+bun.lock
 package-lock.json
 package.json
 node_modules
