@@ -44,6 +44,7 @@ function list-issues() {
   clear
   gum style --align center --padding "0 1" --foreground 51 --border double --border-foreground 51 "󰃤 Github Issues"
   _gh_issue_list | fzf \
+    --border=none \
     --preview="gh issue view {1} --json number,title,body,labels,updatedAt --template '$issuePreviewTemplate' | gum format" \
     --bind=$fzf_bind \
     --delimiter=$fzf_delimiter \
@@ -62,6 +63,7 @@ function list-prs() {
   clear
   gum style --align center --padding "0 1" --foreground 201 --border double --border-foreground 201 " Github PRs"
   _gh_pr_list | fzf \
+    --border=none \
     --preview="gh pr view {1} --json number,title,body,assignees,reviews,state --template '$pullPreviewTemplate' | gum format" \
     --bind=$fzf_bind \
     --delimiter=$fzf_delimiter \
@@ -75,7 +77,8 @@ function list-runs() {
   gum style --align center --padding "0 1" --foreground 208 --border double --border-foreground 208 " Github Actions"
   gh run list --json number,name,headBranch,startedAt,conclusion,status,url,databaseId --template \
     '{{range .}}{{printf "%.0f" .databaseId}}:{{printf "#%v" .number}} {{.name}} on {{.headBranch}} [{{.conclusion}}] ({{timeago .startedAt}}){{"\n"}}{{end}}' |
-    fzf --delimiter ':' \
+    fzf --border=none \
+      --delimiter ':' \
       --with-nth 2.. \
       --preview 'gh run view {1}' \
       --preview-window=top:50%:wrap \
