@@ -120,6 +120,7 @@ function edit_filtered_files() {
 	clear
 	local selected=$(_get_edit_files | fzf \
 		--reverse \
+		--border=none \
 		--preview 'bat --color=always --style=numbers --line-range=:500 {}' \
 		--preview-window=top:80% \
 		--bind 'ctrl-/:toggle-preview' \

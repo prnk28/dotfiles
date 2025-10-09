@@ -75,7 +75,7 @@ function open_github-actions() {
 function open_repo() {
   clear
   gum style --align center --padding "0 1" --border double --foreground 215 --border-foreground 215 " Open Repository"
-  local selected=$(ghq list | fzf --delimiter='/' --nth=-1 --height=92%)
+  local selected=$(ghq list | fzf --delimiter='/' --nth=-1 --height=92% --border=none)
   if [[ -n "$selected" ]]; then
     cd "$GHQ_ROOT/$selected"
     clear
@@ -110,7 +110,7 @@ alias ghi=open_github-issues
 
 function open_lazygit() {
   lazygit
-  zle && zle reset-prompt  # Force prompt redraw
+  zle && zle reset-prompt # Force prompt redraw
 }
 
 zle -N open_lazygit-widget open_lazygit
@@ -130,7 +130,7 @@ bindkey '^O' open_repo-widget
 
 function open_gh-dash() {
   gh dash
-  zle && zle reset-prompt  # Force prompt redraw
+  zle && zle reset-prompt # Force prompt redraw
 }
 
 zle -N open_gh-dash-widget open_gh-dash
