@@ -29,13 +29,15 @@
     },
     "ask": {
       "mode": "primary",
-      "model": "cerebras/qwen-3-coder-480b",
+      "model": "opencode/grok-code",
+      "prompt": "{file:./prompt/ask.txt}",
       "tools": {
         "write": false,
         "edit": false,
-        "bash": true,
-        "mcp_context7": false,
-        "mcp_exa": false,
+        "bash": false,
+        "read": false,
+        "mcp_context7": true,
+        "mcp_exa": true,
         "mcp_deepgraph": true,
       } 
     },
