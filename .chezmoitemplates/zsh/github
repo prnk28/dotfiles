@@ -52,37 +52,6 @@ function gop() {
   fi
 }
 
-function edit_files() {
-  if [[ $(jobs | wc -l) -gt 0 ]]; then
-    fg
-  else
-    clear
-    gum style --align center --padding "0 1" --border double --foreground 117 --border-foreground 117 " Edit Files"
-
-    # Get the file list
-    local files=$(git ls-files 2>/dev/null |
-      grep -v -E '\.(pb|twirp)\.go$|_templ\.go$|\.pb\.gw\.go$|_gen\.go$|\.gen\.go$|mock_.*\.go$' |
-      xargs -I {} stat -c "%Y %n" {} 2>/dev/null |
-      sort -rn |
-      cut -d' ' -f2-)
-
-    if [[ -z "$files" ]]; then
-      # No git files found, just open nvim in cwd
-      ${EDITOR:-nvim}
-    else
-      # Show fzf selector
-      echo "$files" | fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' \
-        --preview-window=right:60% \
-        --bind 'ctrl-/:toggle-preview' \
-        --bind 'enter:execute(${EDITOR:-nvim} {})' \
-        --header 'ENTER to edit | CTRL-/ to toggle preview' \
-        --height=92%
-    fi
-    clear
-  fi
-  zle && zle reset-prompt # Force prompt redraw
-}
-
 function open_lazycommit() {
   /home/prad/.local/bin/gcai
   zle && zle reset-prompt # Force prompt redraw
@@ -129,7 +98,6 @@ alias gdc='gum confirm "Reset local changes" && git reset --hard HEAD'
 alias ghl="ghq list"
 alias ghrm="ghq rm"
 alias gghh="ghq get -"
-alias e=edit_files
 alias o=open_repo
 alias gc=open_lazycommit
 alias gha=open_github-actions
@@ -147,9 +115,6 @@ function open_lazygit() {
 
 zle -N open_lazygit-widget open_lazygit
 bindkey '^G' open_lazygit-widget
-
-zle -N edit_files-widget edit_files
-bindkey '^E' edit_files-widget
 
 zle -N open_github-issues-widget open_github-issues
 bindkey '^N' open_github-issues-widget

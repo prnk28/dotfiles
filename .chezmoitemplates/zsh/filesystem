@@ -32,6 +32,124 @@ function tdrw() {
 	zle && zle reset-prompt # Force prompt redraw
 }
 
+function _get_edit_files() {
+	local filter="$1"
+
+	# Check for unstaged changes (modified + untracked files)
+	local unstaged_files=$(
+		git diff --name-only 2>/dev/null
+		git ls-files --others --exclude-standard 2>/dev/null
+	)
+
+	local files
+	if [[ -n "$unstaged_files" ]]; then
+		# Show only unstaged files sorted by modification time
+		files=$(echo "$unstaged_files" |
+			grep -v -E '\.(pb|twirp)\.go$|_templ\.go$|\.pb\.gw\.go$|_gen\.go$|\.gen\.go$|mock_.*\.go$' |
+			xargs -r ls -t 2>/dev/null)
+	else
+		# Use fd to find all files, sorted by modification time
+		files=$(fd --type f \
+			--exclude '*.pb.go' \
+			--exclude '*.pb.gw.go' \
+			--exclude '*_templ.go' \
+			--exclude '*.twirp.go' \
+			--exclude '*_gen.go' \
+			--exclude '*.gen.go' \
+			--exclude 'mock_*.go' \
+			--exec-batch ls -t)
+	fi
+
+	# Apply filter if provided
+	case "$filter" in
+	go)
+		echo "$files" | grep '\.go$'
+		;;
+	md)
+		echo "$files" | grep '\.md$'
+		;;
+	js)
+		echo "$files" | grep -E '\.(js|ts|jsx|tsx)$'
+		;;
+	config)
+		echo "$files" | grep -E '\.(json|ya?ml|toml)$'
+		;;
+	build)
+		echo "$files" | grep -E '(devbox\.json|Dockerfile|Makefile|\.dockerignore|docker-compose\.ya?ml)$'
+		;;
+	proto)
+		echo "$files" | grep '\.proto$'
+		;;
+	*)
+		echo "$files"
+		;;
+	esac
+}
+
+function _get_edit_filter_text() {
+	echo "Edit |  :<C-a>  :<C-o>  :<C-b>  :<C-d>  :<C-j>  :<C-g>  :<C-p>"
+}
+
+function _get_filter_prompt() {
+	case "$1" in
+	go)
+		echo "  "
+		;;
+	md)
+		echo "  "
+		;;
+	js)
+		echo "  "
+		;;
+	config)
+		echo "  "
+		;;
+	build)
+		echo "  "
+		;;
+	proto)
+		echo "  "
+		;;
+	*)
+		echo "  "
+		;;
+	esac
+}
+
+function edit_filtered_files() {
+	clear
+	local selected=$(_get_edit_files | fzf \
+		--reverse \
+		--preview 'bat --color=always --style=numbers --line-range=:500 {}' \
+		--preview-window=top:80% \
+		--bind 'ctrl-/:toggle-preview' \
+		--bind "ctrl-g:reload(source {{ .chezmoi.homeDir }}/.zshrc && _get_edit_files go)+change-prompt($(_get_filter_prompt go))+change-header($(_get_edit_filter_text))" \
+		--bind "ctrl-d:reload(source {{ .chezmoi.homeDir }}/.zshrc && _get_edit_files md)+change-prompt($(_get_filter_prompt md))+change-header($(_get_edit_filter_text))" \
+		--bind "ctrl-j:reload(source {{ .chezmoi.homeDir }}/.zshrc && _get_edit_files js)+change-prompt($(_get_filter_prompt js))+change-header($(_get_edit_filter_text))" \
+		--bind "ctrl-o:reload(source {{ .chezmoi.homeDir }}/.zshrc && _get_edit_files config)+change-prompt($(_get_filter_prompt config))+change-header($(_get_edit_filter_text))" \
+		--bind "ctrl-p:reload(source {{ .chezmoi.homeDir }}/.zshrc && _get_edit_files proto)+change-prompt($(_get_filter_prompt proto))+change-header($(_get_edit_filter_text))" \
+		--bind "ctrl-b:reload(source {{ .chezmoi.homeDir }}/.zshrc && _get_edit_files build)+change-prompt($(_get_filter_prompt build))+change-header($(_get_edit_filter_text))" \
+		--bind "ctrl-a:reload(source {{ .chezmoi.homeDir }}/.zshrc && _get_edit_files)+change-prompt(  )+change-header($(_get_edit_filter_text))" \
+		--header "$(_get_edit_filter_text)" \
+		--prompt '  ' \
+		--height=100%)
+
+	if [[ -n "$selected" ]]; then
+		${EDITOR:-nvim} "$selected"
+	fi
+
+	clear
+	zle && zle reset-prompt # Force prompt redraw
+}
+
+function e() {
+	if [[ $# -eq 0 ]]; then
+		edit_filtered_files
+	else
+		${EDITOR:-nvim} "$@"
+	fi
+}
+
 # =====================
 # | 1.2 |   Aliases   |
 # =====================
@@ -56,3 +174,5 @@ zle -N tdrw-widget tdrw
 bindkey '^T' tdrw-widget
 zle -N yy-widget yy
 bindkey '^F' yy-widget
+zle -N edit_filtered_files-widget edit_filtered_files
+bindkey '^E' edit_filtered_files-widget
