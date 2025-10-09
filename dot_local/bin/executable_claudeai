@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Check if Claude window exists
+if hyprctl clients | grep -q "chrome-claude.ai__-Profile_2"; then
+  # Window exists, toggle the special workspace
+  hyprctl dispatch togglespecialworkspace claude
+else
+  # Window doesn't exist, launch it
+  omarchy-launch-or-focus-webapp Claude "https://claude.ai"
+fi
