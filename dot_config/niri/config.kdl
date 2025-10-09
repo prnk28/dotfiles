@@ -371,9 +371,9 @@ cursor {
 // Environment Variables
 // ============================================================================
 environment {
-    // GDK_SCALE "2"
-    // QT_QPA_PLATFORM "wayland"
-    // XCURSOR_SIZE "24"
+    GDK_SCALE "2"
+    QT_QPA_PLATFORM "wayland"
+    XCURSOR_SIZE "24"
 }
 
 // ============================================================================
