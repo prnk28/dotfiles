@@ -63,10 +63,10 @@ function _get_edit_files() {
 	# Apply filter if provided
 	case "$filter" in
 	go)
-		echo "$files" | grep '\.go$'
+		echo "$files" | grep -E '\.go$'
 		;;
 	md)
-		echo "$files" | grep '\.md$'
+		echo "$files" | grep -E '\.md$'
 		;;
 	js)
 		echo "$files" | grep -E '\.(js|ts|jsx|tsx)$'
@@ -75,10 +75,10 @@ function _get_edit_files() {
 		echo "$files" | grep -E '\.(json|ya?ml|toml)$'
 		;;
 	build)
-		echo "$files" | grep -E '(devbox\.json|Dockerfile|Makefile|\.dockerignore|docker-compose\.ya?ml)$'
+		echo "$files" | grep -E '(devbox\.json|Dockerfile|Makefile|\.dockerignore|docker-compose\.ya?ml)'
 		;;
 	proto)
-		echo "$files" | grep '\.proto$'
+		echo "$files" | grep -E '\.proto$'
 		;;
 	*)
 		echo "$files"
