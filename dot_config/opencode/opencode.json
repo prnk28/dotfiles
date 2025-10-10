@@ -1,5 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "formatter": {
+    "yamlfmt": {
+      "command": ["yamlfmt", "-w"],
+      "extensions": ["yaml", "yml"]
+    }
+  },
   "theme": "cyberdream",
   "agent": {
     "build": {
