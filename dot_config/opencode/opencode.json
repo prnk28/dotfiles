@@ -27,20 +27,6 @@
         "mcp_deepgraph": true,
       } 
     },
-    "ask": {
-      "mode": "primary",
-      "model": "opencode/grok-code",
-      "prompt": "{file:./prompt/ask.txt}",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false,
-        "read": false,
-        "mcp_context7": true,
-        "mcp_exa": true,
-        "mcp_deepgraph": true,
-      } 
-    },
   },
   "mcp": {
     "exa": {
