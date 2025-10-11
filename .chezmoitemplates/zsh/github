@@ -128,10 +128,10 @@ bindkey '^A' open_github-actions-widget
 zle -N open_repo-widget open_repo
 bindkey '^O' open_repo-widget
 
-function open_gh-dash() {
-  gh dash
+function open_bhist() {
+  /home/prad/.local/bin/bhist
   zle && zle reset-prompt # Force prompt redraw
 }
 
-zle -N open_gh-dash-widget open_gh-dash
-bindkey '^H' open_gh-dash-widget
+zle -N open_bhist-widget open_bhist
+bindkey '^H' open_bhist-widget

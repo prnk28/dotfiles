@@ -6,6 +6,7 @@
 export PATH="$BUN_INSTALL/bin:$PATH"
 [[ -s "$BUN_INSTALL/_bun" ]] && source "$BUN_INSTALL/_bun"
 export PATH="{{ .chezmoi.homeDir }}/.deno/bin:$PATH"
+export PATH="{{ .chezmoi.homeDir }}/.bun/bin:$PATH"
 [[ -s "{{ .chezmoi.homeDir }}/.deno/env" ]] && source "{{ .chezmoi.homeDir }}/.deno/env"
 # =====================
 # | 1.1 |  Functions  |

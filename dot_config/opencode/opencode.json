@@ -23,7 +23,7 @@
     },
     "plan": {
       "mode": "primary",
-      "model": "opencode/gpt-5-codex",
+      "model": "opencode/grok-code",
       "tools": {
         "write": false,
         "edit": false,
