@@ -438,6 +438,18 @@ keybinding:
   commitMessage:
     commitMenu: <c-o>
 customCommands:
+  - key: "<c-a>"
+    command: "/home/prad/.local/bin/github actions"
+    context: "global"
+    output: terminal
+  - key: "I"
+    command: "/home/prad/.local/bin/github issues"
+    context: "global"
+    output: terminal
+  - key: "<c-p>"
+    command: "/home/prad/.local/bin/github prs"
+    context: "global"
+    output: terminal
   - key: "F"
     command: "gh repo sync && gh clean-branches --force"
     context: "files"
