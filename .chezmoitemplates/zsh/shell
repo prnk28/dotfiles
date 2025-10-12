@@ -142,7 +142,7 @@ bindkey '^[[B' history-search-forward   # Down arrow
 
 # Chezmoi apply and reload keybinding:
 function apply_chezmoi_and_reload() {
-  chezmoi apply
+  gum spin --title "Updating shell..." -- chezmoi apply
   if [[ -n "$TMUX" ]]; then
     tmux source {{ .chezmoi.homeDir }}/.tmux.conf
   fi
