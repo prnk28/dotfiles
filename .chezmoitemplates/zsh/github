@@ -7,6 +7,13 @@
 # =====================
 # | 1.1 |  Functions  |
 # =====================
+function repo-preview() {
+  local issueBox=$(gum style --align center --padding "0 1" --border double --foreground 208 --border-foreground 208 "$(gh issue ls -s open --json number | jq length) Issues")
+  local prBox=$(gum style --align center --padding "0 1" --border double --foreground 208 --border-foreground 208 "$(gh pr ls -s open --json number | jq length) PRs")
+  local repoName=$(gum style --align center --padding "0 1" --border double "$PWD")
+  gum join "$repoName" "$issueBox" "$prBox"
+}
+
 function ghg() {
   gum spin --title "Fetching $1..." -- ghq get $1
   gum spin --title "Adding $1..." -- zoxide add $GHQ_ROOT/github.com/$1
@@ -79,10 +86,9 @@ function open_repo() {
   if [[ -n "$selected" ]]; then
     cd "$GHQ_ROOT/$selected"
     clear
+    repo-preview
   fi
-  clear
   zle && zle reset-prompt # Force prompt redraw
-  clear
 }
 
 # =====================
