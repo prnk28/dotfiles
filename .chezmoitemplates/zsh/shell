@@ -123,6 +123,7 @@ alias vim="nvim"
 #   ^N - open github issues (github template) [overrides down-line-or-search]
 #   ^Q - launch claude in repo (claude template) [overrides push-line]
 #   ^R - hishtory TUI (hishtory/config.zsh, re-bound in dot_zshrc.tmpl)
+#   ^U - apply chezmoi and reload shell (shell template) [overrides kill-whole-line]
 #   ^V - devbox run script selector (devbox template) [overrides quoted-insert]
 #
 # Additional custom keybindings:
@@ -133,12 +134,25 @@ alias vim="nvim"
 #   ^T - open tldraw file selector (filesystem template)
 #
 # Preserved standard keybindings:
-#   ^U - kill-whole-line
 #   ^W - backward-kill-word
 #
 # History search keybindings:
 bindkey '^[[A' history-search-backward  # Up arrow
 bindkey '^[[B' history-search-forward   # Down arrow
+
+# Chezmoi apply and reload keybinding:
+function apply_chezmoi_and_reload() {
+  chezmoi apply
+  if [[ -n "$TMUX" ]]; then
+    tmux source {{ .chezmoi.homeDir }}/.tmux.conf
+  fi
+  source {{ .chezmoi.homeDir }}/.zshrc
+  clear
+  zle && zle reset-prompt # Force prompt redraw
+}
+
+zle -N apply_chezmoi_and_reload-widget apply_chezmoi_and_reload
+bindkey '^U' apply_chezmoi_and_reload-widget
 
 
 

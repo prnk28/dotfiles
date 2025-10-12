@@ -14,7 +14,7 @@ opacity = 0.69
 option_as_alt = "Both"
 
 [font]
-size = 10
+size = 11
 
 [font.bold]
 family = "VictorMono Nerd Font Mono"
@@ -75,16 +75,6 @@ key = "Enter"
 mods = "Shift"
 chars = "\u001b\r"
 
-[[keyboard.bindings]]
-key = "H"
-mods = "Alt"
-action = "None"
-
-[[keyboard.bindings]]
-key = "L"
-mods = "Alt"
-action = "None"
-
 # Disable Command-N (new window) - macOS default
 [[keyboard.bindings]]
 key = "N"
@@ -95,28 +85,32 @@ action = "CreateNewWindow"
 [[keyboard.bindings]]
 key = "T"
 mods = "Command"
-action = "None"
+chars = "\u0002t" # This sends Ctrl+B which and t as chars for tmux
 
-# Disable Command-N (new window) - macOS default
 [[keyboard.bindings]]
-key = "N"
+key = "H"
 mods = "Super"
-action = "None"
+chars = "\u0002[" # This sends Ctrl+B which and t as chars for tmux
 
-# Disable Command-T (new tab) - macOS default
 [[keyboard.bindings]]
-key = "T"
+key = "L"
 mods = "Super"
-action = "None"
-
-[[keyboard.bindings]]
-key = "J"
-mods = "Alt"
-action = "None"
+chars = "\u0002]" # This sends Ctrl+B which and t a
 
 [[keyboard.bindings]]
 key = "K"
-mods = "Alt"
+mods = "Super"
+chars = "\u0002k"
+
+[[keyboard.bindings]]
+key = "J"
+mods = "Super"
+chars = "\u0002J"
+
+
+[[keyboard.bindings]]
+key = "D"
+mods = "Super"
 action = "None"
 
 [[keyboard.bindings]]

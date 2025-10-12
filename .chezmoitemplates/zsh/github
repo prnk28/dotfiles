@@ -117,13 +117,13 @@ zle -N open_lazygit-widget open_lazygit
 bindkey '^G' open_lazygit-widget
 
 zle -N open_github-issues-widget open_github-issues
-bindkey '^N' open_github-issues-widget
+# bindkey '^N' open_github-issues-widget
 
 zle -N open_github-prs-widget open_github-prs
-bindkey '^P' open_github-prs-widget
+# bindkey '^P' open_github-prs-widget
 
 zle -N open_github-actions-widget open_github-actions
-bindkey '^A' open_github-actions-widget
+# bindkey '^A' open_github-actions-widget
 
 zle -N open_repo-widget open_repo
 bindkey '^O' open_repo-widget
