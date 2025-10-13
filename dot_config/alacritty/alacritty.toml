@@ -107,6 +107,10 @@ key = "J"
 mods = "Super"
 chars = "\u0002J"
 
+[[keyboard.bindings]]
+key = "Enter"
+mods = "Super"
+chars = "\u0002o"
 
 [[keyboard.bindings]]
 key = "D"

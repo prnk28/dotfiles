@@ -7,12 +7,23 @@
 # =====================
 # | 1.1 |  Functions  |
 # =====================
+function repo-runs() {
+  local info=$(gh run list --json databaseId,startedAt,status,workflowName,conclusion | jq '{pending: (map(select(.conclusion == "")) | length), success: (map(select(.conclusion == "success")) | length), cancelled: (map(select(.conclusion == "cancelled")) | length), failure: (map(select(.conclusion == "failure")) | length), skipped: (map(select(.conclusion == "skipped")) | length), lastUpdated: (map(.startedAt) | max)}')
+  local runSuccess=$(gum style --align center --padding "0 1" --foreground 208 --border-foreground 208 " $(echo $info | jq '.success')")
+  local runCancelled=$(gum style --align center --padding "0 1" --foreground 120 --border-foreground 120 " $(echo $info | jq '.cancelled')")
+  local runFailure=$(gum style --align center --padding "0 1" --foreground 120 --border-foreground 120 " $(echo $info | jq '.failure')")
+  gum join " " "Recent Runs: " "$runSuccess" "$runCancelled" "$runFailure"
+
+}
+
 function repo-preview() {
+  gum spin --title="Fetching changes..." gh clean-branches
   local info=$(gh repo view --json issues,pullRequests,url --jq '{"issues": .issues.totalCount, "prs": .pullRequests.totalCount, "url": .url}')
-  local prBox=$(gum style --border rounded --align center --padding "0 1" --foreground 208 --border-foreground 208 "$(echo $info | jq '.prs') PRs")
-  local issueBox=$(gum style --border rounded --align center --padding "0 1" --foreground 120 --border-foreground 120 "$(echo $info | jq '.issues') Issues")
-  local repoDisplay=$(gum style --border rounded --align center --padding "0 1" "$(echo $info | jq '.url' -r)")
-  gum join "$repoDisplay" "$issueBox" "$prBox" 
+  local prBox=$(gum style --border rounded --foreground 200 --border-foreground 200 --align center --padding "0 1" " $(echo $info | jq '.prs') PRs")
+  local issueBox=$(gum style --border rounded  --foreground 69 --border-foreground 69 --align center --padding "0 1" "󰃤 $(echo $info | jq '.issues') Issues")
+  local repoUrl=$(gum style --border rounded --foreground 245 --border-foreground 245 --align center --padding "0 1" " $(echo $info | jq '.url' -r)")
+  gum join "$issueBox" "$prBox" "$repoUrl" 
+  repo-runs 
   echo ""
   echo ""
 }
@@ -81,6 +92,7 @@ function open_github-actions() {
   /home/prad/.local/bin/github actions
   zle && zle reset-prompt # Force prompt redraw
 }
+
 
 function open_repo() {
   clear

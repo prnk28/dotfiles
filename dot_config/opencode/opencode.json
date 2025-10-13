@@ -35,20 +35,57 @@
     },
   },
   "mcp": {
-    "exa": {
+    "chrome": {
       "type": "local",
-      "command": ["npx", "-y", "mcp-remote", "https://mcp.exa.ai/mcp"],
-      "enabled": true
-    },
-    "deepgraph": {
-      "type": "local",
-      "command": ["npx", "-y", "mcp-code-graph@latest", "sonr-io/sonr"],
-      "enabled": true
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
+      "enabled": false
     },
     "context7": {
       "type": "local",
       "command": ["npx", "-y", "@upstash/context7-mcp"],
       "enabled": true
-    }
+    },
+    "deepgraph-sonr": {
+      "type": "local",
+      "command": ["npx", "-y", "mcp-code-graph@latest", "sonr-io/sonr"],
+      "enabled": false
+    },
+    "deepgraph-crypto": {
+      "type": "local",
+      "command": ["npx", "-y", "mcp-code-graph@latest", "sonr-io/crypto"],
+      "enabled": false
+    },
+    "deepgraph-motr": {
+      "type": "local",
+      "command": ["npx", "-y", "mcp-code-graph@latest", "sonr-io/motr"],
+      "enabled": false
+    },
+    "exa": {
+      "type": "local",
+      "command": ["npx", "-y", "mcp-remote", "https://mcp.exa.ai/mcp"],
+      "enabled": true
+    },
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "-y", "@playwright/mcp@latest"],
+      "enabled": false
+    },
+    "godoc": {
+      "type": "local",
+      "command": ["/home/prad/.go/bin/godoc-mcp"],
+      "enabled": false,
+      "environment": {
+        "GOPATH": "/home/prad/.go",
+        "GOMODCACHE": "/home/prad/.go/pkg/mod",
+      }
+    },
+    "shadcn": {
+      "type": "local",
+      "command": ["npx", "-y", "shadcn@latest", "mcp"],
+      "enabled": false,
+      "environment": {
+        "GITHUB_TOKEN": "$(gh auth token)"
+      }
+    },
   }
 }

@@ -481,7 +481,7 @@ customCommands:
   - key: "A"
     context: "files"
     command: "git add ."
-  - key: "<C-g>"
+  - key: "<c-d>"
     context: "files"
     command: "gh dash"
     output: terminal

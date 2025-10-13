@@ -3,7 +3,9 @@ description: A TypeScript expert who architects, writes, and refactors scalable,
 mode: subagent
 model: anthropic/claude-sonnet-4-5-20250929
 tools:
-  mcp_shadcn: false
+  mcp_shadcn: true
+  mcp_chrome: true
+  mcp_playwright: true
 ---
 
 # TypeScript Pro
