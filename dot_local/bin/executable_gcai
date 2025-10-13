@@ -207,14 +207,37 @@ function runCode2PromptForFiles() {
   local files="$1"
   local output_file="$2"
 
-  # Create a temporary file with just the specified files
-  local temp_file="$tmpdir/filtered_files.txt"
-  echo "$files" > "$temp_file"
+  # Create a temporary diff file
+  local diff_file="$tmpdir/filtered_diff.txt"
+  > "$diff_file"
 
-  # Run code2prompt with filtered files
-  echo "$files" | while IFS= read -r file; do
-    git diff HEAD -- "$repo_root/$file" 2>/dev/null
-  done | code2prompt -O "$output_file" -t ~/.local/share/code2prompt/write-git-commit.hbs >/dev/null 2>&1
+  # Generate unified diff for each file
+  while IFS= read -r file; do
+    if [ -n "$file" ]; then
+      # Get both staged and unstaged changes
+      git diff HEAD -- "$repo_root/$file" >> "$diff_file" 2>/dev/null
+      git diff --cached -- "$repo_root/$file" >> "$diff_file" 2>/dev/null
+    fi
+  done <<< "$files"
+
+  # Check if we have any diff content
+  if [ ! -s "$diff_file" ]; then
+    echo "Warning: No diff content generated for files" >&2
+    return 1
+  fi
+
+  # Create a simple prompt file for mods
+  cat > "$output_file" <<EOF
+# Git Commit Message Request
+
+Generate a conventional commit message for the following changes:
+
+\`\`\`diff
+$(cat "$diff_file")
+\`\`\`
+
+Analyze the changes and provide appropriate commit message suggestions.
+EOF
 }
 
 function preview() {
@@ -306,21 +329,26 @@ function manualCommitForGroup() {
   echo ""
 
   # Prompt for commit type
-  local TYPE=$(gum choose "fix" "feat" "docs" "style" "refactor" "test" "chore" "revert")
+  local TYPE=$(gum choose "fix" "feat" "docs" "style" "refactor" "test" "chore" "revert" 2>/dev/null)
 
   if [ -z "$TYPE" ]; then
     return 1
   fi
 
-  # Pre-populate with scope
-  local SUMMARY=$(gum input --value "$TYPE($scope): " --placeholder "Summary of this change")
+  # Pre-populate with scope - use printf to avoid shell escaping issues
+  local prompt_value
+  printf -v prompt_value "%s(%s): " "$TYPE" "$scope"
+
+  local SUMMARY=$(gum input --value="$prompt_value" --placeholder="Summary of this change" 2>/dev/null)
 
   if [ -z "$SUMMARY" ]; then
     return 1
   fi
 
-  # Prompt for detailed description (optional)
-  local DESCRIPTION=$(gum write --placeholder "Details of this change (optional)")
+  # Prompt for detailed description (optional) - with timeout
+  echo ""
+  echo "$(gum style --foreground 245 'Enter description (optional, Ctrl+D to skip):')"
+  local DESCRIPTION=$(timeout 30 gum write --placeholder "Details of this change (optional)" 2>/dev/null || true)
 
   # Return the commit message
   if [ -n "$DESCRIPTION" ]; then
@@ -478,24 +506,35 @@ function commitPackageGroup() {
   done
   echo ""
 
+  # Sanitize scope for filename (remove special chars)
+  local safe_scope=$(echo "$scope" | sed 's/[^a-zA-Z0-9_-]/_/g')
+
   # Generate AI suggestions for this group
-  local prompt_file="$tmpdir/commit_prompt_$scope.md"
+  local prompt_file="$tmpdir/commit_prompt_${safe_scope}.md"
   echo "Generating suggestions for $scope..."
 
   # Create diff for just these files
-  runCode2PromptForFiles "$files" "$prompt_file"
-
-  # Try to get AI suggestions
-  local selected_message=$(selectCommitForGroup "$prompt_file" "$scope")
-
-  # If no AI suggestions, fall back to manual
-  if [ -z "$selected_message" ]; then
-    echo "$(gum style --foreground 11 'No AI suggestions, falling back to manual input...')"
-    selected_message=$(manualCommitForGroup "$scope")
+  if ! runCode2PromptForFiles "$files" "$prompt_file"; then
+    echo "$(gum style --foreground 11 'Warning: Could not generate diff, using manual input...')"
+    local selected_message=$(manualCommitForGroup "$scope")
 
     if [ -z "$selected_message" ]; then
       echo "$(gum style --foreground 11 "Skipping $scope...")"
       return 0
+    fi
+  else
+    # Try to get AI suggestions
+    local selected_message=$(selectCommitForGroup "$prompt_file" "$scope" 2>/dev/null)
+
+    # If no AI suggestions, fall back to manual
+    if [ -z "$selected_message" ]; then
+      echo "$(gum style --foreground 11 'No AI suggestions, using manual input...')"
+      selected_message=$(manualCommitForGroup "$scope")
+
+      if [ -z "$selected_message" ]; then
+        echo "$(gum style --foreground 11 "Skipping $scope...")"
+        return 0
+      fi
     fi
   fi
 
@@ -514,15 +553,27 @@ function commitPackageGroup() {
 
   # Stage only files from this group
   echo "Staging files for $scope..."
-  echo "$files" | while IFS= read -r file; do
-    git add "$repo_root/$file" 2>/dev/null
-  done
+  local staged_count=0
+  while IFS= read -r file; do
+    if [ -n "$file" ]; then
+      if git add "$repo_root/$file" 2>/dev/null; then
+        staged_count=$((staged_count + 1))
+      fi
+    fi
+  done <<< "$files"
+
+  if [ $staged_count -eq 0 ]; then
+    echo "$(gum style --foreground 9 "✗ No files could be staged for $scope")"
+    return 1
+  fi
+
+  echo "$(gum style --foreground 10 "✓ Staged $staged_count file(s)")"
 
   # Commit this group
   echo "Committing $scope..."
-  echo "$selected_message" | git commit -F - >/dev/null 2>&1
+  echo "$selected_message" | git commit -F - 2>&1 | grep -v "^#"
 
-  if [ $? -eq 0 ]; then
+  if [ ${PIPESTATUS[1]} -eq 0 ]; then
     echo "$(gum style --foreground 10 "✓ Successfully committed $scope")"
     return 0
   else
