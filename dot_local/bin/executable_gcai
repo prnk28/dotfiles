@@ -205,24 +205,20 @@ function commitChanges() {
   git status --short --branch
   echo ""
 
-  if gum confirm "Proceed with commit?"; then
-    # Use git commit with message file to properly handle multi-line messages
-    echo "$commit_message" | git commit -F -
-    if [ $? -eq 0 ]; then
-      echo ""
-      echo "$(gum style --foreground 10 '✓ Successfully committed')"
+  # Use git commit with message file to properly handle multi-line messages
+  echo "Committing changes..."
+  echo "$commit_message" | git commit -F -
+  if [ $? -eq 0 ]; then
+    echo ""
+    echo "$(gum style --foreground 10 '✓ Successfully committed')"
 
-      # Check if we have a remote to push to
-      if git remote get-url origin >/dev/null 2>&1; then
-        echo ""
-        pushChanges
-      fi
-    else
-      echo "$(gum style --foreground 9 '✗ Commit failed')"
-      return 1
+    # Check if we have a remote to push to
+    if git remote get-url origin >/dev/null 2>&1; then
+      echo ""
+      pushChanges
     fi
   else
-    echo "Commit cancelled"
+    echo "$(gum style --foreground 9 '✗ Commit failed')"
     return 1
   fi
 }
