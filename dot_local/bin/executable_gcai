@@ -107,7 +107,7 @@ function selectCommit() {
   local suggestions=$(preview | jq -r '.commitMessages[]')
 
   if [ -z "$suggestions" ]; then
-    echo "No commit suggestions generated"
+    echo "No commit suggestions generated" >&2
     # Debug output to understand what's happening
     echo "Debug: Checking commit_prompt.md content:" >&2
     echo "File exists: $([ -f "$tmpdir/commit_prompt.md" ] && echo "yes" || echo "no")" >&2
@@ -122,6 +122,44 @@ function selectCommit() {
     --prompt "Select commit message (or Ctrl-C to cancel): " \
     --header "Press Enter to select, or type to filter" \
     --preview-window hidden
+}
+
+function manualCommit() {
+  echo ""
+  echo "$(gum style --foreground 11 'Falling back to manual conventional commit...')"
+  echo ""
+
+  # Prompt for commit type
+  local TYPE=$(gum choose "fix" "feat" "docs" "style" "refactor" "test" "chore" "revert")
+
+  if [ -z "$TYPE" ]; then
+    echo "Commit cancelled"
+    return 1
+  fi
+
+  # Prompt for scope (optional)
+  local SCOPE=$(gum input --placeholder "scope (optional)")
+
+  # Wrap scope in parentheses if provided
+  test -n "$SCOPE" && SCOPE="($SCOPE)"
+
+  # Prompt for summary with pre-populated type and scope
+  local SUMMARY=$(gum input --value "$TYPE$SCOPE: " --placeholder "Summary of this change")
+
+  if [ -z "$SUMMARY" ]; then
+    echo "Commit cancelled"
+    return 1
+  fi
+
+  # Prompt for detailed description (optional)
+  local DESCRIPTION=$(gum write --placeholder "Details of this change (optional)")
+
+  # Return the commit message (summary only, or with description if provided)
+  if [ -n "$DESCRIPTION" ]; then
+    echo "$SUMMARY"$'\n\n'"$DESCRIPTION"
+  else
+    echo "$SUMMARY"
+  fi
 }
 
 function stageChanges() {
@@ -147,7 +185,16 @@ function commitChanges() {
 
   echo ""
   echo "Selected commit message:"
-  echo "  $(gum style --foreground 212 "$commit_message")"
+  # Show first line (summary) in styled format
+  local first_line=$(echo "$commit_message" | head -n1)
+  echo "  $(gum style --foreground 212 "$first_line")"
+
+  # Show additional lines if they exist
+  local rest_lines=$(echo "$commit_message" | tail -n +2)
+  if [ -n "$rest_lines" ]; then
+    echo ""
+    echo "$rest_lines" | sed 's/^/  /'
+  fi
 
   # Automatically stage all changes
   stageChanges
@@ -159,7 +206,8 @@ function commitChanges() {
   echo ""
 
   if gum confirm "Proceed with commit?"; then
-    git commit -m "$commit_message"
+    # Use git commit with message file to properly handle multi-line messages
+    echo "$commit_message" | git commit -F -
     if [ $? -eq 0 ]; then
       echo ""
       echo "$(gum style --foreground 10 '✓ Successfully committed')"
@@ -220,9 +268,14 @@ function main() {
   echo "Generating commit suggestions..."
   local selected_message=$(selectCommit)
 
+  # If no AI suggestions, fall back to manual commit
   if [ -z "$selected_message" ]; then
-    echo "No message selected"
-    return 1
+    selected_message=$(manualCommit)
+
+    if [ -z "$selected_message" ]; then
+      echo "No message provided"
+      return 1
+    fi
   fi
 
   commitChanges "$selected_message"
