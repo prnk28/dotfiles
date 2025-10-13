@@ -97,11 +97,30 @@ function open_github-actions() {
 function open_repo() {
   clear
   gum style --align center --padding "0 1" --border double --foreground 215 --border-foreground 215 " Open Repository"
-  local selected=$(ghq list | fzf --delimiter='/' --nth=-1 --height=92% --border=none)
+
+  # Combine ghq list with special directories
+  local chezmoi_path="{{ .chezmoi.homeDir }}/.local/share/chezmoi"
+  local nvim_path="{{ .chezmoi.homeDir }}/.config/nvim"
+  local selected=$( (echo "local/chezmoi"; echo "local/nvim"; ghq list) | fzf --delimiter='/' --nth=-1 --height=92% --border=none)
+
   if [[ -n "$selected" ]]; then
-    cd "$GHQ_ROOT/$selected"
-    clear
-    repo-preview
+    if [[ "$selected" == "local/chezmoi" ]]; then
+      cd "$chezmoi_path"
+      clear
+      gum style --border rounded --foreground 99 --border-foreground 99 --align center --padding "0 1" " Chezmoi Dotfiles"
+      echo ""
+      echo ""
+    elif [[ "$selected" == "local/nvim" ]]; then
+      cd "$nvim_path"
+      clear
+      gum style --border rounded --foreground 76 --border-foreground 76 --align center --padding "0 1" " Neovim Config"
+      echo ""
+      echo ""
+    else
+      cd "$GHQ_ROOT/$selected"
+      clear
+      repo-preview
+    fi
   fi
   zle && zle reset-prompt # Force prompt redraw
 }
