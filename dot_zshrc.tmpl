@@ -85,3 +85,10 @@ if [[ -f "{{ .chezmoi.homeDir }}/.hishtory/config.zsh" ]] && command -v hishtory
     bindkey '^R' _hishtory_widget
   fi
 fi
+
+# Capture last command output
+preexec() { LAST_CMD="$1"; }
+precmd() { LAST_OUTPUT="$(eval $LAST_CMD 2>&1)"; }
+
+# Then use this alias
+alias clc='echo "$LAST_OUTPUT" | xclip -selection clipboard'
