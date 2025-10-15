@@ -81,163 +81,11 @@ function init() {
     echo "gum is not installed"
     return 1
   fi
-
-  # Check if jq is installed (needed for package.json parsing)
-  if ! command -v jq >/dev/null 2>&1; then
-    echo "jq is not installed"
-    return 1
-  fi
-}
-
-function findPackageDirectories() {
-  # Find all directories containing package.json (excluding node_modules)
-  find "$repo_root" -name "package.json" -not -path "*/node_modules/*" -exec dirname {} \; | sort
-}
-
-function getPackageScope() {
-  local pkg_dir="$1"
-  local pkg_json="$pkg_dir/package.json"
-
-  if [ -f "$pkg_json" ]; then
-    # Try to extract name from package.json
-    local pkg_name=$(jq -r '.name // empty' "$pkg_json" 2>/dev/null)
-    if [ -n "$pkg_name" ]; then
-      # Remove @scope/ prefix if it exists and get last part
-      echo "$pkg_name" | sed 's|^@[^/]*/||' | sed 's|/|-|g'
-    else
-      # Fallback to directory name
-      basename "$pkg_dir"
-    fi
-  else
-    basename "$pkg_dir"
-  fi
-}
-
-function getRelativePath() {
-  local file="$1"
-  local base="$2"
-  echo "${file#$base/}"
-}
-
-function groupFilesByPackage() {
-  # Get all changed files (both staged and unstaged)
-  local changed_files=$(git diff --name-only HEAD 2>/dev/null; git diff --name-only --cached 2>/dev/null | sort -u)
-
-  if [ -z "$changed_files" ]; then
-    return 1
-  fi
-
-  # Find all package directories
-  local package_dirs=$(findPackageDirectories)
-
-  # Create a temp file to store groupings
-  local grouping_file="$tmpdir/file_groups.txt"
-  > "$grouping_file"
-
-  # If no package.json found, treat everything as root
-  if [ -z "$package_dirs" ]; then
-    echo "root|$repo_root|$changed_files" >> "$grouping_file"
-    echo "$grouping_file"
-    return 0
-  fi
-
-  # Group files by their nearest package.json
-  while IFS= read -r file; do
-    local abs_file="$repo_root/$file"
-    local file_dir=$(dirname "$abs_file")
-    local matched_pkg=""
-    local max_depth=0
-
-    # Find the closest package.json by checking parent directories
-    while IFS= read -r pkg_dir; do
-      # Check if file is under this package directory
-      if [[ "$abs_file" == "$pkg_dir"* ]]; then
-        local depth=$(echo "$file" | grep -o "/" | wc -l)
-        local pkg_depth=$(echo "${pkg_dir#$repo_root/}" | grep -o "/" | wc -l)
-
-        # Use the deepest (most specific) package
-        if [ $pkg_depth -ge $max_depth ]; then
-          max_depth=$pkg_depth
-          matched_pkg="$pkg_dir"
-        fi
-      fi
-    done <<< "$package_dirs"
-
-    # If no package matched, assign to root
-    if [ -z "$matched_pkg" ]; then
-      matched_pkg="$repo_root"
-    fi
-
-    echo "$file|$matched_pkg"
-  done <<< "$changed_files" | sort -t'|' -k2 > "$tmpdir/file_package_map.txt"
-
-  # Create groups
-  local current_pkg=""
-  local current_files=""
-
-  while IFS='|' read -r file pkg; do
-    if [ "$pkg" != "$current_pkg" ]; then
-      # Save previous group
-      if [ -n "$current_pkg" ]; then
-        local scope=$(getPackageScope "$current_pkg")
-        echo "$scope|$current_pkg|$current_files" >> "$grouping_file"
-      fi
-      current_pkg="$pkg"
-      current_files="$file"
-    else
-      current_files="$current_files"$'\n'"$file"
-    fi
-  done < "$tmpdir/file_package_map.txt"
-
-  # Save last group
-  if [ -n "$current_pkg" ]; then
-    local scope=$(getPackageScope "$current_pkg")
-    echo "$scope|$current_pkg|$current_files" >> "$grouping_file"
-  fi
-
-  echo "$grouping_file"
 }
 
 function runCode2Prompt() {
   echo "Analyzing changes in $(basename "$repo_root")..."
   code2prompt -O "$tmpdir"/commit_prompt.md --git-diff-branch HEAD main -t ~/.local/share/code2prompt/write-git-commit.hbs . >/dev/null 2>&1
-}
-
-function runCode2PromptForFiles() {
-  local files="$1"
-  local output_file="$2"
-
-  # Create a temporary diff file
-  local diff_file="$tmpdir/filtered_diff.txt"
-  > "$diff_file"
-
-  # Generate unified diff for each file
-  while IFS= read -r file; do
-    if [ -n "$file" ]; then
-      # Get both staged and unstaged changes
-      git diff HEAD -- "$repo_root/$file" >> "$diff_file" 2>/dev/null
-      git diff --cached -- "$repo_root/$file" >> "$diff_file" 2>/dev/null
-    fi
-  done <<< "$files"
-
-  # Check if we have any diff content
-  if [ ! -s "$diff_file" ]; then
-    echo "Warning: No diff content generated for files" >&2
-    return 1
-  fi
-
-  # Create a simple prompt file for mods
-  cat > "$output_file" <<EOF
-# Git Commit Message Request
-
-Generate a conventional commit message for the following changes:
-
-\`\`\`diff
-$(cat "$diff_file")
-\`\`\`
-
-Analyze the changes and provide appropriate commit message suggestions.
-EOF
 }
 
 function preview() {
@@ -254,21 +102,12 @@ function preview() {
   cat "$tmpdir"/commit_prompt.md | HOME="$HOME" mods -R commit-writer 2>/dev/null | awk '/^```json$/{f=1;next} /^```$/{f=0} f'
 }
 
-function previewGroup() {
-  local prompt_file="$1"
-
-  # Ensure HOME is set for mods to find config
-  export HOME="${HOME:-$(eval echo ~)}"
-
-  cat "$prompt_file" | HOME="$HOME" mods -R commit-writer 2>/dev/null | awk '/^```json$/{f=1;next} /^```$/{f=0} f'
-}
-
 function selectCommit() {
   # Use jq to pull commitMessages from suggestions
   local suggestions=$(preview | jq -r '.commitMessages[]')
 
   if [ -z "$suggestions" ]; then
-    echo "No commit suggestions generated" >&2
+    echo "No commit suggestions generated"
     # Debug output to understand what's happening
     echo "Debug: Checking commit_prompt.md content:" >&2
     echo "File exists: $([ -f "$tmpdir/commit_prompt.md" ] && echo "yes" || echo "no")" >&2
@@ -283,117 +122,6 @@ function selectCommit() {
     --prompt "Select commit message (or Ctrl-C to cancel): " \
     --header "Press Enter to select, or type to filter" \
     --preview-window hidden
-}
-
-function selectCommitForGroup() {
-  local prompt_file="$1"
-  local scope="$2"
-
-  # Use jq to pull commitMessages from suggestions
-  local suggestions=$(previewGroup "$prompt_file" | jq -r '.commitMessages[]')
-
-  if [ -z "$suggestions" ]; then
-    return 1
-  fi
-
-  # Auto-add scope to suggestions if not present
-  local scoped_suggestions=""
-  while IFS= read -r msg; do
-    # Check if message already has the scope
-    if [[ "$msg" =~ ^\w+\($scope\): ]]; then
-      scoped_suggestions+="$msg"$'\n'
-    elif [[ "$msg" =~ ^(\w+): ]]; then
-      # Add scope to conventional commit
-      local type="${BASH_REMATCH[1]}"
-      local rest="${msg#*: }"
-      scoped_suggestions+="$type($scope): $rest"$'\n'
-    else
-      scoped_suggestions+="$msg"$'\n'
-    fi
-  done <<< "$suggestions"
-
-  # Let user select
-  echo "$scoped_suggestions" | fzf \
-    --height 60% \
-    --reverse \
-    --prompt "Select commit for $scope (or Ctrl-C to skip): " \
-    --header "Press Enter to select, ESC to skip this package" \
-    --preview-window hidden
-}
-
-function manualCommitForGroup() {
-  local scope="$1"
-
-  echo ""
-  echo "$(gum style --foreground 11 "Manual commit for $scope...")"
-  echo ""
-
-  # Prompt for commit type
-  local TYPE=$(gum choose "fix" "feat" "docs" "style" "refactor" "test" "chore" "revert" 2>/dev/null)
-
-  if [ -z "$TYPE" ]; then
-    return 1
-  fi
-
-  # Pre-populate with scope - use printf to avoid shell escaping issues
-  local prompt_value
-  printf -v prompt_value "%s(%s): " "$TYPE" "$scope"
-
-  local SUMMARY=$(gum input --value="$prompt_value" --placeholder="Summary of this change" 2>/dev/null)
-
-  if [ -z "$SUMMARY" ]; then
-    return 1
-  fi
-
-  # Prompt for detailed description (optional) - with timeout
-  echo ""
-  echo "$(gum style --foreground 245 'Enter description (optional, Ctrl+D to skip):')"
-  local DESCRIPTION=$(timeout 30 gum write --placeholder "Details of this change (optional)" 2>/dev/null || true)
-
-  # Return the commit message
-  if [ -n "$DESCRIPTION" ]; then
-    echo "$SUMMARY"$'\n\n'"$DESCRIPTION"
-  else
-    echo "$SUMMARY"
-  fi
-}
-
-function manualCommit() {
-  echo ""
-  echo "$(gum style --foreground 11 'Falling back to manual conventional commit...')"
-  echo ""
-
-  # Prompt for commit type
-  local TYPE=$(gum choose "fix" "feat" "docs" "style" "refactor" "test" "chore" "revert")
-
-  if [ -z "$TYPE" ]; then
-    echo "Commit cancelled"
-    return 1
-  fi
-
-  # Prompt for scope (optional)
-  local SCOPE=$(gum input --placeholder "scope (optional)")
-
-  # Wrap scope in parentheses if provided
-  test -n "$SCOPE" && SCOPE="($SCOPE)"
-
-  # Prompt for summary with pre-populated type and scope
-  local SUMMARY=$(gum input --value "$TYPE$SCOPE: " --placeholder "Summary of this change")
-
-  if [ -z "$SUMMARY" ]; then
-    echo "Commit cancelled"
-    return 1
-  fi
-
-  # Prompt for detailed description (optional)
-  local DESCRIPTION=$(gum write --placeholder "Details of this change (optional)")
-
-  # Return the commit message (summary only, or with description if provided)
-  if [ -n "$DESCRIPTION" ]; then
-    echo "$SUMMARY"$'\n\n'"$DESCRIPTION"
-  else
-    echo "$SUMMARY"
-  fi
 }
 
 function stageChanges() {
@@ -419,16 +147,7 @@ function commitChanges() {
 
   echo ""
   echo "Selected commit message:"
-  # Show first line (summary) in styled format
-  local first_line=$(echo "$commit_message" | head -n1)
-  echo "  $(gum style --foreground 212 "$first_line")"
-
-  # Show additional lines if they exist
-  local rest_lines=$(echo "$commit_message" | tail -n +2)
-  if [ -n "$rest_lines" ]; then
-    echo ""
-    echo "$rest_lines" | sed 's/^/  /'
-  fi
+  echo "  $(gum style --foreground 212 "$commit_message")"
 
   # Automatically stage all changes
   stageChanges
@@ -439,20 +158,23 @@ function commitChanges() {
   git status --short --branch
   echo ""
 
-  # Use git commit with message file to properly handle multi-line messages
-  echo "Committing changes..."
-  echo "$commit_message" | git commit -F -
-  if [ $? -eq 0 ]; then
-    echo ""
-    echo "$(gum style --foreground 10 '✓ Successfully committed')"
-
-    # Check if we have a remote to push to
-    if git remote get-url origin >/dev/null 2>&1; then
+  if gum confirm "Proceed with commit?"; then
+    git commit -m "$commit_message"
+    if [ $? -eq 0 ]; then
       echo ""
-      pushChanges
+      echo "$(gum style --foreground 10 '✓ Successfully committed')"
+
+      # Check if we have a remote to push to
+      if git remote get-url origin >/dev/null 2>&1; then
+        echo ""
+        pushChanges
+      fi
+    else
+      echo "$(gum style --foreground 9 '✗ Commit failed')"
+      return 1
     fi
   else
-    echo "$(gum style --foreground 9 '✗ Commit failed')"
+    echo "Commit cancelled"
     return 1
   fi
 }
@@ -488,184 +210,19 @@ function pushChanges() {
   fi
 }
 
-function commitPackageGroup() {
-  local scope="$1"
-  local pkg_dir="$2"
-  local files="$3"
-  local group_num="$4"
-  local total_groups="$5"
-
-  echo ""
-  echo "$(gum style --border rounded --foreground 99 --border-foreground 99 --padding '0 1' "Package $group_num/$total_groups: $scope")"
-  echo ""
-
-  # Show files in this group
-  echo "Files in this package:"
-  echo "$files" | while IFS= read -r file; do
-    echo "  $(gum style --foreground 245 "$file")"
-  done
-  echo ""
-
-  # Sanitize scope for filename (remove special chars)
-  local safe_scope=$(echo "$scope" | sed 's/[^a-zA-Z0-9_-]/_/g')
-
-  # Generate AI suggestions for this group
-  local prompt_file="$tmpdir/commit_prompt_${safe_scope}.md"
-  echo "Generating suggestions for $scope..."
-
-  # Create diff for just these files
-  if ! runCode2PromptForFiles "$files" "$prompt_file"; then
-    echo "$(gum style --foreground 11 'Warning: Could not generate diff, using manual input...')"
-    local selected_message=$(manualCommitForGroup "$scope")
-
-    if [ -z "$selected_message" ]; then
-      echo "$(gum style --foreground 11 "Skipping $scope...")"
-      return 0
-    fi
-  else
-    # Try to get AI suggestions
-    local selected_message=$(selectCommitForGroup "$prompt_file" "$scope" 2>/dev/null)
-
-    # If no AI suggestions, fall back to manual
-    if [ -z "$selected_message" ]; then
-      echo "$(gum style --foreground 11 'No AI suggestions, using manual input...')"
-      selected_message=$(manualCommitForGroup "$scope")
-
-      if [ -z "$selected_message" ]; then
-        echo "$(gum style --foreground 11 "Skipping $scope...")"
-        return 0
-      fi
-    fi
-  fi
-
-  # Show selected message
-  echo ""
-  echo "Selected commit message for $scope:"
-  local first_line=$(echo "$selected_message" | head -n1)
-  echo "  $(gum style --foreground 212 "$first_line")"
-
-  local rest_lines=$(echo "$selected_message" | tail -n +2)
-  if [ -n "$rest_lines" ]; then
-    echo ""
-    echo "$rest_lines" | sed 's/^/  /'
-  fi
-  echo ""
-
-  # Stage only files from this group
-  echo "Staging files for $scope..."
-  local staged_count=0
-  while IFS= read -r file; do
-    if [ -n "$file" ]; then
-      if git add "$repo_root/$file" 2>/dev/null; then
-        staged_count=$((staged_count + 1))
-      fi
-    fi
-  done <<< "$files"
-
-  if [ $staged_count -eq 0 ]; then
-    echo "$(gum style --foreground 9 "✗ No files could be staged for $scope")"
-    return 1
-  fi
-
-  echo "$(gum style --foreground 10 "✓ Staged $staged_count file(s)")"
-
-  # Commit this group
-  echo "Committing $scope..."
-  echo "$selected_message" | git commit -F - 2>&1 | grep -v "^#"
-
-  if [ ${PIPESTATUS[1]} -eq 0 ]; then
-    echo "$(gum style --foreground 10 "✓ Successfully committed $scope")"
-    return 0
-  else
-    echo "$(gum style --foreground 9 "✗ Commit failed for $scope")"
-    return 1
-  fi
-}
-
-function commitAllGroups() {
-  local grouping_file=$(groupFilesByPackage)
-
-  if [ -z "$grouping_file" ] || [ ! -f "$grouping_file" ]; then
-    echo "No file groups found"
-    return 1
-  fi
-
-  # Count total groups
-  local total_groups=$(wc -l < "$grouping_file")
-
-  echo ""
-  echo "$(gum style --border double --foreground 99 --border-foreground 99 --padding '0 1' --align center "Found $total_groups package group(s)")"
-  echo ""
-
-  # Show overview
-  echo "Package overview:"
-  local group_num=1
-  while IFS='|' read -r scope pkg_dir files; do
-    local file_count=$(echo "$files" | wc -l)
-    echo "  $group_num. $(gum style --foreground 99 --bold "$scope") - $file_count file(s)"
-    group_num=$((group_num + 1))
-  done < "$grouping_file"
-  echo ""
-
-  if ! gum confirm "Proceed with grouped commits?"; then
-    echo "Cancelled"
-    return 1
-  fi
-
-  # Commit each group sequentially
-  local committed_count=0
-  group_num=1
-
-  while IFS='|' read -r scope pkg_dir files; do
-    if commitPackageGroup "$scope" "$pkg_dir" "$files" "$group_num" "$total_groups"; then
-      committed_count=$((committed_count + 1))
-    fi
-    group_num=$((group_num + 1))
-  done < "$grouping_file"
-
-  echo ""
-  echo "$(gum style --foreground 10 --bold "✓ Completed $committed_count/$total_groups commits")"
-
-  # Push all commits at once
-  if [ $committed_count -gt 0 ]; then
-    if git remote get-url origin >/dev/null 2>&1; then
-      echo ""
-      pushChanges
-    fi
-  fi
-}
-
 function main() {
   if ! init; then
     return 1
   fi
 
-  # Check if there are multiple package.json files (monorepo detection)
-  local pkg_count=$(findPackageDirectories | wc -l)
-
-  if [ $pkg_count -gt 1 ]; then
-    echo "$(gum style --foreground 99 '🎯 Monorepo detected with '$pkg_count' packages')"
-
-    if gum confirm "Use grouped commits by package?"; then
-      commitAllGroups
-      return $?
-    fi
-  fi
-
-  # Fallback to single commit mode
   runCode2Prompt
 
   echo "Generating commit suggestions..."
   local selected_message=$(selectCommit)
 
-  # If no AI suggestions, fall back to manual commit
   if [ -z "$selected_message" ]; then
-    selected_message=$(manualCommit)
-
-    if [ -z "$selected_message" ]; then
-      echo "No message provided"
-      return 1
-    fi
+    echo "No message selected"
+    return 1
   fi
 
   commitChanges "$selected_message"

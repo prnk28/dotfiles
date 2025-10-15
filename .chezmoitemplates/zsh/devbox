@@ -22,6 +22,7 @@ function devbox-run() {
 # =====================
 # | 1.2 |   Aliases   |
 # =====================
+alias t="task"
 alias dx="devbox"
 alias dxa="devbox add"
 alias dxg="devbox global"

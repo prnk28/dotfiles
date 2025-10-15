@@ -10,7 +10,7 @@ args = ["-l"]
 blur = true
 dynamic_padding = true
 decorations = "Buttonless"
-opacity = 0.69
+opacity = 0.60
 option_as_alt = "Both"
 
 [font]

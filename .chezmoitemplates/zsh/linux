@@ -14,7 +14,8 @@ export GHQ_ROOT="{{ .chezmoi.homeDir }}/Developer/codebase"
   source "{{ .chezmoi.homeDir }}/.nix-profile/etc/profile.d/nix.sh"
 
 export LD_LIBRARY_PATH="{{ .chezmoi.homeDir }}/.local/lib:$LD_LIBRARY_PATH"
-
+export PUPPETEER_EXECUTABLE_PATH=/bin/chromium
+export BROWSER=/bin/chromium
 export PATH="{{ .chezmoi.homeDir }}/.go/bin:{{ .chezmoi.homeDir }}/.go/current/bin:$GOBIN:$PATH"
 export PATH="/var/lib/osxcross/bin:$PATH"
 export GITHUB_TOKEN="$(gh auth token)"
