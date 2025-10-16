@@ -12,6 +12,7 @@
 	],
 	"modules-right": [
 		"bluetooth",
+		"pulseaudio",
 		"network",
 		"cpu",
 		"battery",
@@ -109,7 +110,7 @@
 	},
 	"pulseaudio": {
 		"format": "{icon}",
-		"on-click": "$TERMINAL --class=Wiremix -e wiremix",
+		"on-click": "uwsm app -- ghostty --class=Wiremix -e wiremix",
 		"on-click-right": "pamixer -t",
 		"tooltip-format": "Playing at {volume}%",
 		"scroll-step": 5,
