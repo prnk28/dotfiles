@@ -12,7 +12,7 @@ function yy() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
 	yazi "$@" --cwd-file="$tmp"
 	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
+		builtin cd -- "$cwd" && _update_shared_cwd
 	fi
 	rm -f -- "$tmp"
 	zle && zle reset-prompt # Force prompt redraw
@@ -20,14 +20,14 @@ function yy() {
 
 function tdrw() {
 	OLDPWD="$PWD"
-	cd "$HOME/Documents/TLDraw"
+	cd "$HOME/Documents/TLDraw" && _update_shared_cwd
 	clear
 	gum style --align center --padding "0 1" --border double --foreground 213 --border-foreground 213 " TLDraw Files"
 	local selected=$(fd -e tldr -p | fzf --height=92%)
 	if [[ -n "$selected" ]]; then
 		tldraw-edit "$selected"
 	fi
-	cd "$OLDPWD"
+	cd "$OLDPWD" && _update_shared_cwd
 	clear
 	zle && zle reset-prompt # Force prompt redraw
 }
@@ -160,7 +160,6 @@ alias mkiso="caligula"
 alias j="c"
 alias cb="cd -"
 alias ..="cd .."
-alias cd.="chezmoi cd"
 alias cdd="cd $GHQ_ROOT"
 alias cdc="cd $XDG_CONFIG_HOME"
 alias ls="eza -F -1 --icons=always -T -L=1 -l --group-directories-first --no-user --no-filesize --no-permissions --git --no-time --octal-permissions"
