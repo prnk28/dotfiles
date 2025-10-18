@@ -43,11 +43,11 @@ fi
 echo "Finding scopes with changes..."
 
 # Combine staged and unstaged files
-CHANGED_FILES=$(git diff --cached --name-only; git diff --name-only | sort -u)
+CHANGED_FILES=$( (git diff --cached --name-only; git diff --name-only) | sort -u)
 
 SCOPES=$(echo "$CHANGED_FILES" | while read file; do
     [[ -z "$file" ]] && continue
-    jq -r --arg f "$file" '.[] | select($f | startswith(.path)) | .scope' "$SCOPES_FILE"
+    jq -r --arg f "$file" '.[] | select(.path as $p | $f | startswith($p)) | .scope' "$SCOPES_FILE"
 done | sort -u)
 
 if [[ -z "$SCOPES" ]]; then
@@ -57,9 +57,6 @@ fi
 
 echo "Scopes with changes: $SCOPES"
 echo ""
-
-# Save currently staged files to restore later
-STAGED_FILES=$(git diff --cached --name-only)
 
 # Process each scope
 for scope in $SCOPES; do
@@ -78,13 +75,20 @@ for scope in $SCOPES; do
 
     echo "  Staging files in $scope_path..."
 
-    # Stage all tracked files in the scope's path (both previously staged and unstaged)
-    if [[ -n "$STAGED_FILES" ]]; then
-        echo "$STAGED_FILES" | grep "^$scope_path" | xargs -r git add 2>/dev/null || true
+    # Get all changed files (staged and unstaged) in this scope's path
+    # Use git status to catch all modified, added, deleted files
+    scope_files=$(git status --porcelain | awk '{print $2}' | grep "^$scope_path" || true)
+
+    if [[ -z "$scope_files" ]]; then
+        echo "  No files found in $scope_path"
+        continue
     fi
 
-    # Also add any unstaged files in this scope
-    git diff --name-only | grep "^$scope_path" | xargs -r git add 2>/dev/null || true
+    echo "  Files to stage:"
+    echo "$scope_files" | sed 's/^/    /'
+
+    # Stage all files in this scope
+    echo "$scope_files" | xargs -r git add 2>/dev/null || true
 
     # Get the diff for this scope
     diff=$(git diff --cached)
@@ -113,9 +117,6 @@ $scope"
     if gum confirm "Commit changes for $scope?"; then
         git commit -m "$message"
         echo "✓ Committed changes for $scope"
-
-        # Remove committed files from the saved staged files list
-        STAGED_FILES=$(echo "$STAGED_FILES" | grep -v "^$scope_path" || true)
     else
         echo "  Skipped $scope"
     fi

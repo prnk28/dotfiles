@@ -223,8 +223,8 @@ binds {
 
     // Focus movement (Alt + Vim keys, matching Hyprland)
     Alt+H { focus-column-left; }
-    Alt+J { focus-window-down; }
-    Alt+K { focus-window-up; }
+    Alt+J { focus-monitor-right; }
+    Alt+K { focus-monitor-left; }
     Alt+L { focus-column-right; }
     Alt+Left { focus-column-left; }
     Alt+Down { focus-window-down; }
@@ -288,9 +288,9 @@ binds {
     Super+Shift+Comma { spawn "vicinae" "vicinae://settings/open?tab=extensions"; }
 
     // Main applications
-    Super+N { spawn "uwsm" "app" "--" "alacritty" "--working-directory=$(omarchy-cmd-terminal-cwd)"; }
-    Super+T { spawn "uwsm" "app" "--" "chromium" "--new-tab" "--disable-session-crashed-bubble" "https://github.com/sonr-io/sonr"; }
-    Super+Shift+N { spawn "uwsm" "app" "--" "chromium" "--incognito" "--disable-session-crashed-bubble"; }
+    Super+N { spawn "omarchy-launch-or-focus" "alacritty"; }
+    Super+T { spawn "omarchy-launch-or-focus" "vivaldi-snapshot"; }
+    Super+Shift+N { spawn "uwsm" "app" "--" "vivaldi-snapshot" "--incognito" "--disable-session-crashed-bubble"; }
     Super+F { spawn "uwsm" "app" "--" "nautilus" "--new-window"; }
     Super+E { spawn "uwsm" "app" "--" "ghostty" "--class=TUI.tile" "--working-directory=$(omarchy-cmd-terminal-cwd)" "-e" "nvim"; }
     Super+O { spawn "uwsm" "app" "--" "ghostty" "--working-directory=$(omarchy-cmd-terminal-cwd)" "-e" "tv" "repos"; }
@@ -299,11 +299,11 @@ binds {
     Super+K { spawn "uwsm" "app" "--" "alacritty" "--class=TUI.tile" "--config-file=$XDG_CONFIG_HOME/alacritty/tile.toml" "--working-directory=$(omarchy-cmd-terminal-cwd)" "-e" "lazyssh"; }
     Super+D { spawn "uwsm" "app" "--" "alacritty" "--class=TUI.float" "--config-file=$XDG_CONFIG_HOME/alacritty/float.toml" "--working-directory=$(omarchy-cmd-terminal-cwd)" "-e" "gh" "dash"; }
     Super+A { spawn "uwsm" "app" "--" "alacritty" "--class=TUI.tile" "--config-file=$XDG_CONFIG_HOME/alacritty/tile.toml" "--working-directory=$(omarchy-cmd-terminal-cwd)" "-e" "claude"; }
-    Super+Comma { spawn "uwsm" "app" "--" "alacritty" "--working-directory=/home/prad/.local/share/chezmoi" "-e" "nvim"; }
+    Super+Comma { spawn "omarchy-menu"; }
 
     // Quick launch or focus
-    Ctrl+Super+Alt+K { spawn "omarchy-launch-or-focus" "chromium"; }
-    Ctrl+Super+Alt+J { spawn "omarchy-launch-or-focus" "alacritty"; }
+    Ctrl+Super+Alt+K { spawn "omarchy-launch-or-focus" "vivaldi-snapshot"; }
+    Ctrl+Super+Alt+J { spawn "omarchy-launch-or-focus" "ghostty"; }
 
     // Web apps
     Super+Shift+A { spawn "omarchy-launch-or-focus-webapp" "Grok" "https://grok.com"; }
@@ -329,12 +329,7 @@ binds {
     // ========================================================================
     // System controls
     // ========================================================================
-    Super+Shift+P { quit; }
     Super+Shift+Ctrl+T { toggle-debug-tint; }
-
-    // Clipboard
-    Super+C { spawn "wl-copy"; }
-    Super+V { spawn "wl-paste"; }
 }
 
 // ============================================================================
@@ -347,6 +342,11 @@ screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 hotkey-overlay {
     skip-at-startup
 }
+
+// ============================================================================
+// Wallpaper
+// ============================================================================
+spawn-at-startup "swaybg" "-i" "~/Pictures/Wallpapers/current.png" "-m" "fill"
 
 // ============================================================================
 // Debug Settings
